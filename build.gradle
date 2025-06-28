@@ -1,1 +1,40 @@
+plugins{
+    id 'java'
+}
 
+def now_version = "0.0.0"
+
+allprojects {
+    apply {
+        plugin 'java'
+    }
+
+    group = 'top.redstarmc'
+
+    version = now_version
+
+    repositories {
+        mavenCentral()  //Maven 存储库
+    }
+
+    dependencies {
+        compileOnly 'org.jetbrains:annotations:23.0.0'
+    }
+
+
+    // 编译 固定 UTF-8 编码
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+    }
+    // Javadoc 固定 UTF-8 编码
+    tasks.withType(Javadoc).tap {
+        configureEach {
+            options.encoding = "UTF-8"
+        }
+    }
+
+    // 固定使用 Java19
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(19))
+    }
+}
