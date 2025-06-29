@@ -1,15 +1,15 @@
 plugins{
-    id 'java'
+    id 'java-library'
 }
 
-def now_version = "0.0.0"
+def now_version = "0.0.1"
 
 allprojects {
     apply {
-        plugin 'java'
+        plugin 'java-library'
     }
 
-    group = 'top.redstarmc'
+    group = 'top.redstarmc.plugin.velocitytitle'
 
     version = now_version
 
@@ -37,4 +37,42 @@ allprojects {
     java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(19))
     }
+
+}
+
+subprojects {
+    tasks.withType(Jar).tap {
+        configureEach {
+            // 设置所有子模块 JAR 的输出根目录
+            destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
+            // 可选：自定义文件名（包含模块名）
+        }
+    }
+}
+
+tasks.register('createAllJar', Jar) {
+    group = 'build'
+
+    archiveBaseName.set('VelocityTitle')
+    archiveVersion.set(now_version)
+
+    from {
+        project.rootProject.subprojects.collectMany { subproject ->
+            def sourceSet = subproject.sourceSets.main
+
+            // 收集类文件和资源文件
+            [
+                    // 类文件目录（可能包含多个）
+                    sourceSet.output.classesDirs.files,
+                    // 资源目录（单个）
+                    sourceSet.output.resourcesDir
+            ].flatten().findAll { it != null && it.exists() }
+        }
+    }
+
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', '*.MF'
+}
+
+tasks.named('build') {
+    finalizedBy('createAllJar')
 }

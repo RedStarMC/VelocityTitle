@@ -1,0 +1,10 @@
+{
+  "id": "velocity_title",
+  "name": "VelocityTitle",
+  "version": "${now_version}",
+  "authors": [
+    "RedStarMC", "pingguomc"
+  ],
+  "dependencies": [],
+  "main": "top.redstarmc.plugin.velocitytitle.velocity.VelocityTitle"
+}

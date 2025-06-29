@@ -1,0 +1,12 @@
+dependencies {
+    compileOnly "com.velocitypowered:velocity-api:3.4.0-SNAPSHOT"
+}
+
+repositories {
+    maven { url 'https://repo.codemc.io/repository/maven-releases/' }
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+jar {
+    archiveBaseName.set("VelocityTitle-Velocity")  // 基础名称
+}

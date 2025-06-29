@@ -1,0 +1,4 @@
+name: VelocityTitle
+version: '${now_version}'
+main: top.redstarmc.plugin.velocitytitle.spigot.VelocityTitleSpigot
+api-version: 1.13

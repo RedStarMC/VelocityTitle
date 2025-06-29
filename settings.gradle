@@ -1,2 +1,3 @@
 rootProject.name = 'VelocityTitle'
-
+include 'velocity'
+include 'spigot'
