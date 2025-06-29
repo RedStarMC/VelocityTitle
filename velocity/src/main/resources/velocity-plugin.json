@@ -3,8 +3,9 @@
   "name": "VelocityTitle",
   "version": "${now_version}",
   "authors": [
-    "RedStarMC", "pingguomc"
+    "pingguomc"
   ],
   "dependencies": [],
-  "main": "top.redstarmc.plugin.velocitytitle.velocity.VelocityTitle"
+  "main": "top.redstarmc.plugin.velocitytitle.velocity.VelocityTitle",
+  "website": "https://github.com/RedStarMC/VelocityTitle"
 }
