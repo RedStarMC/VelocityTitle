@@ -1,5 +1,6 @@
 dependencies {
     compileOnly "com.velocitypowered:velocity-api:3.4.0-SNAPSHOT"
+    implementation 'cc.carm.lib:easysql-hikaricp:0.4.7'
 }
 
 repositories {

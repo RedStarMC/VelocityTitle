@@ -6,6 +6,6 @@
     "pingguomc"
   ],
   "dependencies": [],
-  "main": "top.redstarmc.plugin.velocitytitle.velocity.VelocityTitle",
+  "main": "top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity",
   "website": "https://github.com/RedStarMC/VelocityTitle"
 }

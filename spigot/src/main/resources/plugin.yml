@@ -4,3 +4,4 @@ main: top.redstarmc.plugin.velocitytitle.spigot.VelocityTitleSpigot
 api-version: 1.13
 author: pingguomc
 website: https://github.com/RedStarMC/VelocityTitle
+loadbefore: [PlaceholderAPI]

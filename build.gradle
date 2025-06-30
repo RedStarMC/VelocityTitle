@@ -19,6 +19,7 @@ allprojects {
 
     dependencies {
         compileOnly 'org.jetbrains:annotations:23.0.0'
+        implementation 'com.moandjiezana.toml:toml4j:0.7.2'
     }
 
 
