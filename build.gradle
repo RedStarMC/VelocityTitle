@@ -41,13 +41,49 @@ allprojects {
 
 }
 
+//subprojects {
+//    tasks.withType(Jar).tap {
+//        configureEach {
+//            // 设置所有子模块 JAR 的输出根目录
+//            destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
+//        }
+//    }
+//}
+
 subprojects {
+    // 统一设置子模块 JAR 的输出目录
     tasks.withType(Jar).tap {
         configureEach {
-            // 设置所有子模块 JAR 的输出根目录
             destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
-            // 可选：自定义文件名（包含模块名）
+            archiveClassifier.set('original') // 给原始 JAR 加分类器以便区分
         }
+    }
+
+    // 为每个子模块新增一个包含依赖的 JAR 任务
+    tasks.register('jarWithDependencies', Jar) {
+        group = 'build'
+
+        // 设置输出目录
+        destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
+        archiveBaseName.set(jar.archiveBaseName)
+        archiveClassifier.set('dependencies')
+
+        from {
+            sourceSets.main.output
+        }
+
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }.each {
+            from(it) {
+                exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', '*.MF'
+            }
+        }
+
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    }
+
+    tasks.named('build') {
+        dependsOn('jarWithDependencies')
     }
 }
 
@@ -57,21 +93,26 @@ tasks.register('createAllJar', Jar) {
     archiveBaseName.set('VelocityTitle')
     archiveVersion.set(now_version)
 
+    // 收集所有子模块的类文件和资源文件
     from {
-        project.rootProject.subprojects.collectMany { subproject ->
-            def sourceSet = subproject.sourceSets.main
-
-            // 收集类文件和资源文件
+        subprojects.collectMany { subproject ->
             [
-                    // 类文件目录（可能包含多个）
-                    sourceSet.output.classesDirs.files,
-                    // 资源目录（单个）
-                    sourceSet.output.resourcesDir
+                    subproject.sourceSets.main.output.classesDirs.files,
+                    subproject.sourceSets.main.output.resourcesDir
             ].flatten().findAll { it != null && it.exists() }
         }
     }
 
+    // 收集所有子模块的依赖
+    from {
+        subprojects.collectMany { subproject ->
+            subproject.configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+    }
+
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', '*.MF'
+
+    destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
 }
 
 tasks.named('build') {
