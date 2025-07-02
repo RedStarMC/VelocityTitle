@@ -66,15 +66,16 @@ subprojects {
         // 设置输出目录
         destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
         archiveBaseName.set(jar.archiveBaseName)
-        archiveClassifier.set('dependencies')
 
         from {
             sourceSets.main.output
         }
 
+        archiveClassifier.set('')
+
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }.each {
             from(it) {
-                exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', '*.MF'
+                exclude 'META-INF/*', '*.MF'
             }
         }
 
@@ -110,7 +111,8 @@ tasks.register('createAllJar', Jar) {
         }
     }
 
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', '*.MF'
+    exclude 'META-INF/*', '*.MF'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
 }
