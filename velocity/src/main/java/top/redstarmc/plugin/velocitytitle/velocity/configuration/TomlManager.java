@@ -1,31 +1,30 @@
 package top.redstarmc.plugin.velocitytitle.velocity.configuration;
 
 import com.moandjiezana.toml.Toml;
-
-import com.moandjiezana.toml.TomlWriter;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
+import top.redstarmc.plugin.velocitytitle.velocity.util.IOFile;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-
-import static com.moandjiezana.toml.Toml.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 public class TomlManager {
 
     private static final File path = VelocityTitleVelocity.getInstance().getDataFolder();
 
-    private static final File configFile = new File(path,"config.toml");
+    private static final File configFile = new File(path,"config-velocity.toml");
 
-    private static final File languageFile = new File(path,"language.toml");
+    private static final File languageFile = new File(path,"language-velocity.toml");
 
-    Toml configToml;
+    @Deprecated
+    private static final String d_version = "0.1.1";
 
-    Toml languageToml;
+    private Toml configToml;
+
+    private Toml languageToml;
 
     public void init(){
-        // 确保文件存在
+
         if (!configFile.exists()) {
             try {
                 configFile.getParentFile().mkdirs();
@@ -46,18 +45,29 @@ public class TomlManager {
         configToml = new Toml().read(configFile);
         languageToml = new Toml().read(languageFile);
 
-        // 读取配置，检查配置版本
 
+        String configVersion = configToml.getString("version");
+        if (!Objects.equals(configVersion, d_version)){
 
+            IOFile.reSave(TomlManager.class.getResourceAsStream("/config-velocity.toml"),configFile);
 
-//            // 从资源文件夹中读取标准配置文件
-//            InputStream inputStream = TomlManager.class.getResourceAsStream("/config.toml");
+            configToml = new Toml().read(configFile);
+        }
 
+        String languageVersion = configToml.getString("version");
+        if (!Objects.equals(languageVersion, d_version)){
+
+            IOFile.reSave(TomlManager.class.getResourceAsStream("/language-velocity.toml"),configFile);
+
+            languageToml = new Toml().read(languageFile);
+        }
     }
 
+    public Toml getConfigToml() {
+        return configToml;
+    }
 
-
-
-
-
+    public Toml getLanguageToml() {
+        return languageToml;
+    }
 }

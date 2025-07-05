@@ -7,10 +7,14 @@ import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import org.slf4j.Logger;
 import top.redstarmc.plugin.velocitytitle.velocity.command.CommandBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.TomlManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.LoggerManager;
+
+import java.io.File;
+import java.nio.file.Path;
 
 @Plugin(
         id = "velocity_title",
@@ -20,16 +24,34 @@ public class VelocityTitleVelocity {
 
     private LoggerManager logger;
 
-    @Inject
-    private ProxyServer server;
+    private TomlManager configManager;
+
+    private final File dataFolder;
+
+    private final ProxyServer server;
 
     private static VelocityTitleVelocity instance;
+
+    @Inject
+    public VelocityTitleVelocity(@DataDirectory Path dataDirectory, ProxyServer server) {
+        this.dataFolder = dataDirectory.toFile();
+        this.server = server;
+    }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         instance = this;
-        logger = new LoggerManager("测试浅醉",true);
+
+        System.out.println("[VelocityTitle]  Configurations Loading...");
+        configManager = new TomlManager();
+        configManager.init();
+
+        logger = new LoggerManager(configManager.getConfigToml().getString("plugin-prefix"),true);
+
         logger.info("测试");
+        logger.warn("警告");
+        logger.error("错误");
+        logger.debug("debug");
     }
 
 
@@ -51,8 +73,16 @@ public class VelocityTitleVelocity {
         return logger;
     }
 
+    public TomlManager getConfigManager() {
+        return configManager;
+    }
+
     public ProxyServer getServer() {
         return server;
+    }
+
+    public File getDataFolder() {
+        return dataFolder;
     }
 
     public static VelocityTitleVelocity getInstance() {
