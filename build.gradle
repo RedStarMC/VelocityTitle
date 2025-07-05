@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins{
     id 'java-library'
 }
@@ -42,11 +44,12 @@ allprojects {
     processResources {
         // 匹配所有资源文件
         filesMatching('**/*') {
-            // 使用 filter 方法替换占位符
+            filter(ReplaceTokens, tokens: [encoding: 'UTF-8'])
             filter { Object line ->
                 line.toString().replace('@VERSION@', project.version)
             }
         }
+        filteringCharset = 'UTF-8'
     }
 
 }
@@ -86,6 +89,7 @@ subprojects {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }.each {
             from(it) {
                 exclude 'META-INF/*', '*.MF'
+                setFilteringCharset('UTF-8')
             }
         }
 
