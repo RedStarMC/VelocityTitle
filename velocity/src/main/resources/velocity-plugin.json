@@ -1,7 +1,7 @@
 {
   "id": "velocity_title",
   "name": "VelocityTitle",
-  "version": "${now_version}",
+  "version": "@VERSION@",
   "authors": [
     "pingguomc"
   ],

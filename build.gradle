@@ -39,6 +39,16 @@ allprojects {
         toolchain.languageVersion.set(JavaLanguageVersion.of(19))
     }
 
+    processResources {
+        // 匹配所有资源文件
+        filesMatching('**/*') {
+            // 使用 filter 方法替换占位符
+            filter { Object line ->
+                line.toString().replace('@VERSION@', project.version)
+            }
+        }
+    }
+
 }
 
 //subprojects {
@@ -96,11 +106,9 @@ tasks.register('createAllJar', Jar) {
 
     // 收集所有子模块的类文件和资源文件
     from {
-        subprojects.collectMany { subproject ->
-            [
-                    subproject.sourceSets.main.output.classesDirs.files,
-                    subproject.sourceSets.main.output.resourcesDir
-            ].flatten().findAll { it != null && it.exists() }
+        subprojects.collect { subproject ->
+            [subproject.file("build/classes/java/main"),
+             subproject.file("build/resources/main")].findAll { it != null && it.exists() }
         }
     }
 
@@ -115,6 +123,11 @@ tasks.register('createAllJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
+
+    // 添加对子模块构建任务的依赖
+    subprojects.each { project ->
+        dependsOn project.tasks.named('build')
+    }
 }
 
 tasks.named('build') {
