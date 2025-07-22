@@ -2,7 +2,11 @@ package top.redstarmc.plugin.velocitytitle.velocity.util;
 
 import java.util.LinkedHashMap;
 
+/**
+ * <h1>Velocity 控制台染色器</h1>
+ */
 public class ColoredConsole {
+
     private static final LinkedHashMap<String, String> MAP = new LinkedHashMap<>();
 
     static {

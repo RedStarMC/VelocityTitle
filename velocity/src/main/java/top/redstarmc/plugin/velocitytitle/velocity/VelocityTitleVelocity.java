@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -43,7 +43,7 @@ public class VelocityTitleVelocity {
         instance = this;
 
         System.out.println("[VelocityTitle]  Configurations Loading...");
-        configManager = new TomlManager();
+        configManager = new TomlManager(getDataFolder());
         configManager.init();
 
         logger = new LoggerManager(configManager.getConfigToml().getString("plugin-prefix"),true);

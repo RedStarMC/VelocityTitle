@@ -1,7 +1,6 @@
 package top.redstarmc.plugin.velocitytitle.velocity.configuration;
 
 import com.moandjiezana.toml.Toml;
-import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.util.IOFile;
 
 import java.io.File;
@@ -10,11 +9,9 @@ import java.util.Objects;
 
 public class TomlManager {
 
-    private static final File path = VelocityTitleVelocity.getInstance().getDataFolder();
+    private final File configFile;
 
-    private static final File configFile = new File(path,"config-velocity.toml");
-
-    private static final File languageFile = new File(path,"language-velocity.toml");
+    private final File languageFile;
 
     @Deprecated
     private static final String d_version = "0.1.1";
@@ -22,6 +19,13 @@ public class TomlManager {
     private Toml configToml;
 
     private Toml languageToml;
+
+    public TomlManager(File dataFolder) {
+        this.configFile = new File(dataFolder, "config-velocity.toml");
+        this.languageFile = new File(dataFolder, "language-velocity.toml");
+    }
+
+
 
     public void init(){
 
@@ -57,7 +61,7 @@ public class TomlManager {
         String languageVersion = configToml.getString("version");
         if (!Objects.equals(languageVersion, d_version)){
 
-            IOFile.reSave(TomlManager.class.getResourceAsStream("/language-velocity.toml"),configFile);
+            IOFile.reSave(TomlManager.class.getResourceAsStream("/language-velocity.toml"),languageFile);
 
             languageToml = new Toml().read(languageFile);
         }

@@ -1,15 +1,14 @@
-package top.redstarmc.plugin.velocitytitle.velocity.util;
+package top.redstarmc.plugin.velocitytitle.core.util;
 
 import java.io.*;
 
-@Deprecated
 public class IOFile {
     public static void reSave(InputStream inputStream, File outputFile) {
         try (InputStream is = inputStream;
              FileOutputStream fos = new FileOutputStream(outputFile)) {
 
             if (is == null) {
-                throw new FileNotFoundException("[VelocityTitle] Jar å·²æŸåï¼èµ„æºæ–‡ä»¶ä¸å­˜åœ¨: " + outputFile.getName());
+                throw new FileNotFoundException("[VelocityTitle] Jar ÒÑËğ»µ£¡×ÊÔ´ÎÄ¼ş²»´æÔÚ: " + outputFile.getName());
             }
 
             byte[] buffer = new byte[4096];
@@ -17,10 +16,10 @@ public class IOFile {
             while ((bytesRead = is.read(buffer)) != -1) {
                 fos.write(buffer, 0, bytesRead);
             }
-            fos.flush(); // åˆ·æ–°ç¼“å†²åŒº
+            fos.flush(); // Ë¢ĞÂ»º³åÇø
         } catch (IOException e) {
             System.out.println("[VelocityTitle]"+e.getMessage());
-            e.printStackTrace(); // æ•è·å¼‚å¸¸å¹¶æ‰“å°å †æ ˆä¿¡æ¯
+            e.printStackTrace(); // ²¶»ñÒì³£²¢´òÓ¡¶ÑÕ»ĞÅÏ¢
         }
     }
 }

@@ -17,11 +17,13 @@ allprojects {
 
     repositories {
         mavenCentral()  //Maven 存储库
+        maven { url 'https://repo.codemc.io/repository/maven-releases/' }
     }
 
     dependencies {
         compileOnly 'org.jetbrains:annotations:23.0.0'
         implementation 'com.moandjiezana.toml:toml4j:0.7.2'
+        implementation 'cc.carm.lib:easysql-hikaricp:0.4.7'
     }
 
 
@@ -64,41 +66,48 @@ allprojects {
 //}
 
 subprojects {
-    // 统一设置子模块 JAR 的输出目录
+    // 1. 配置原始 Jar 任务（仅含自身代码，不加依赖）
     tasks.withType(Jar).tap {
         configureEach {
+            group = 'build'
             destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
-            archiveClassifier.set('original') // 给原始 JAR 加分类器以便区分
+            archiveClassifier.set('original') // 明确标记为原始 JAR（无依赖）
+
+            // 仅包含自身代码和资源（不添加依赖）
+            from sourceSets.main.output
         }
     }
 
-    // 为每个子模块新增一个包含依赖的 JAR 任务
+    // 2. 配置包含依赖的 JAR 任务（xxx.jar）
     tasks.register('jarWithDependencies', Jar) {
         group = 'build'
-
-        // 设置输出目录
         destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
         archiveBaseName.set(jar.archiveBaseName)
-
-        from {
-            sourceSets.main.output
-        }
-
         archiveClassifier.set('')
 
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }.each {
-            from(it) {
-                exclude 'META-INF/*', '*.MF'
-                setFilteringCharset('UTF-8')
-            }
+        from {
+            sourceSets.main.output // 包含当前模块的代码和资源
         }
 
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        // 收集外部依赖（排除项目内的 original.jar）
+        from {
+            configurations.runtimeClasspath.collect { file ->
+                // 排除项目内生成的 original.jar（避免重复打包）
+                if (file.name.endsWith("-original.jar")) {
+                    null // 跳过 original.jar
+                } else {
+                    file.isDirectory() ? file : zipTree(file)
+                }
+            }.findAll { it != null } // 过滤掉 null 值
+        }
 
+        exclude 'META-INF/*', '*.MF'
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 
+    // 3. 确保 build 任务同时执行两个 JAR 任务
     tasks.named('build') {
-        dependsOn('jarWithDependencies')
+        dependsOn(tasks.named('jar'), tasks.named('jarWithDependencies'))
     }
 }
 
