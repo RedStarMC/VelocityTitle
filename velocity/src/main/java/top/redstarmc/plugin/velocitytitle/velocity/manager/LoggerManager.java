@@ -1,6 +1,7 @@
-package top.redstarmc.plugin.velocitytitle.velocity.util;
+package top.redstarmc.plugin.velocitytitle.velocity.manager;
 
 import top.redstarmc.plugin.velocitytitle.core.api.AbstractLoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.util.ColoredConsole;
 
 /**
  * <h1>日志管理器</h1>

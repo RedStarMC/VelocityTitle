@@ -2,6 +2,10 @@ package top.redstarmc.plugin.velocitytitle.core.api;
 
 import top.redstarmc.plugin.velocitytitle.core.util.toStrings;
 
+/**
+ * <h1>日志管理器</h1>
+ * 负责向控制台输出日志。所有日志通过 {@link #sendMessage(String...)} 输出，由子类实现来适配多平台。
+ */
 public abstract class AbstractLoggerManager {
     public String INFO_PREFIX;
 

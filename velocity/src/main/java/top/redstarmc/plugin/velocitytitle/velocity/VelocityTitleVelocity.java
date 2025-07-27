@@ -11,7 +11,7 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import top.redstarmc.plugin.velocitytitle.velocity.command.CommandBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.TomlManager;
-import top.redstarmc.plugin.velocitytitle.velocity.util.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 import java.io.File;
 import java.nio.file.Path;

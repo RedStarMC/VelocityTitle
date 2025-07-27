@@ -2,7 +2,7 @@ package top.redstarmc.plugin.velocitytitle.core.util;
 
 import java.io.*;
 
-public class IOFile {
+public class IOUtils {
     public static void reSave(InputStream inputStream, File outputFile) {
         try (InputStream is = inputStream;
              FileOutputStream fos = new FileOutputStream(outputFile)) {
