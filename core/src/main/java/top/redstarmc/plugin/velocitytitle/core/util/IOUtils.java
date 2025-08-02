@@ -53,28 +53,34 @@ public class IOUtils {
     /**
      * 备份文件（重命名为原文件名+.old）
      * @param sourceFile 源文件
-     * @return 备份文件
      * @throws IOException 备份失败时抛出
      */
-    public static File backupFile(File sourceFile) throws IOException {
+    public static void backupFile(File sourceFile) throws IOException {
         File backupFile = new File(sourceFile.getParent(), sourceFile.getName() + ".old");
         if (!sourceFile.renameTo(backupFile)) {
             throw new IOException("[VelocityTitle Config Loading...] 文件备份失败: " + backupFile.getName());
         }
-        return backupFile;
     }
 
     /**
      * 读取TOML配置文件
      * @param file 配置文件
      * @return Toml对象
-     * @throws Exception 读取或解析失败时抛出
+     * @throws FileNotFoundException 读取或解析失败时抛出
      */
-    public static Toml readToml(File file) throws Exception {
+    public static Toml readToml(File file) throws FileNotFoundException {
         if (!file.exists()) {
             throw new FileNotFoundException("[VelocityTitle Config Loading...] 配置文件不存在: " + file.getName());
         }
         return new Toml().read(file);
     }
 
+    /**
+     * 删除文件
+     * @param file 文件
+     * @return 是否成功
+     */
+    public static boolean delFile(File file){
+        return file.delete();
+    }
 }
