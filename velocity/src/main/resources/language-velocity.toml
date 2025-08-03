@@ -13,6 +13,17 @@ mode = ""
 
 # 日志提示类
 [logs]
+loading = "插件正在启动~~~"
+command-loading = "正在加载命令模块……"
+database-loading = "正在加载数据库……"
+
+author = "作者："
+debug = "请注意！当前已启用 Debug 模式"
+
+thanks = "感谢您使用本插件！"
+website = "本插件是开源的。Github ："
+
+reload = "插件已重载"
 
 
 # 命令提示类
