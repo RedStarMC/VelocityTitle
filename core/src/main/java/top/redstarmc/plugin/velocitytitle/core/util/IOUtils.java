@@ -8,36 +8,36 @@ import java.nio.file.Files;
 public class IOUtils {
 
     /**
-     * ´´½¨Ä¿Â¼£¨°üÀ¨¸¸Ä¿Â¼£©
-     * @param dir Ä¿±êÄ¿Â¼
-     * @throws IOException Ä¿Â¼´´½¨Ê§°ÜÊ±Å×³ö
+     * åˆ›å»ºç›®å½•ï¼ˆåŒ…æ‹¬çˆ¶ç›®å½•ï¼‰
+     * @param dir ç›®æ ‡ç›®å½•
+     * @throws IOException ç›®å½•åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
      */
     public static void createDirectory(File dir) throws IOException {
         if (dir != null && !dir.exists() && !Files.createDirectories(dir.toPath()).toFile().exists()) {
-            throw new IOException("[VelocityTitle Config Loading...] Ä¿Â¼´´½¨Ê§°Ü: " + dir.getAbsolutePath());
+            throw new IOException("[VelocityTitle Config Loading...] ç›®å½•åˆ›å»ºå¤±è´¥: " + dir.getAbsolutePath());
         }
     }
 
     /**
-     * ´´½¨ÎÄ¼ş£¨ĞèÈ·±£¸¸Ä¿Â¼´æÔÚ£©
-     * @param file Ä¿±êÎÄ¼ş
-     * @throws IOException ÎÄ¼ş´´½¨Ê§°ÜÊ±Å×³ö
+     * åˆ›å»ºæ–‡ä»¶ï¼ˆéœ€ç¡®ä¿çˆ¶ç›®å½•å­˜åœ¨ï¼‰
+     * @param file ç›®æ ‡æ–‡ä»¶
+     * @throws IOException æ–‡ä»¶åˆ›å»ºå¤±è´¥æ—¶æŠ›å‡º
      */
     public static void createFile(File file) throws IOException {
         if (!file.exists() && !file.createNewFile()) {
-            throw new IOException("[VelocityTitle Config Loading...] ÎÄ¼ş´´½¨Ê§°Ü: " + file.getName());
+            throw new IOException("[VelocityTitle Config Loading...] æ–‡ä»¶åˆ›å»ºå¤±è´¥: " + file.getName());
         }
     }
 
     /**
-     * ´ÓÊäÈëÁ÷¸´ÖÆµ½ÎÄ¼ş
-     * @param inputStream Ô´ÊäÈëÁ÷
-     * @param targetFile Ä¿±êÎÄ¼ş
-     * @throws IOException Á÷²Ù×÷Ê§°ÜÊ±Å×³ö
+     * ä»è¾“å…¥æµå¤åˆ¶åˆ°æ–‡ä»¶
+     * @param inputStream æºè¾“å…¥æµ
+     * @param targetFile ç›®æ ‡æ–‡ä»¶
+     * @throws IOException æµæ“ä½œå¤±è´¥æ—¶æŠ›å‡º
      */
     public static void copyResource(InputStream inputStream, File targetFile) throws IOException {
         if (inputStream == null) {
-            throw new FileNotFoundException("[VelocityTitle Config Loading...] ×ÊÔ´ÊäÈëÁ÷Îª¿Õ: " + targetFile.getName());
+            throw new FileNotFoundException("[VelocityTitle Config Loading...] èµ„æºè¾“å…¥æµä¸ºç©º: " + targetFile.getName());
         }
         try (InputStream is = inputStream;
              OutputStream os = new FileOutputStream(targetFile)) {
@@ -51,34 +51,34 @@ public class IOUtils {
     }
 
     /**
-     * ±¸·İÎÄ¼ş£¨ÖØÃüÃûÎªÔ­ÎÄ¼şÃû+.old£©
-     * @param sourceFile Ô´ÎÄ¼ş
-     * @throws IOException ±¸·İÊ§°ÜÊ±Å×³ö
+     * å¤‡ä»½æ–‡ä»¶ï¼ˆé‡å‘½åä¸ºåŸæ–‡ä»¶å+.oldï¼‰
+     * @param sourceFile æºæ–‡ä»¶
+     * @throws IOException å¤‡ä»½å¤±è´¥æ—¶æŠ›å‡º
      */
     public static void backupFile(File sourceFile) throws IOException {
         File backupFile = new File(sourceFile.getParent(), sourceFile.getName() + ".old");
         if (!sourceFile.renameTo(backupFile)) {
-            throw new IOException("[VelocityTitle Config Loading...] ÎÄ¼ş±¸·İÊ§°Ü: " + backupFile.getName());
+            throw new IOException("[VelocityTitle Config Loading...] æ–‡ä»¶å¤‡ä»½å¤±è´¥: " + backupFile.getName());
         }
     }
 
     /**
-     * ¶ÁÈ¡TOMLÅäÖÃÎÄ¼ş
-     * @param file ÅäÖÃÎÄ¼ş
-     * @return Toml¶ÔÏó
-     * @throws FileNotFoundException ¶ÁÈ¡»ò½âÎöÊ§°ÜÊ±Å×³ö
+     * è¯»å–TOMLé…ç½®æ–‡ä»¶
+     * @param file é…ç½®æ–‡ä»¶
+     * @return Tomlå¯¹è±¡
+     * @throws FileNotFoundException è¯»å–æˆ–è§£æå¤±è´¥æ—¶æŠ›å‡º
      */
     public static Toml readToml(File file) throws FileNotFoundException {
         if (!file.exists()) {
-            throw new FileNotFoundException("[VelocityTitle Config Loading...] ÅäÖÃÎÄ¼ş²»´æÔÚ: " + file.getName());
+            throw new FileNotFoundException("[VelocityTitle Config Loading...] é…ç½®æ–‡ä»¶ä¸å­˜åœ¨: " + file.getName());
         }
         return new Toml().read(file);
     }
 
     /**
-     * É¾³ıÎÄ¼ş
-     * @param file ÎÄ¼ş
-     * @return ÊÇ·ñ³É¹¦
+     * åˆ é™¤æ–‡ä»¶
+     * @param file æ–‡ä»¶
+     * @return æ˜¯å¦æˆåŠŸ
      */
     public static boolean delFile(File file){
         return file.delete();

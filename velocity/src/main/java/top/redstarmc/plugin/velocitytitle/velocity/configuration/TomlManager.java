@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
+@Deprecated
 public class TomlManager {
 
     private final File configFile;

@@ -10,9 +10,9 @@ import java.io.InputStream;
 import java.util.Objects;
 
 /**
- * <h1>Toml ¸ñÊ½ÅäÖÃÎÄ¼ş¹ÜÀíÆ÷</h1>
- * ×÷ÎªÒ»¸ö³éÏóÀà£¬Ê¹ÓÃÇëÈÃ×ÓÀà±»¼Ì³ĞºóÊµÀı»¯¡£
- * ¶ÔÓÚ²»ĞèÒªÊ¹ÓÃµÄÀà£¬ÖØĞ´Îª¿Õ¼´¿É¡£
+ * <h1>Toml æ ¼å¼é…ç½®æ–‡ä»¶ç®¡ç†å™¨</h1>
+ * ä½œä¸ºä¸€ä¸ªæŠ½è±¡ç±»ï¼Œä½¿ç”¨è¯·è®©å­ç±»è¢«ç»§æ‰¿åå®ä¾‹åŒ–ã€‚
+ * å¯¹äºä¸éœ€è¦ä½¿ç”¨çš„ç±»ï¼Œé‡å†™ä¸ºç©ºå³å¯ã€‚
  */
 public abstract class AbstractTomlManager {
 
@@ -28,9 +28,9 @@ public abstract class AbstractTomlManager {
     private final File dataFolder;
 
     /**
-     * ¹¹ÔìÆ÷
-     * @param dataFolder ²å¼şµÄ¹¤×÷ÎÄ¼ş¼Ğ
-     * @param fileName Òª²Ù×÷µÄÅäÖÃÎÄ¼şÃû³Æ
+     * æ„é€ å™¨
+     * @param dataFolder æ’ä»¶çš„å·¥ä½œæ–‡ä»¶å¤¹
+     * @param fileName è¦æ“ä½œçš„é…ç½®æ–‡ä»¶åç§°
      */
     public AbstractTomlManager(File dataFolder, String fileName){
         this.file = new File(dataFolder,fileName);
@@ -39,16 +39,16 @@ public abstract class AbstractTomlManager {
     }
 
     /**
-     * ³¢ÊÔ´´½¨ÎÄ¼ş£¨°üÀ¨¸¸Ä¿Â¼£©£¬Ê§°ÜÔòÅ×³öÒì³£¡£
-     * Èô³É¹¦´´½¨Ôò³¢ÊÔ¶ÁÈ¡Ä¬ÈÏÅäÖÃ£¬ÈôÒÑ´æÔÚÔò²»½øĞĞ²Ù×÷¡£
-     * µ«ÊÇ²¢²»»á¶ÁÈ¡ÅäÖÃÎÄ¼ş ¶ÁÈ¡ÅäÖÃÎÄ¼şÇëÊ¹ÓÃ {@link #loadConfig()}
+     * å°è¯•åˆ›å»ºæ–‡ä»¶ï¼ˆåŒ…æ‹¬çˆ¶ç›®å½•ï¼‰ï¼Œå¤±è´¥åˆ™æŠ›å‡ºå¼‚å¸¸ã€‚
+     * è‹¥æˆåŠŸåˆ›å»ºåˆ™å°è¯•è¯»å–é»˜è®¤é…ç½®ï¼Œè‹¥å·²å­˜åœ¨åˆ™ä¸è¿›è¡Œæ“ä½œã€‚
+     * ä½†æ˜¯å¹¶ä¸ä¼šè¯»å–é…ç½®æ–‡ä»¶ è¯»å–é…ç½®æ–‡ä»¶è¯·ä½¿ç”¨ {@link #loadConfig()}
      */
     public void tryCreateFile(){
         if (!dataFolder.exists()) {
             try {
                 IOUtils.createDirectory(dataFolder);
             } catch (IOException e) {
-                throw new RuntimeException(e); //TODO Êä³ö´ı²âÊÔ
+                throw new RuntimeException(e); //TODO è¾“å‡ºå¾…æµ‹è¯•
             }
         }
         if (!file.exists()) {
@@ -56,7 +56,7 @@ public abstract class AbstractTomlManager {
                 IOUtils.createFile(file);
                 injectConfigFromFile();
             } catch (IOException e) {
-                throw new RuntimeException(e); //TODO Êä³ö´ı²âÊÔ
+                throw new RuntimeException(e); //TODO è¾“å‡ºå¾…æµ‹è¯•
             }
         }
     }
@@ -68,27 +68,27 @@ public abstract class AbstractTomlManager {
         try {
             IOUtils.copyResource(inputStream, file);
         } catch (IOException e) {
-            System.out.println("[VelocityTitle TomlManager] ÎŞ·¨´Ó Jar ÖĞ¸´ÖÆÄ¬ÈÏÅäÖÃµ½ÎÄ¼şÖĞ");
+            System.out.println("[VelocityTitle TomlManager] æ— æ³•ä» Jar ä¸­å¤åˆ¶é»˜è®¤é…ç½®åˆ°æ–‡ä»¶ä¸­");
             throw new RuntimeException(e);
         }
 
     }
 
     /**
-     * <h2>¸üĞÂÅäÖÃÎÄ¼ş</h2>
-     * µ±ÅäÖÃÎÄ¼ş°æ±¾²»Ò»ÖÂÊ±£¬¸üĞÂÅäÖÃÎÄ¼ş²¢±¸·İÔ­ÅäÖÃÎÄ¼ş¡£
+     * <h2>æ›´æ–°é…ç½®æ–‡ä»¶</h2>
+     * å½“é…ç½®æ–‡ä»¶ç‰ˆæœ¬ä¸ä¸€è‡´æ—¶ï¼Œæ›´æ–°é…ç½®æ–‡ä»¶å¹¶å¤‡ä»½åŸé…ç½®æ–‡ä»¶ã€‚
      */
     public void updateFile(){
-        String readVersion = configToml.getString("Version");
+        String readVersion = configToml.getString("version");
 
         if (Objects.equals(readVersion, d_version)){
             return;
         }
 
         try {
-            IOUtils.backupFile(file);  //±¸·İ
+            IOUtils.backupFile(file);  //å¤‡ä»½
         } catch (IOException e) {
-            System.out.println("[VelocityTitle TomlManager] ÎŞ·¨±¸·İÅäÖÃÎÄ¼ş£¬ÇëÊÖ¶¯±¸·İºóÖØÊÔ"+e.getMessage());
+            System.out.println("[VelocityTitle TomlManager] æ— æ³•å¤‡ä»½é…ç½®æ–‡ä»¶ï¼Œè¯·æ‰‹åŠ¨å¤‡ä»½åé‡è¯•"+e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -96,23 +96,24 @@ public abstract class AbstractTomlManager {
 
         injectConfigFromFile();
 
+        loadConfig();
     }
 
     /**
-     * <h2>¶ÁÈ¡ÅäÖÃ</h2>
-     * ÊÊÓÃÓÚÆô¶¯¡¢ÖØÔØÊ±¼ÓÔØÅäÖÃÎÄ¼ş£¬»á´ÓÏµÍ³ÖØĞÂ¶ÁÈ¡ÎÄ¼ş
+     * <h2>è¯»å–é…ç½®</h2>
+     * é€‚ç”¨äºå¯åŠ¨ã€é‡è½½æ—¶åŠ è½½é…ç½®æ–‡ä»¶ï¼Œä¼šä»ç³»ç»Ÿé‡æ–°è¯»å–æ–‡ä»¶
      */
     public void loadConfig(){
         try {
             configToml = IOUtils.readToml(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace(); //TODO ĞŞ¸ÄÊä³ö
+            e.printStackTrace(); //TODO ä¿®æ”¹è¾“å‡º
         }
     }
 
     /**
-     * <h2>³õÊ¼»¯ÅäÖÃÎÄ¼ş</h2>
-     * ×ÓÀàÖØĞ´¼´¿É
+     * <h2>åˆå§‹åŒ–é…ç½®æ–‡ä»¶</h2>
+     * å­ç±»é‡å†™å³å¯
      */
     public void init(){
         tryCreateFile();

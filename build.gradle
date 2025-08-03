@@ -56,25 +56,20 @@ allprojects {
 
 }
 
-//subprojects {
-//    tasks.withType(Jar).tap {
-//        configureEach {
-//            // 设置所有子模块 JAR 的输出根目录
-//            destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
-//        }
-//    }
-//}
-
 subprojects {
-    // 1. 配置原始 Jar 任务（仅含自身代码，不加依赖）
+    // 1. 配置原始 Jar 任务（包含自身代码和core模块代码）
     tasks.withType(Jar).tap {
         configureEach {
             group = 'build'
             destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
-            archiveClassifier.set('original') // 明确标记为原始 JAR（无依赖）
+            archiveClassifier.set('original') // 明确标记为原始 JAR
 
-            // 仅包含自身代码和资源（不添加依赖）
+            // 包含自身代码、资源和core模块代码
             from sourceSets.main.output
+            // 仅对velocity和spigot模块添加core代码
+            if (project.name in ['velocity', 'spigot']) {
+                from project(':core').sourceSets.main.output
+            }
         }
     }
 
@@ -87,6 +82,10 @@ subprojects {
 
         from {
             sourceSets.main.output // 包含当前模块的代码和资源
+            // 仅对velocity和spigot模块添加core代码
+            if (project.name in ['velocity', 'spigot']) {
+                project(':core').sourceSets.main.output
+            }
         }
 
         // 收集外部依赖（排除项目内的 original.jar）
