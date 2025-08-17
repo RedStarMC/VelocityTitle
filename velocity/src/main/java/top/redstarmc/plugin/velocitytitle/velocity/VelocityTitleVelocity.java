@@ -12,6 +12,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import top.redstarmc.plugin.velocitytitle.velocity.command.CommandBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Config;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 import java.io.File;
@@ -30,6 +31,8 @@ public class VelocityTitleVelocity {
     private Config config;
 
     private Language language;
+
+    private EasySQLManager DBManager;
 
     private final ProxyServer server;
 
@@ -61,8 +64,8 @@ public class VelocityTitleVelocity {
         registerCommand();
 
         logger.info(config.getConfigToml().getString("database-loading"));
-
-
+        DBManager = new EasySQLManager(logger, config, language);
+        DBManager.init();
 
         logger.info("测试");
         logger.warn("警告");

@@ -4,7 +4,7 @@ plugins{
     id 'java-library'
 }
 
-def now_version = "0.1.1"
+def now_version = "0.1.2"
 
 allprojects {
     apply {

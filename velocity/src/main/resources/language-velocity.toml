@@ -14,17 +14,25 @@ mode = ""
 # 日志提示类
 [logs]
 loading = "插件正在启动~~~"
-command-loading = "正在加载命令模块……"
-database-loading = "正在加载数据库……"
+command-loading = "正在注册 命令 ……"
+database-loading = "正在加载 数据库 ……"
 
-author = "作者："
-debug = "请注意！当前已启用 Debug 模式"
+author = "插件作者："
+debug = "请注意！当前已启用 Debug 模式。"
 
 thanks = "感谢您使用本插件！"
 website = "本插件是开源的。Github ："
 
-reload = "插件已重载"
-
+reload = "插件已重载。"
 
 # 命令提示类
 [commands]
+
+# 数据库类
+[database]
+embedded = "[数据库] 正在加载嵌入式（Embedded）数据库……"
+server = "[数据库] 正在加载服务器模式（Server）数据库……"
+other = "[数据库] 无法识别数据库模式！正在加载默认的嵌入式（Embedded）数据库……"
+timeout = "[数据库] 链接超时！"
+failed = "[数据库] 无法链接到数据库！"
+

@@ -17,7 +17,7 @@ import java.util.Objects;
 public abstract class AbstractTomlManager {
 
     @Deprecated
-    private static final String d_version = "0.1.1";
+    private static final String d_version = "0.1.2";
 
     private final File file;
 
