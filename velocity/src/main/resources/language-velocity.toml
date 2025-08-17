@@ -25,8 +25,13 @@ website = "本插件是开源的。Github ："
 
 reload = "插件已重载。"
 
-# 命令提示类
+# 命令类
 [commands]
+root = "========VelocityTitle========"
+
+# 命令帮助类
+[commands.helps]
+open = "使用 /vt help 打开帮助页面"
 
 # 数据库类
 [database]
@@ -35,4 +40,4 @@ server = "[数据库] 正在加载服务器模式（Server）数据库……"
 other = "[数据库] 无法识别数据库模式！正在加载默认的嵌入式（Embedded）数据库……"
 timeout = "[数据库] 链接超时！"
 failed = "[数据库] 无法链接到数据库！"
-
+failed-operate = "[数据库] 数据库在操作时出现问题！"

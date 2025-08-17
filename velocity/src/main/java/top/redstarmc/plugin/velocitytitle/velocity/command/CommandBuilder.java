@@ -5,22 +5,26 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
-import net.kyori.adventure.text.Component;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
+
+import static net.kyori.adventure.text.Component.text;
 
 public abstract class CommandBuilder {
 
-    public static LiteralCommandNode<CommandSource> init(){
+    public static LiteralCommandNode<CommandSource> init(ConfigManager language){
         return LiteralArgumentBuilder.<CommandSource>literal("VelocityTitle")
-                .requires(source -> source.hasPermission("VelocityTitle.info"))
                 .executes(context -> {
-                    context.getSource().sendMessage(Component.text("a"));
+                    context.getSource().sendMessage(text(language.getConfigToml().getString("commands.root"))
+                            .append(text(language.getConfigToml().getString("commands.helps.open"))));
                     return Command.SINGLE_SUCCESS;
                 })
+                .then(CreateBuilder.init(language))
                 .build();
+
     }
 
     public static final ProxyServer proxyServer = VelocityTitleVelocity.getInstance().getServer();
 
-    public abstract LiteralArgumentBuilder<CommandSource> build();
+    public abstract LiteralArgumentBuilder<CommandSource> build(ConfigManager language);
 }

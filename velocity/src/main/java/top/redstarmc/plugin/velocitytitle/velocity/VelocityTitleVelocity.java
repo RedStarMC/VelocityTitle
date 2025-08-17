@@ -55,6 +55,8 @@ public class VelocityTitleVelocity {
         logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"),
                 config.getConfigToml().getBoolean("debug-mode"));
 
+        logger.info("Language: "+language.getConfigToml().getString("name"));
+
         logger.info(language.getConfigToml().getString("logs.loading"));
         logger.info(language.getConfigToml().getString("logs.author")," pingguomc");
         logger.debug(language.getConfigToml().getString("logs.debug"));
@@ -73,8 +75,6 @@ public class VelocityTitleVelocity {
         logger.debug("debug");
     }
 
-
-
     private void registerCommand(){
         CommandManager commandManager = server.getCommandManager();
 
@@ -83,7 +83,7 @@ public class VelocityTitleVelocity {
                 .aliases("vt")
                 .build();
 
-        commandManager.register(commandMeta,new BrigadierCommand(CommandBuilder.init()));
+        commandManager.register(commandMeta,new BrigadierCommand(CommandBuilder.init(language)));
     }
 
 
@@ -102,6 +102,10 @@ public class VelocityTitleVelocity {
 
     public ProxyServer getServer() {
         return server;
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 
     public File getDataFolder() {

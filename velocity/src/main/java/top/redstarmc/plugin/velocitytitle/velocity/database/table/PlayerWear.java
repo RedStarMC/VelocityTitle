@@ -15,7 +15,7 @@ public enum PlayerWear implements SQLTable {
     PLAYER_WEAR((table) -> {
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("uuid", "VARCHAR(38) NOT NULL");
-        table.addColumn("name", "VARCHAR(38) NOT NULL");
+        table.addColumn("name", "VARCHAR(64) NOT NULL");
         table.addColumn("prefix", "VARCHAR(256)");
         table.addColumn("suffix", "VARCHAR(256)");
 
