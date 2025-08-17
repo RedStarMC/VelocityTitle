@@ -55,15 +55,15 @@ public class VelocityTitleVelocity {
         logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"),
                 config.getConfigToml().getBoolean("debug-mode"));
 
-        logger.info(config.getConfigToml().getString("loading"));
-        logger.info(config.getConfigToml().getString("author")," pingguomc");
-        logger.debug(config.getConfigToml().getString("debug"));
-        logger.info(config.getConfigToml().getString("website")," https://github.com/RedStarMC/VelocityTitle");
+        logger.info(language.getConfigToml().getString("logs.loading"));
+        logger.info(language.getConfigToml().getString("logs.author")," pingguomc");
+        logger.debug(language.getConfigToml().getString("logs.debug"));
+        logger.info(language.getConfigToml().getString("logs.website")," https://github.com/RedStarMC/VelocityTitle");
 
-        logger.info(config.getConfigToml().getString("command-loading"));
+        logger.info(language.getConfigToml().getString("logs.command-loading"));
         registerCommand();
 
-        logger.info(config.getConfigToml().getString("database-loading"));
+        logger.info(language.getConfigToml().getString("logs.database-loading"));
         DBManager = new EasySQLManager(logger, config, language);
         DBManager.init();
 
