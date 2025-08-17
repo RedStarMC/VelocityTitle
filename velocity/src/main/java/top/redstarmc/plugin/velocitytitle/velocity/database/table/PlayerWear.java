@@ -11,13 +11,15 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
-public enum UUID implements SQLTable {
-    UUID((table) -> {
+public enum PlayerWear implements SQLTable {
+    PLAYER_WEAR((table) -> {
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
-        table.addColumn("name", "VARCHAR(30) NOT NULL");
         table.addColumn("uuid", "VARCHAR(38) NOT NULL");
+        table.addColumn("name", "VARCHAR(38) NOT NULL");
+        table.addColumn("prefix", "VARCHAR(256)");
+        table.addColumn("suffix", "VARCHAR(256)");
 
-        table.setIndex("name", IndexType.UNIQUE_KEY);
+        table.setIndex("uuid", IndexType.UNIQUE_KEY);
     });
 
     private final Consumer<TableCreateBuilder> builder;
@@ -25,7 +27,7 @@ public enum UUID implements SQLTable {
 
     private static final String tableName = "Velocity_UUID";
 
-    UUID(Consumer<TableCreateBuilder> builder) {
+    PlayerWear(Consumer<TableCreateBuilder> builder) {
         this.builder = builder;
     }
 
@@ -47,6 +49,10 @@ public enum UUID implements SQLTable {
         if (builder != null) builder.accept(tableBuilder);
 
         return tableBuilder.build().executeFunction(l -> l > 0, false);
+    }
+
+    public static void initialize(SQLManager sqlManager) throws SQLException {
+        PLAYER_WEAR.create(sqlManager);
     }
 
 }

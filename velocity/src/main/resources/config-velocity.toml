@@ -5,7 +5,7 @@
 version = "@VERSION@"
 
 # 插件提示前缀（可以使用 & 符号）
-plugin-prefix = "VelocityTitle"
+plugin-prefix = "[VelocityTitle] "
 
 # 是否开启 Debug 模式
 debug-mode = true

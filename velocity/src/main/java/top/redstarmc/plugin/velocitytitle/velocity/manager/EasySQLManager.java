@@ -5,12 +5,16 @@ import cc.carm.lib.easysql.hikari.HikariConfig;
 import cc.carm.lib.easysql.hikari.HikariDataSource;
 import cc.carm.lib.easysql.manager.SQLManagerImpl;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DebugHandler;
+import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
+import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
+import top.redstarmc.plugin.velocitytitle.velocity.database.table.PrefixDictionary;
+import top.redstarmc.plugin.velocitytitle.velocity.database.table.SuffixDictionary;
 
 import java.sql.SQLException;
 
 /**
- * <h1>Êı¾İ¿â¹ÜÀíÆ÷</h1>
- * Ê¹ÓÃ {@link cc.carm.lib.easysql.EasySQL} Êı¾İ¿â²Ù×÷¿â¡£
+ * <h1>æ•°æ®åº“ç®¡ç†å™¨</h1>
+ * ä½¿ç”¨ {@link cc.carm.lib.easysql.EasySQL} æ•°æ®åº“æ“ä½œåº“ã€‚
  */
 public class EasySQLManager {
 
@@ -29,8 +33,8 @@ public class EasySQLManager {
     }
 
     /**
-     * <h2>³õÊ¼»¯Êı¾İ¿â</h2>
-     * ´Ó {@link top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity } µ÷ÓÃ¡£Êı¾İ¿âÈë¿Ú·½·¨¡£
+     * <h2>åˆå§‹åŒ–æ•°æ®åº“</h2>
+     * ä» {@link top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity } è°ƒç”¨ã€‚æ•°æ®åº“å…¥å£æ–¹æ³•ã€‚
      */
     public void init(){
         String mode = config.getConfigToml().getString("database.mode");
@@ -54,7 +58,15 @@ public class EasySQLManager {
                 logger.error(language.getConfigToml().getString("database.timeout"));
             }
 
-            // ×¢²áÊı¾İ±í
+            // æ³¨å†Œæ•°æ®è¡¨
+            logger.debugDataBase("æ­£åœ¨æ³¨å†Œæ•°æ®è¡¨");
+
+            PrefixDictionary.initialize(sqlManager);
+            SuffixDictionary.initialize(sqlManager);
+            PlayerTitles.initialize(sqlManager);
+            PlayerWear.initialize(sqlManager);
+
+            logger.debugDataBase("æ•°æ®è¡¨æ³¨å†Œå®Œæ¯•");
 
         } catch (SQLException e) {
             logger.error(language.getConfigToml().getString("database.failed"));
@@ -63,7 +75,7 @@ public class EasySQLManager {
     }
 
     /**
-     * ³õÊ¼»¯Ç¶ÈëÊ½Êı¾İ¿âµÄ {@link cc.carm.lib.easysql.api.SQLManager}
+     * åˆå§‹åŒ–åµŒå…¥å¼æ•°æ®åº“çš„ {@link cc.carm.lib.easysql.api.SQLManager}
      */
     private void initEmbedded(){
         String diver = config.getConfigToml().getString("database.driver");
@@ -77,7 +89,7 @@ public class EasySQLManager {
     }
 
     /**
-     * ³õÊ¼»¯·şÎñÆ÷£¨Ô¶³ÌÁ´½Ó£©Êı¾İ¿âµÄ {@link cc.carm.lib.easysql.api.SQLManager}
+     * åˆå§‹åŒ–æœåŠ¡å™¨ï¼ˆè¿œç¨‹é“¾æ¥ï¼‰æ•°æ®åº“çš„ {@link cc.carm.lib.easysql.api.SQLManager}
      */
     private void initServer(){
         String diver = config.getConfigToml().getString("database.driver");
