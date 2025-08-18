@@ -25,7 +25,7 @@ public class Listener {
 
         if (player == null) return;
 
-        PlayerWearOperate.ReplaceUUID(EasySQLManager.getSqlManager(), player.getUniqueId().toString(), name);
+        PlayerWearOperate.replaceUUID(EasySQLManager.getSqlManager(), player.getUniqueId().toString(), name);
     }
 
 

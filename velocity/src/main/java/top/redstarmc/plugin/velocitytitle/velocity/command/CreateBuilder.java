@@ -5,7 +5,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
+import top.redstarmc.plugin.velocitytitle.velocity.database.operate.PrefixDictionaryOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.database.operate.SuffixDictionaryOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
 
 /**
@@ -46,19 +49,28 @@ public class CreateBuilder extends CommandBuilder{
                             ));
                             return Command.SINGLE_SUCCESS;
                         })
-                        .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.greedyString())
-                                .executes(context -> {
-                                    String name = context.getArgument("name", String.class);
-                                    String display = context.getArgument("display", String.class);
+                        .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
+                                        .executes(context -> {
+                                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                                    language.getConfigToml().getString("commands.parameter-less")
+                                            ));
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                        .then(BrigadierCommand.requiredArgumentBuilder("description", StringArgumentType.greedyString())
+                                                .executes(context -> {
+                                                    String name = context.getArgument("name", String.class);
+                                                    String display = context.getArgument("display", String.class);
+                                                    String description = context.getArgument("description", String.class);
 
-                                    // TODO 创建操作
+                                                    PrefixDictionaryOperate.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
 
-                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                            language.getConfigToml().getString("commands.create-success")
-                                    ));
+                                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                                            language.getConfigToml().getString("commands.create-success")
+                                                    ));
 
-                                    return Command.SINGLE_SUCCESS;
-                                })
+                                                    return Command.SINGLE_SUCCESS;
+                                                })
+                                        )
                         )
                 );
     }
@@ -79,19 +91,28 @@ public class CreateBuilder extends CommandBuilder{
                             ));
                             return Command.SINGLE_SUCCESS;
                         })
-                        .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.greedyString())
+                        .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
                                 .executes(context -> {
-                                    String name = context.getArgument("name", String.class);
-                                    String display = context.getArgument("display", String.class);
-
-                                    // TODO 创建操作
-
                                     context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                            language.getConfigToml().getString("commands.create-success")
+                                            language.getConfigToml().getString("commands.parameter-less")
                                     ));
-
                                     return Command.SINGLE_SUCCESS;
                                 })
+                                .then(BrigadierCommand.requiredArgumentBuilder("description", StringArgumentType.greedyString())
+                                        .executes(context -> {
+                                            String name = context.getArgument("name", String.class);
+                                            String display = context.getArgument("display", String.class);
+                                            String description = context.getArgument("description", String.class);
+
+                                            SuffixDictionaryOperate.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
+
+                                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                                    language.getConfigToml().getString("commands.create-success")
+                                            ));
+
+                                            return Command.SINGLE_SUCCESS;
+                                        })
+                                )
                         )
                 );
     }

@@ -20,8 +20,12 @@ public abstract class CommandBuilder {
                     return Command.SINGLE_SUCCESS;
                 })
                 .then(new CreateBuilder().build(language))
+                .then(new DeleteBuilder().build(language))
+                .then(new GiveBuilder().build(language))
+                .then(new HelpBuilder().build(language))
+                .then(new ReloadBuilder().build(language))
+                .then(new RevokeBuilder().build(language))
                 .build();
-
     }
 
     public static final ProxyServer proxyServer = VelocityTitleVelocity.getInstance().getServer();

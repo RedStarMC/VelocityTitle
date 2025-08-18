@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 /**
- * <h1>ÎÄ±¾ĞòÁĞºÅÆ÷</h1>
+ * <h1>æ–‡æœ¬åºåˆ—å·å™¨</h1>
  */
 public class TextSerializers {
 
