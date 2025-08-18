@@ -1,14 +1,15 @@
 repositories {
-    maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
-    maven { url 'https://repo.helpch.at/releases' }
+    // PlaceholderAPI 仓库
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 }
 
 dependencies {
-    implementation project(':core')
-    compileOnly "org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT"
-    compileOnly 'me.clip:placeholderapi:2.11.6'
-}
+    // Spigot API
+    compileOnly 'org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT'
 
-jar {
-    archiveBaseName.set("VelocityTitle-Spigot")  // 基础名称
+    // PlaceholderAPI
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+
+    // Core 模块
+    implementation project(':core')
 }

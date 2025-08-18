@@ -1,50 +1,69 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-plugins{
+plugins {
     id 'java-library'
 }
 
-def now_version = "0.1.2"
+def now_version = "1.0.0"
 
 allprojects {
     apply {
         plugin 'java-library'
     }
-
-    group = 'top.redstarmc.plugin.velocitytitle'
-
+    
+    group = 'org.example.flashytitles'
     version = now_version
 
+    // 作者信息
+    ext.author = 'maple'
+    
     repositories {
-        mavenCentral()  //Maven 存储库
-        maven { url 'https://repo.codemc.io/repository/maven-releases/' }
+        mavenCentral()
+        // Velocity 仓库
+        maven {
+            name = 'velocity'
+            url = 'https://nexus.velocitypowered.com/repository/maven-public/'
+        }
+        // PaperMC 仓库
+        maven {
+            name = 'papermc'
+            url = 'https://repo.papermc.io/repository/maven-public/'
+        }
+        // 阿里云镜像
+        maven { url = 'https://maven.aliyun.com/repository/central' }
+        maven { url = 'https://maven.aliyun.com/repository/public' }
     }
-
+    
     dependencies {
-        compileOnly 'org.jetbrains:annotations:23.0.0'
-        implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-        implementation 'cc.carm.lib:easysql-hikaricp:0.4.7'
+        compileOnly 'org.jetbrains:annotations:24.0.1'
+        implementation 'com.google.code.gson:gson:2.10.1'
+        implementation 'com.zaxxer:HikariCP:5.0.1'
+        implementation 'mysql:mysql-connector-java:8.0.33'
+        implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+        implementation 'redis.clients:jedis:4.4.3'
+        // H2 数据库
+        implementation 'com.h2database:h2:2.2.224'
     }
-
-
+    
     // 编译 固定 UTF-8 编码
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
+        options.release = 17
     }
+    
     // Javadoc 固定 UTF-8 编码
     tasks.withType(Javadoc).tap {
         configureEach {
             options.encoding = "UTF-8"
         }
     }
-
-    // 固定使用 Java19
+    
+    // 固定使用 Java 17
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(19))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
     }
-
+    
     processResources {
-        // 匹配所有资源文件
         filesMatching('**/*') {
             filter(ReplaceTokens, tokens: [encoding: 'UTF-8'])
             filter { Object line ->
@@ -53,57 +72,54 @@ allprojects {
         }
         filteringCharset = 'UTF-8'
     }
-
 }
 
 subprojects {
-    // 1. 配置原始 Jar 任务（包含自身代码和core模块代码）
+    // 1. 配置原始 Jar 任务
     tasks.withType(Jar).tap {
         configureEach {
             group = 'build'
             destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
-            archiveClassifier.set('original') // 明确标记为原始 JAR
-
-            // 包含自身代码、资源和core模块代码
+            archiveClassifier.set('original')
+            
             from sourceSets.main.output
-            // 仅对velocity和spigot模块添加core代码
-            if (project.name in ['velocity', 'spigot']) {
+            
+            // 对velocity、spigot、fabric、neoforge模块添加core代码
+            if (project.name in ['velocity', 'spigot', 'fabric', 'neoforge']) {
                 from project(':core').sourceSets.main.output
             }
         }
     }
-
-    // 2. 配置包含依赖的 JAR 任务（xxx.jar）
+    
+    // 2. 配置包含依赖的 JAR 任务
     tasks.register('jarWithDependencies', Jar) {
         group = 'build'
         destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
         archiveBaseName.set(jar.archiveBaseName)
         archiveClassifier.set('')
-
+        
         from {
-            sourceSets.main.output // 包含当前模块的代码和资源
-            // 仅对velocity和spigot模块添加core代码
-            if (project.name in ['velocity', 'spigot']) {
+            sourceSets.main.output
+            
+            if (project.name in ['velocity', 'spigot', 'fabric', 'neoforge']) {
                 project(':core').sourceSets.main.output
             }
         }
-
-        // 收集外部依赖（排除项目内的 original.jar）
+        
         from {
             configurations.runtimeClasspath.collect { file ->
-                // 排除项目内生成的 original.jar（避免重复打包）
                 if (file.name.endsWith("-original.jar")) {
-                    null // 跳过 original.jar
+                    null
                 } else {
                     file.isDirectory() ? file : zipTree(file)
                 }
-            }.findAll { it != null } // 过滤掉 null 值
+            }.findAll { it != null }
         }
-
+        
         exclude 'META-INF/*', '*.MF'
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
-
+    
     // 3. 确保 build 任务同时执行两个 JAR 任务
     tasks.named('build') {
         dependsOn(tasks.named('jar'), tasks.named('jarWithDependencies'))
@@ -112,31 +128,30 @@ subprojects {
 
 tasks.register('createAllJar', Jar) {
     group = 'build'
-
-    archiveBaseName.set('VelocityTitle')
+    archiveBaseName.set('FlashyTitles-Complete')
     archiveVersion.set(now_version)
-
-    // 收集所有子模块的类文件和资源文件
+    
     from {
         subprojects.collect { subproject ->
-            [subproject.file("build/classes/java/main"),
-             subproject.file("build/resources/main")].findAll { it != null && it.exists() }
+            [subproject.file("build/classes/java/main"), 
+             subproject.file("build/resources/main")].findAll { 
+                it != null && it.exists() 
+            }
         }
     }
-
-    // 收集所有子模块的依赖
+    
     from {
         subprojects.collectMany { subproject ->
-            subproject.configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+            subproject.configurations.runtimeClasspath.collect { 
+                it.isDirectory() ? it : zipTree(it) 
+            }
         }
     }
-
+    
     exclude 'META-INF/*', '*.MF'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
     destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
-
-    // 添加对子模块构建任务的依赖
+    
     subprojects.each { project ->
         dependsOn project.tasks.named('build')
     }

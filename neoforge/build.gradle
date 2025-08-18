@@ -1,0 +1,43 @@
+// 暂时使用标准 Java 插件，避免 NeoForge Gradle 插件的复杂性
+plugins {
+    id 'java'
+}
+
+repositories {
+    maven { url = 'https://maven.aliyun.com/repository/central' }
+    maven { url = 'https://maven.aliyun.com/repository/public' }
+    maven { url = 'https://maven.neoforged.net/releases' }
+    mavenCentral()
+}
+
+dependencies {
+    // Core 模块
+    implementation project(':core')
+
+    // 基础依赖
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'org.slf4j:slf4j-api:2.0.7'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withSourcesJar()
+}
+
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    inputs.property "version", project.version
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
