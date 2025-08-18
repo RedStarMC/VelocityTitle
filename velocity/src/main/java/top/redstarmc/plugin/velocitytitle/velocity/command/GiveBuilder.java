@@ -7,6 +7,6 @@ import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 public class GiveBuilder extends CommandBuilder{
     @Override
     public LiteralArgumentBuilder<CommandSource> build(ConfigManager language) {
-        return null;
+        return LiteralArgumentBuilder.<CommandSource>literal("give");
     }
 }

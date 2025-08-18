@@ -14,4 +14,13 @@ public class PrefixDictionaryOperate implements EasySQLOperate {
                 );
     }
 
+    public static void deleteTitle(SQLManager sqlManager, String name){
+        sqlManager.createDelete(PrefixDictionary.PREFIX_DICTIONARY.getTableName())
+                .addCondition("name", name)
+                .build()
+                .executeAsync((query) -> {},
+                        ((exception, sqlAction) -> logger.crash(exception,language.getConfigToml().getString("database.failed-operate")))
+                );
+    }
+
 }

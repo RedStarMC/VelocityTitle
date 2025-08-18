@@ -13,4 +13,13 @@ public class SuffixDictionaryOperate implements EasySQLOperate {
                         ((exception, sqlAction) -> logger.crash(exception,language.getConfigToml().getString("database.failed-operate")))
                 );
     }
+
+    public static void deleteTitle(SQLManager sqlManager, String name){
+        sqlManager.createDelete(SuffixDictionary.SUFFIX_DICTIONARY.getTableName())
+                .addCondition("name", name)
+                .build()
+                .executeAsync((query) -> {},
+                        ((exception, sqlAction) -> logger.crash(exception,language.getConfigToml().getString("database.failed-operate")))
+                );
+    }
 }
