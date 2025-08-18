@@ -311,23 +311,65 @@ public class TitleCommand implements SimpleCommand {
         
         String id = args[1];
         String raw = args[2];
-        
+
+        // 验证称号ID格式
+        if (!id.matches("^[a-zA-Z0-9_-]+$")) {
+            source.sendMessage(Component.text("称号ID只能包含字母、数字、下划线和连字符", NamedTextColor.RED));
+            return;
+        }
+
+        // 验证称号ID长度
+        if (id.length() > 32) {
+            source.sendMessage(Component.text("称号ID长度不能超过32个字符", NamedTextColor.RED));
+            return;
+        }
+
+        // 验证称号文本长度
+        if (raw.length() > 128) {
+            source.sendMessage(Component.text("称号文本长度不能超过128个字符", NamedTextColor.RED));
+            return;
+        }
+
         try {
             int price = Integer.parseInt(args[3]);
+
+            // 验证价格范围
+            if (price < 0) {
+                source.sendMessage(Component.text("价格不能为负数", NamedTextColor.RED));
+                return;
+            }
+
+            if (price > 1000000) {
+                source.sendMessage(Component.text("价格不能超过1,000,000", NamedTextColor.RED));
+                return;
+            }
+
             boolean animated = args.length > 4 && Boolean.parseBoolean(args[4]);
             String permission = args.length > 5 ? args[5] : null;
             String description = args.length > 6 ? String.join(" ", Arrays.copyOfRange(args, 6, args.length)) : "";
-            
+
+            // 验证描述长度
+            if (description.length() > 256) {
+                source.sendMessage(Component.text("描述长度不能超过256个字符", NamedTextColor.RED));
+                return;
+            }
+
+            // 检查称号是否已存在
+            if (titleManager.getTitle(id) != null) {
+                source.sendMessage(Component.text("称号ID已存在: " + id, NamedTextColor.RED));
+                return;
+            }
+
             titleManager.createTitle(id, raw, price, animated, permission, description).thenAccept(success -> {
                 if (success) {
                     source.sendMessage(Component.text("成功创建称号: " + id, NamedTextColor.GREEN));
                 } else {
-                    source.sendMessage(Component.text("创建称号失败", NamedTextColor.RED));
+                    source.sendMessage(Component.text("创建称号失败，请检查日志获取详细信息", NamedTextColor.RED));
                 }
             });
-            
+
         } catch (NumberFormatException e) {
-            source.sendMessage(Component.text("无效的价格: " + args[3], NamedTextColor.RED));
+            source.sendMessage(Component.text("无效的价格格式: " + args[3] + "，请输入有效的数字", NamedTextColor.RED));
         }
     }
     
@@ -422,9 +464,25 @@ public class TitleCommand implements SimpleCommand {
             source.sendMessage(Component.text("你没有权限执行此命令", NamedTextColor.RED));
             return;
         }
-        
-        // TODO: 实现重载功能
-        source.sendMessage(Component.text("重载功能暂未实现", NamedTextColor.YELLOW));
+
+        source.sendMessage(Component.text("正在重载配置...", NamedTextColor.YELLOW));
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                // 重载配置文件
+                titleManager.getConfigManager().loadConfig();
+
+                // 重新加载称号缓存
+                titleManager.reloadTitles();
+
+                source.sendMessage(Component.text("配置重载完成！", NamedTextColor.GREEN));
+                logger.info("管理员 {} 重载了配置", source.toString());
+
+            } catch (Exception e) {
+                source.sendMessage(Component.text("配置重载失败: " + e.getMessage(), NamedTextColor.RED));
+                logger.error("配置重载失败", e);
+            }
+        });
     }
     
     private void sendHelp(CommandSource source) {

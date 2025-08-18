@@ -35,20 +35,33 @@ public class AnimationUtil {
         if (raw == null || raw.isEmpty()) {
             return raw;
         }
-        
-        // 检测动画类型
-        if (raw.contains("{rainbow}")) {
-            return renderRainbow(raw, tick);
-        } else if (raw.contains("{gradient}")) {
-            return renderGradient(raw, tick);
-        } else if (raw.contains("{blink}")) {
-            return renderBlink(raw, tick);
-        } else if (raw.contains("{wave}")) {
-            return renderWave(raw, tick);
-        } else if (containsMultipleColors(raw)) {
-            return renderColorCycle(raw, tick);
+
+        // 限制文本长度，防止性能问题
+        if (raw.length() > 256) {
+            raw = raw.substring(0, 256);
         }
-        
+
+        // 确保tick值在合理范围内，防止溢出
+        tick = Math.abs(tick % 10000);
+
+        try {
+            // 检测动画类型
+            if (raw.contains("{rainbow}")) {
+                return renderRainbow(raw, tick);
+            } else if (raw.contains("{gradient}")) {
+                return renderGradient(raw, tick);
+            } else if (raw.contains("{blink}")) {
+                return renderBlink(raw, tick);
+            } else if (raw.contains("{wave}")) {
+                return renderWave(raw, tick);
+            } else if (containsMultipleColors(raw)) {
+                return renderColorCycle(raw, tick);
+            }
+        } catch (Exception e) {
+            // 如果动画渲染失败，返回静态文本
+            return getStaticDisplay(raw);
+        }
+
         return raw;
     }
     
@@ -70,19 +83,25 @@ public class AnimationUtil {
     private static String renderRainbow(String raw, int tick) {
         String text = raw.replace("{rainbow}", "");
         StringBuilder result = new StringBuilder();
-        
+
         // 移除现有颜色代码
         String cleanText = text.replaceAll("§[0-9a-fk-or]", "");
-        
+
+        // 确保有颜色数组
+        if (RAINBOW_COLORS.length == 0) {
+            return cleanText;
+        }
+
         for (int i = 0; i < cleanText.length(); i++) {
             char c = cleanText.charAt(i);
             if (c != ' ') {
-                int colorIndex = (tick / 2 + i) % RAINBOW_COLORS.length;
+                // 安全的数组访问
+                int colorIndex = Math.abs((tick / 2 + i)) % RAINBOW_COLORS.length;
                 result.append(RAINBOW_COLORS[colorIndex]);
             }
             result.append(c);
         }
-        
+
         return result.toString();
     }
     

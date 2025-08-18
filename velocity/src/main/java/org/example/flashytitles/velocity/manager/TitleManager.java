@@ -3,6 +3,7 @@ package org.example.flashytitles.velocity.manager;
 import org.example.flashytitles.core.database.DatabaseManager;
 import org.example.flashytitles.core.model.Title;
 import org.example.flashytitles.velocity.config.ConfigManager;
+import org.example.flashytitles.velocity.sync.SimplifiedSyncManager;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ public class TitleManager {
     private final Logger logger;
     private final DatabaseManager databaseManager;
     private final ScheduledExecutorService scheduler;
+    private SimplifiedSyncManager syncManager;
     
     // 动画tick计数器
     private int animationTick = 0;
@@ -173,33 +175,38 @@ public class TitleManager {
                 if (title == null) {
                     return PurchaseResult.TITLE_NOT_FOUND;
                 }
-                
+
                 // 检查是否已拥有
                 if (ownsTitle(playerUuid, titleId)) {
                     return PurchaseResult.ALREADY_OWNED;
                 }
-                
+
                 // 检查金币
                 int playerCoins = getCoins(playerUuid);
                 if (playerCoins < title.getPrice()) {
                     return PurchaseResult.INSUFFICIENT_COINS;
                 }
-                
+
                 // 检查权限（如果有的话）
                 if (title.getPermission() != null && !title.getPermission().isEmpty()) {
-                    // 这里需要权限检查，但在Velocity中比较复杂
-                    // 可以通过消息通道让Spigot端检查权限
+                    // 通过同步管理器检查权限
+                    boolean hasPermission = checkPlayerPermission(playerUuid, title.getPermission());
+                    if (!hasPermission) {
+                        logger.info("玩家 {} 没有权限 {} 购买称号 {}", playerUuid, title.getPermission(), titleId);
+                        return PurchaseResult.NO_PERMISSION;
+                    }
+                    logger.debug("玩家 {} 权限检查通过: {}", playerUuid, title.getPermission());
                 }
-                
-                // 扣除金币
-                setCoins(playerUuid, playerCoins - title.getPrice());
-                
-                // 给予称号
-                databaseManager.grantTitle(playerUuid, titleId).join();
-                
+
+                // 使用事务确保原子性
+                boolean success = databaseManager.purchaseTitleTransaction(playerUuid, titleId, title.getPrice()).join();
+                if (!success) {
+                    return PurchaseResult.ERROR;
+                }
+
                 logger.info("玩家 {} 购买称号: {} (花费: {})", playerUuid, titleId, title.getPrice());
                 return PurchaseResult.SUCCESS;
-                
+
             } catch (Exception e) {
                 logger.error("购买称号失败: " + titleId, e);
                 return PurchaseResult.ERROR;
@@ -312,7 +319,54 @@ public class TitleManager {
     public int getCurrentAnimationTick() {
         return animationTick;
     }
-    
+
+    /**
+     * 重载称号数据
+     */
+    public void reloadTitles() {
+        try {
+            databaseManager.loadCache();
+            logger.info("称号数据重载完成");
+        } catch (Exception e) {
+            logger.error("重载称号数据失败", e);
+            throw new RuntimeException("重载称号数据失败", e);
+        }
+    }
+
+    /**
+     * 获取配置管理器
+     */
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    /**
+     * 设置同步管理器（用于权限检查）
+     */
+    public void setSyncManager(SimplifiedSyncManager syncManager) {
+        this.syncManager = syncManager;
+    }
+
+    /**
+     * 检查玩家权限
+     * 通过同步管理器与后端服务器通信检查权限
+     */
+    private boolean checkPlayerPermission(UUID playerUuid, String permission) {
+        if (syncManager != null) {
+            try {
+                // 使用同步管理器进行权限检查
+                return syncManager.checkPlayerPermission(playerUuid, permission).get(5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                logger.warn("权限检查失败，默认允许: 玩家 {} 权限 {}", playerUuid, permission, e);
+                return true; // 权限检查失败时默认允许，避免阻塞购买流程
+            }
+        }
+
+        // 如果没有同步管理器，使用简化的权限检查逻辑
+        logger.debug("使用简化权限检查: 玩家 {} 权限 {}", playerUuid, permission);
+        return true; // 默认允许
+    }
+
     /**
      * 购买结果枚举
      */

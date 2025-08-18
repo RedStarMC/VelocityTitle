@@ -11,7 +11,7 @@ import org.example.flashytitles.velocity.command.TitleCommand;
 import org.example.flashytitles.velocity.config.ConfigManager;
 import org.example.flashytitles.velocity.listener.PlayerListener;
 import org.example.flashytitles.velocity.manager.TitleManager;
-import org.example.flashytitles.velocity.sync.SyncManager;
+import org.example.flashytitles.velocity.sync.SimplifiedSyncManager;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
@@ -33,7 +33,7 @@ public class FlashyTitlesVelocity {
     
     private ConfigManager configManager;
     private TitleManager titleManager;
-    private SyncManager syncManager;
+    private SimplifiedSyncManager syncManager;
     
     @Inject
     public FlashyTitlesVelocity(ProxyServer server, Logger logger, @DataDirectory Path dataDirectory) {
@@ -57,8 +57,11 @@ public class FlashyTitlesVelocity {
             titleManager.initialize();
             
             // 初始化同步管理器
-            syncManager = new SyncManager(configManager, titleManager, server, logger);
+            syncManager = new SimplifiedSyncManager(configManager, titleManager, server, logger);
             syncManager.initialize();
+
+            // 设置同步管理器到称号管理器（用于权限检查）
+            titleManager.setSyncManager(syncManager);
             
             // 注册命令
             server.getCommandManager().register("title", new TitleCommand(titleManager, server, logger));
@@ -101,5 +104,5 @@ public class FlashyTitlesVelocity {
     public Logger getLogger() { return logger; }
     public ConfigManager getConfigManager() { return configManager; }
     public TitleManager getTitleManager() { return titleManager; }
-    public SyncManager getSyncManager() { return syncManager; }
+    public SimplifiedSyncManager getSyncManager() { return syncManager; }
 }

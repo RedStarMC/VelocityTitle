@@ -32,8 +32,45 @@ public class DatabaseManager {
      * 初始化数据库连接
      */
     public void initialize() throws SQLException {
+        int maxRetries = 3;
+        int retryDelay = 5000; // 5秒
+
+        for (int attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                initializeConnection();
+
+                // 创建表
+                createTables();
+
+                // 加载缓存
+                loadCache();
+
+                System.out.println("数据库初始化成功 (尝试 " + attempt + "/" + maxRetries + ")");
+                return;
+
+            } catch (SQLException e) {
+                System.err.println("数据库初始化失败 (尝试 " + attempt + "/" + maxRetries + "): " + e.getMessage());
+
+                if (attempt == maxRetries) {
+                    throw new SQLException("数据库初始化失败，已尝试 " + maxRetries + " 次", e);
+                }
+
+                try {
+                    Thread.sleep(retryDelay);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new SQLException("数据库初始化被中断", ie);
+                }
+            }
+        }
+    }
+
+    /**
+     * 初始化数据库连接配置
+     */
+    private void initializeConnection() throws SQLException {
         HikariConfig hikariConfig = new HikariConfig();
-        
+
         if (config.getType().equalsIgnoreCase("mysql")) {
             hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%d/%s?useSSL=false&serverTimezone=UTC&characterEncoding=utf8",
                     config.getHost(), config.getPort(), config.getDatabase()));
@@ -41,23 +78,37 @@ public class DatabaseManager {
             hikariConfig.setPassword(config.getPassword());
             hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
         } else {
-            hikariConfig.setJdbcUrl("jdbc:sqlite:" + config.getSqliteFile());
-            hikariConfig.setDriverClassName("org.sqlite.JDBC");
+            // 默认使用H2数据库
+            String dbPath = config.getSqliteFile();
+            if (dbPath == null || dbPath.isEmpty()) {
+                dbPath = "./data/flashytitles";
+            }
+            hikariConfig.setJdbcUrl("jdbc:h2:file:" + dbPath + ";DB_CLOSE_DELAY=-1;MODE=MYSQL");
+            hikariConfig.setDriverClassName("org.h2.Driver");
+            hikariConfig.setUsername("sa");
+            hikariConfig.setPassword("");
         }
-        
+
+        // 连接池配置
         hikariConfig.setMaximumPoolSize(10);
         hikariConfig.setMinimumIdle(2);
         hikariConfig.setConnectionTimeout(30000);
         hikariConfig.setIdleTimeout(600000);
         hikariConfig.setMaxLifetime(1800000);
-        
+        hikariConfig.setLeakDetectionThreshold(60000);
+
+        // 连接验证
+        hikariConfig.setConnectionTestQuery("SELECT 1");
+        hikariConfig.setValidationTimeout(3000);
+
         dataSource = new HikariDataSource(hikariConfig);
-        
-        // 创建表
-        createTables();
-        
-        // 加载缓存
-        loadCache();
+
+        // 测试连接
+        try (Connection conn = dataSource.getConnection()) {
+            if (!conn.isValid(5)) {
+                throw new SQLException("数据库连接验证失败");
+            }
+        }
     }
     
     /**
@@ -118,7 +169,7 @@ public class DatabaseManager {
     /**
      * 加载缓存
      */
-    private void loadCache() throws SQLException {
+    public void loadCache() throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             // 加载称号
             try (Statement stmt = conn.createStatement();
@@ -173,17 +224,19 @@ public class DatabaseManager {
     public CompletableFuture<Void> saveTitle(Title title) {
         return CompletableFuture.runAsync(() -> {
             try (Connection conn = dataSource.getConnection()) {
-                String sql = """
-                    INSERT INTO flashy_titles (id, raw, price, animated, permission, description) 
-                    VALUES (?, ?, ?, ?, ?, ?) 
-                    ON DUPLICATE KEY UPDATE 
-                    raw = VALUES(raw), price = VALUES(price), animated = VALUES(animated), 
-                    permission = VALUES(permission), description = VALUES(description)
-                """;
-                
-                if (config.getType().equalsIgnoreCase("sqlite")) {
+                String sql;
+                if (config.getType().equalsIgnoreCase("mysql")) {
                     sql = """
-                        INSERT OR REPLACE INTO flashy_titles (id, raw, price, animated, permission, description) 
+                        INSERT INTO flashy_titles (id, raw, price, animated, permission, description)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE
+                        raw = VALUES(raw), price = VALUES(price), animated = VALUES(animated),
+                        permission = VALUES(permission), description = VALUES(description)
+                    """;
+                } else {
+                    // H2 和 SQLite 使用 MERGE 或 INSERT OR REPLACE
+                    sql = """
+                        MERGE INTO flashy_titles (id, raw, price, animated, permission, description)
                         VALUES (?, ?, ?, ?, ?, ?)
                     """;
                 }
@@ -248,8 +301,11 @@ public class DatabaseManager {
     public CompletableFuture<Void> grantTitle(UUID playerUuid, String titleId) {
         return CompletableFuture.runAsync(() -> {
             try (Connection conn = dataSource.getConnection()) {
-                String sql = "INSERT IGNORE INTO flashy_owned_titles (player_uuid, title_id) VALUES (?, ?)";
-                if (config.getType().equalsIgnoreCase("sqlite")) {
+                String sql;
+                if (config.getType().equalsIgnoreCase("mysql")) {
+                    sql = "INSERT IGNORE INTO flashy_owned_titles (player_uuid, title_id) VALUES (?, ?)";
+                } else {
+                    // H2 和 SQLite 使用 INSERT OR IGNORE
                     sql = "INSERT OR IGNORE INTO flashy_owned_titles (player_uuid, title_id) VALUES (?, ?)";
                 }
                 
@@ -359,15 +415,17 @@ public class DatabaseManager {
     public CompletableFuture<Void> setCoins(UUID playerUuid, int coins) {
         return CompletableFuture.runAsync(() -> {
             try (Connection conn = dataSource.getConnection()) {
-                String sql = """
-                    INSERT INTO flashy_coins (player_uuid, coins, updated_at) 
-                    VALUES (?, ?, CURRENT_TIMESTAMP) 
-                    ON DUPLICATE KEY UPDATE coins = VALUES(coins), updated_at = VALUES(updated_at)
-                """;
-                
-                if (config.getType().equalsIgnoreCase("sqlite")) {
+                String sql;
+                if (config.getType().equalsIgnoreCase("mysql")) {
                     sql = """
-                        INSERT OR REPLACE INTO flashy_coins (player_uuid, coins, updated_at) 
+                        INSERT INTO flashy_coins (player_uuid, coins, updated_at)
+                        VALUES (?, ?, CURRENT_TIMESTAMP)
+                        ON DUPLICATE KEY UPDATE coins = VALUES(coins), updated_at = VALUES(updated_at)
+                    """;
+                } else {
+                    // H2 和 SQLite 使用 MERGE
+                    sql = """
+                        MERGE INTO flashy_coins (player_uuid, coins, updated_at)
                         VALUES (?, ?, CURRENT_TIMESTAMP)
                     """;
                 }
@@ -389,11 +447,95 @@ public class DatabaseManager {
         int currentCoins = getCoins(playerUuid);
         return setCoins(playerUuid, currentCoins + amount);
     }
-    
+
     public int getCoins(UUID playerUuid) {
         return coinsCache.getOrDefault(playerUuid, 0);
     }
-    
+
+    /**
+     * 购买称号事务（原子操作）
+     */
+    public CompletableFuture<Boolean> purchaseTitleTransaction(UUID playerUuid, String titleId, int price) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection conn = dataSource.getConnection()) {
+                conn.setAutoCommit(false);
+
+                try {
+                    // 1. 检查并扣除金币
+                    String checkCoinsSQL = "SELECT coins FROM flashy_coins WHERE player_uuid = ?";
+                    int currentCoins = 0;
+
+                    try (PreparedStatement stmt = conn.prepareStatement(checkCoinsSQL)) {
+                        stmt.setString(1, playerUuid.toString());
+                        try (ResultSet rs = stmt.executeQuery()) {
+                            if (rs.next()) {
+                                currentCoins = rs.getInt("coins");
+                            }
+                        }
+                    }
+
+                    if (currentCoins < price) {
+                        conn.rollback();
+                        return false;
+                    }
+
+                    // 2. 扣除金币
+                    String updateCoinsSQL;
+                    if (config.getType().equalsIgnoreCase("mysql")) {
+                        updateCoinsSQL = """
+                            INSERT INTO flashy_coins (player_uuid, coins, updated_at)
+                            VALUES (?, ?, CURRENT_TIMESTAMP)
+                            ON DUPLICATE KEY UPDATE coins = VALUES(coins), updated_at = VALUES(updated_at)
+                        """;
+                    } else {
+                        // H2 和 SQLite 使用 MERGE
+                        updateCoinsSQL = """
+                            MERGE INTO flashy_coins (player_uuid, coins, updated_at)
+                            VALUES (?, ?, CURRENT_TIMESTAMP)
+                        """;
+                    }
+
+                    try (PreparedStatement stmt = conn.prepareStatement(updateCoinsSQL)) {
+                        stmt.setString(1, playerUuid.toString());
+                        stmt.setInt(2, Math.max(0, currentCoins - price));
+                        stmt.executeUpdate();
+                    }
+
+                    // 3. 给予称号
+                    String grantTitleSQL;
+                    if (config.getType().equalsIgnoreCase("mysql")) {
+                        grantTitleSQL = "INSERT IGNORE INTO flashy_owned_titles (player_uuid, title_id) VALUES (?, ?)";
+                    } else {
+                        // H2 和 SQLite 使用 INSERT OR IGNORE
+                        grantTitleSQL = "INSERT OR IGNORE INTO flashy_owned_titles (player_uuid, title_id) VALUES (?, ?)";
+                    }
+
+                    try (PreparedStatement stmt = conn.prepareStatement(grantTitleSQL)) {
+                        stmt.setString(1, playerUuid.toString());
+                        stmt.setString(2, titleId);
+                        stmt.executeUpdate();
+                    }
+
+                    // 4. 提交事务
+                    conn.commit();
+
+                    // 5. 更新缓存
+                    coinsCache.put(playerUuid, Math.max(0, currentCoins - price));
+                    ownedCache.computeIfAbsent(playerUuid, k -> ConcurrentHashMap.newKeySet()).add(titleId);
+
+                    return true;
+
+                } catch (SQLException e) {
+                    conn.rollback();
+                    throw e;
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException("购买称号事务失败", e);
+            }
+        });
+    }
+
     /**
      * 关闭数据库连接
      */

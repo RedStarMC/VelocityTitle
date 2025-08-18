@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,46 +37,52 @@ public class ConfigManager {
         if (!Files.exists(dataDirectory)) {
             Files.createDirectories(dataDirectory);
         }
-        
+
         // 如果配置文件不存在，创建默认配置
         if (!Files.exists(configFile)) {
             createDefaultConfig();
         }
-        
+
         // 加载配置
         try (Reader reader = Files.newBufferedReader(configFile)) {
             config = JsonParser.parseReader(reader).getAsJsonObject();
+        } catch (Exception e) {
+            logger.error("配置文件读取失败，使用默认配置: {}", e.getMessage());
+            // 备份损坏的配置文件
+            try {
+                Path backupFile = configFile.resolveSibling(configFile.getFileName() + ".backup");
+                Files.copy(configFile, backupFile, StandardCopyOption.REPLACE_EXISTING);
+                logger.info("已备份损坏的配置文件到: {}", backupFile);
+            } catch (IOException backupError) {
+                logger.warn("无法备份损坏的配置文件: {}", backupError.getMessage());
+            }
+            // 重新创建默认配置
+            createDefaultConfig();
         }
-        
+
         if (config == null) {
             config = new JsonObject();
         }
-        
+
+        // 验证配置完整性
+        validateConfig();
+
         logger.info("配置文件加载完成: {}", configFile);
     }
     
     private void createDefaultConfig() throws IOException {
         JsonObject defaultConfig = new JsonObject();
         
-        // 数据库配置 (使用H2数据库，兼容GitHub原仓库设计)
+        // 数据库配置 (默认使用H2数据库)
         JsonObject database = new JsonObject();
-        database.addProperty("type", "h2"); // h2, mysql 或 sqlite
+        database.addProperty("type", "h2"); // h2, mysql
         database.addProperty("host", "localhost");
         database.addProperty("port", 3306);
         database.addProperty("database", "flashy_titles");
         database.addProperty("username", "root");
         database.addProperty("password", "password");
-        database.addProperty("sqlite-file", "titles.db");
+        database.addProperty("sqlite-file", "./data/flashytitles"); // H2数据库文件路径
         defaultConfig.add("database", database);
-        
-        // Redis 配置 (用于实时同步)
-        JsonObject redis = new JsonObject();
-        redis.addProperty("enabled", false);
-        redis.addProperty("host", "localhost");
-        redis.addProperty("port", 6379);
-        redis.addProperty("password", "");
-        redis.addProperty("database", 0);
-        defaultConfig.add("redis", redis);
         
         // 称号配置
         JsonObject titles = new JsonObject();
@@ -118,6 +125,39 @@ public class ConfigManager {
         config = defaultConfig;
         logger.info("已创建默认配置文件: {}", configFile);
     }
+
+    /**
+     * 验证配置完整性
+     */
+    private void validateConfig() {
+        boolean needsUpdate = false;
+
+        // 检查必需的配置项
+        if (!config.has("database")) {
+            logger.warn("配置文件缺少database配置，将使用默认值");
+            needsUpdate = true;
+        }
+
+        if (!config.has("titles")) {
+            logger.warn("配置文件缺少titles配置，将使用默认值");
+            needsUpdate = true;
+        }
+
+        if (!config.has("sync")) {
+            logger.warn("配置文件缺少sync配置，将使用默认值");
+            needsUpdate = true;
+        }
+
+        // 如果需要更新，重新创建默认配置
+        if (needsUpdate) {
+            try {
+                createDefaultConfig();
+                logger.info("配置文件已更新为完整版本");
+            } catch (IOException e) {
+                logger.error("更新配置文件失败: {}", e.getMessage());
+            }
+        }
+    }
     
     // 数据库配置
     public DatabaseConfig getDatabaseConfig() {
@@ -137,25 +177,20 @@ public class ConfigManager {
         return config.getAsJsonObject("database").get("type").getAsString();
     }
     
-    // Redis 配置
-    public boolean isRedisEnabled() {
-        return config.getAsJsonObject("redis").get("enabled").getAsBoolean();
+    // 性能配置
+    public int getCacheSize() {
+        JsonObject perf = config.getAsJsonObject("performance");
+        return perf != null ? perf.get("cache-size").getAsInt() : 1000;
     }
-    
-    public String getRedisHost() {
-        return config.getAsJsonObject("redis").get("host").getAsString();
+
+    public int getConnectionPoolSize() {
+        JsonObject perf = config.getAsJsonObject("performance");
+        return perf != null ? perf.get("connection-pool-size").getAsInt() : 10;
     }
-    
-    public int getRedisPort() {
-        return config.getAsJsonObject("redis").get("port").getAsInt();
-    }
-    
-    public String getRedisPassword() {
-        return config.getAsJsonObject("redis").get("password").getAsString();
-    }
-    
-    public int getRedisDatabase() {
-        return config.getAsJsonObject("redis").get("database").getAsInt();
+
+    public int getQueryTimeout() {
+        JsonObject perf = config.getAsJsonObject("performance");
+        return perf != null ? perf.get("query-timeout").getAsInt() : 30;
     }
     
     // 称号配置
@@ -173,6 +208,11 @@ public class ConfigManager {
     
     public int getDefaultStartingCoins() {
         return config.getAsJsonObject("titles").get("default-starting-coins").getAsInt();
+    }
+
+    public int getMaxPrice() {
+        JsonObject titles = config.getAsJsonObject("titles");
+        return titles.has("max-price") ? titles.get("max-price").getAsInt() : 1000000;
     }
     
     // 同步配置
