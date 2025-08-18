@@ -20,7 +20,7 @@ public class ColoredConsole {
         MAP.put("§7", "\u001B[37m");
         MAP.put("§8", "\u001B[90m");
         MAP.put("§9", "\u001B[94m");
-        MAP.put("§a", "\u001B[92m");
+        MAP.put("§TextSerializers", "\u001B[92m");
         MAP.put("§b", "\u001B[96m");
         MAP.put("§c", "\u001B[91m");
         MAP.put("§d", "\u001B[95m");

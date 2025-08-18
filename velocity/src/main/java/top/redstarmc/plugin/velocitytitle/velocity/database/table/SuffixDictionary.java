@@ -16,6 +16,7 @@ public enum SuffixDictionary implements SQLTable {
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("name", "VARCHAR(256) NOT NULL"); // 作为索引
         table.addColumn("display", "VARCHAR(256) NOT NULL"); // 实际展示
+        table.addColumn("description","VARCHAR(256)"); // 描述
         table.setIndex("name", IndexType.UNIQUE_KEY);
     });
     private final Consumer<TableCreateBuilder> builder;

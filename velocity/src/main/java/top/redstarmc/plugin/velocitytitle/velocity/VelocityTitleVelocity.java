@@ -6,6 +6,7 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -76,6 +77,15 @@ public class VelocityTitleVelocity {
         logger.warn("警告");
         logger.error("错误");
         logger.debug("debug");
+    }
+
+    @Subscribe
+    public void onProxyReload(ProxyReloadEvent event){
+        loadConfiguration();
+        server.getCommandManager().unregister("VelocityTitle");
+        registerCommand();
+        DBManager.init();
+        logger.info(language.getConfigToml().getString("logs.reload"));
     }
 
     private void registerCommand(){
