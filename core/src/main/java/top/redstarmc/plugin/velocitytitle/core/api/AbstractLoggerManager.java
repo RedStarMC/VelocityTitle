@@ -12,8 +12,7 @@ public abstract class AbstractLoggerManager {
     public boolean debugMode;
 
     public AbstractLoggerManager(String INFO_PREFIX) {
-        this.INFO_PREFIX = INFO_PREFIX;
-        this.debugMode = false;
+        this(INFO_PREFIX, false);
     }
 
     public AbstractLoggerManager(String INFO_PREFIX, boolean debugMode) {

@@ -69,6 +69,9 @@ public class VelocityTitleVelocity {
         DBManager = new EasySQLManager(logger, config, language);
         DBManager.init();
 
+        logger.info(language.getConfigToml().getString("logs.listener-loading"));
+        server.getEventManager().register(this, new Listener());
+
         logger.info("测试");
         logger.warn("警告");
         logger.error("错误");

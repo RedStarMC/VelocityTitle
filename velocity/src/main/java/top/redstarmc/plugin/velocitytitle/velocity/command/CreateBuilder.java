@@ -10,7 +10,7 @@ public class CreateBuilder extends CommandBuilder{
     public LiteralArgumentBuilder<CommandSource> build(ConfigManager language) {
         return LiteralArgumentBuilder.<CommandSource>literal("create")
                 .executes(context -> {
-                    // ÃüÁî°ïÖú
+                    // å‘½ä»¤å¸®åŠ©
                     return Command.SINGLE_SUCCESS;
                 })
                 ;

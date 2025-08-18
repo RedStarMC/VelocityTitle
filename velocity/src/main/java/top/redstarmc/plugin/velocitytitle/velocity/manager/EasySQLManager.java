@@ -78,13 +78,19 @@ public class EasySQLManager {
      * 初始化嵌入式数据库的 {@link cc.carm.lib.easysql.api.SQLManager}
      */
     private void initEmbedded(){
-        String diver = config.getConfigToml().getString("database.driver");
+        String driver = config.getConfigToml().getString("database.driver");
         String url = config.getConfigToml().getString("database.url");
-        HikariConfig config = new HikariConfig();
-        config.setDriverClassName(diver);
-        config.setJdbcUrl(url);
+        String username = config.getConfigToml().getString("database.username");
+        String password = config.getConfigToml().getString("database.password");
 
-        sqlManager = new SQLManagerImpl(new HikariDataSource(config), "test");
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setDriverClassName(driver);
+        hikariConfig.setJdbcUrl(url);
+        // 新增：设置用户名和密码
+        hikariConfig.setUsername(username);
+        hikariConfig.setPassword(password);
+
+        sqlManager = new SQLManagerImpl(new HikariDataSource(hikariConfig), "test");
 
     }
 

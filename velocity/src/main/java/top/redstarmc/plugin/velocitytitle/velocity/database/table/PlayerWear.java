@@ -25,7 +25,7 @@ public enum PlayerWear implements SQLTable {
     private final Consumer<TableCreateBuilder> builder;
     private @Nullable SQLManager manager;
 
-    private static final String tableName = "Velocity_UUID";
+    private static final String tableName = "PLAYER_WEAR";
 
     PlayerWear(Consumer<TableCreateBuilder> builder) {
         this.builder = builder;

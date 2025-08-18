@@ -19,7 +19,7 @@ public abstract class CommandBuilder {
                             .append(text(language.getConfigToml().getString("commands.helps.open"))));
                     return Command.SINGLE_SUCCESS;
                 })
-                .then(CreateBuilder.init(language))
+                .then(new CreateBuilder().build(language))
                 .build();
 
     }

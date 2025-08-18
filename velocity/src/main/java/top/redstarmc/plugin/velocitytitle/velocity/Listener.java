@@ -8,14 +8,14 @@ import top.redstarmc.plugin.velocitytitle.velocity.database.operate.PlayerWearOp
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 
 /**
- * <h1>²å¼ş¼àÌıÆ÷</h1>
+ * <h1>æ’ä»¶ç›‘å¬å™¨</h1>
  */
 public class Listener {
 
     /**
-     * ½ø·şÊ±±£´æUUID£¬ÒÔ±ãÀëÏßÊ±²éÑé¡£
-     * ÆäÊµÊÇÎªÁËÊÊÅäÀëÏß·şÎñÆ÷
-     * @param event Á¬½Ó×Ó·şÊÂ¼ş
+     * è¿›æœæ—¶ä¿å­˜UUIDï¼Œä»¥ä¾¿ç¦»çº¿æ—¶æŸ¥éªŒã€‚
+     * å…¶å®æ˜¯ä¸ºäº†é€‚é…ç¦»çº¿æœåŠ¡å™¨
+     * @param event è¿æ¥å­æœäº‹ä»¶
      */
     @Subscribe
     public void onServerPostConnectEvent(@NotNull ServerPostConnectEvent event){

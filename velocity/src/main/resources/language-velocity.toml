@@ -16,6 +16,7 @@ mode = ""
 loading = "插件正在启动~~~"
 command-loading = "正在注册 命令 ……"
 database-loading = "正在加载 数据库 ……"
+listener-loading = "正在注册 监听器 ……"
 
 author = "插件作者："
 debug = "请注意！当前已启用 Debug 模式。"
