@@ -1,7 +1,25 @@
-name: VelocityTitle
-version: '@VERSION@'
-main: top.redstarmc.plugin.velocitytitle.spigot.VelocityTitleSpigot
-api-version: 1.13
-author: pingguomc
-website: https://github.com/RedStarMC/VelocityTitle
-loadbefore: [PlaceholderAPI]
+name: FlashyTitles
+version: @VERSION@
+main: org.example.flashytitles.spigot.FlashyTitlesSpigot
+api-version: 1.21
+description: FlashyTitles Spigot 端 - 群组服务器称号同步系统
+author: maple
+
+depend: []
+softdepend: [PlaceholderAPI]
+
+permissions:
+  flashytitles.*:
+    description: FlashyTitles 所有权限
+    default: op
+    children:
+      flashytitles.use: true
+      flashytitles.admin: true
+  
+  flashytitles.use:
+    description: 使用基本称号功能
+    default: true
+  
+  flashytitles.admin:
+    description: 管理员权限
+    default: op

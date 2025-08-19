@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "flashy-titles",
+  "version": "${version}",
+  "name": "FlashyTitles",
+  "description": "FlashyTitles Fabric 端 - 群组服务器称号同步系统",
+  "authors": [
+    "maple"
+  ],
+  "contact": {
+    "homepage": "https://github.com/maple",
+    "sources": "https://github.com/maple"
+  },
+  "license": "MIT",
+  "icon": "assets/flashy-titles/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "org.example.flashytitles.fabric.FlashyTitlesFabric"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "placeholder-api": ">=2.7.0"
+  },
+  "suggests": {}
+}

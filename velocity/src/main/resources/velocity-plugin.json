@@ -1,11 +1,11 @@
 {
-  "id": "velocity_title",
-  "name": "VelocityTitle",
+  "id": "flashy_titles",
+  "name": "FlashyTitles",
   "version": "@VERSION@",
   "authors": [
-    "pingguomc"
+    "maple"
   ],
   "dependencies": [],
-  "main": "top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity",
-  "website": "https://github.com/RedStarMC/VelocityTitle"
+  "main": "org.example.flashytitles.velocity.FlashyTitlesVelocity",
+  "website": "https://github.com/maplesusu/VelocityTitle"
 }

@@ -1,4 +1,15 @@
-rootProject.name = 'VelocityTitle'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url = 'https://maven.aliyun.com/repository/public' }
+    }
+}
+
+rootProject.name = 'flashy-titles-velocity'
+
 include 'core'
 include 'velocity'
 include 'spigot'
+include 'fabric'  // 重新启用，使用与母项目相同的配置
+include 'neoforge'
