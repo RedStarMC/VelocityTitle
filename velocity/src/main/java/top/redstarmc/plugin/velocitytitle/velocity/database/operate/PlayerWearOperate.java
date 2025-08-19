@@ -14,5 +14,23 @@ public class PlayerWearOperate implements EasySQLOperate {
                 );
     }
 
+    public static void updatePrefix(SQLManager sqlManager, String uuid, String prefix){
+        sqlManager.createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
+                .addColumnValue("uuid", uuid)
+                .addColumnValue("prefix", prefix)
+                .build()
+                .executeAsync((query) -> {},
+                        ((exception, sqlAction) -> logger.crash(exception,language.getConfigToml().getString("database.failed-operate")))
+                );
+    }
 
+    public static void updateSuffix(SQLManager sqlManager, String uuid, String suffix){
+        sqlManager.createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
+                .addColumnValue("uuid", uuid)
+                .addColumnValue("suffix", suffix)
+                .build()
+                .executeAsync((query) -> {},
+                        ((exception, sqlAction) -> logger.crash(exception,language.getConfigToml().getString("database.failed-operate")))
+                );
+    }
 }

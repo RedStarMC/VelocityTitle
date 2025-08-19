@@ -17,11 +17,13 @@ loading = "插件正在启动~~~"
 command-loading = "正在注册 命令 ……"
 database-loading = "正在加载 数据库 ……"
 listener-loading = "正在注册 监听器 ……"
+channel-loading = "正在注册 插件消息通道 ……"
 
 author = "插件作者："
 debug = "请注意！当前已启用 Debug 模式。"
 
 thanks = "感谢您使用本插件！"
+end = "===加载完毕==="
 website = "本插件是开源的。Github ："
 
 reload = "插件配置文件已重载。"
@@ -31,6 +33,7 @@ reload = "插件配置文件已重载。"
 root = "========VelocityTitle========\n"
 parameter-less = "缺少必要的参数！"
 create-success = "创建成功！"
+console = "控制台不能执行该指令！"
 
 # 命令帮助类
 [commands.helps]
