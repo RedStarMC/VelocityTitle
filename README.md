@@ -456,33 +456,34 @@ cp velocity-1.0.0.jar velocity/plugins/
 cp build/jars/spigot-1.0.0.jar spigot-server1/plugins/
 cp build/jars/spigot-1.0.0.jar spigot-server2/plugins/
 
-# 3. 重启所有服务器
-# H2数据库会自动创建，无需额外配置
-```
+在 Velocity 服务端创建数据库存储玩家称号（分为前缀和后缀），并通过 Velocity 和子服的消息通道来发送数据。最终通过 PAPI 和 GUI 进行显示和操作。
 
-#### 单服务器部署
-```bash
-# Spigot服务器
-cp build/jars/spigot-1.0.0.jar plugins/
+计划:
+* [ ] Velocity 部分
+    - [ ] 命令模块
+        * [x] 根命令
+        * [ ] 命令帮助
+        * [x] 创建，删除称号
+        * [ ] 分配，取消分配称号
+        * [x] 重载配置
+    - [x] 配置模块
+        * [x] 插件配置
+        * [x] 语言配置
+        * [x] 配置读取和保存器
+    - [x] 数据库模块
+        * [x] EasySQL
+        * [x] H2 数据库
+    - [ ] 和 Bukkit 部分通信
+    - [ ] 其他
+        * [x] 日志输出
+* [ ] Bukkit 部分
+    - [ ] 和 Velocity 部分通信
+    - [ ] 命令模块
+        * [ ] 重载配置
+        * [ ] 命令帮助
+        * [ ] 根命令
+    - [ ] GUI (可选) 模块
+    - [ ] PAPI部分
 
-# Fabric服务器
-cp build/jars/fabric-1.0.0.jar mods/
 
-# NeoForge服务器
-cp build/jars/neoforge-1.0.0.jar mods/
-```
 
-### 首次使用
-```bash
-# 1. 启动服务器，插件会自动创建配置文件
-# 2. 创建第一个称号
-/titleadmin create vip "&6[VIP]" 1000 false "flashytitles.vip" "VIP专属称号"
-
-# 3. 给玩家添加金币
-/titleadmin coins add <玩家名> 5000
-
-# 4. 玩家购买和装备称号
-/titles shop
-/titles buy vip
-/titles equip vip
-```

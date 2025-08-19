@@ -1,1 +1,3 @@
-// Core 模块不需要额外的依赖配置，使用父项目的配置即可
+dependencies {
+    implementation "net.kyori:adventure-api:4.24.0"
+}
