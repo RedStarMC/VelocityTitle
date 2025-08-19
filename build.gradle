@@ -40,8 +40,7 @@ allprojects {
         implementation 'com.zaxxer:HikariCP:5.0.1'
         implementation 'mysql:mysql-connector-java:8.0.33'
         implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
-        implementation 'redis.clients:jedis:4.4.3'
-        // H2 数据库
+        // H2 数据库 (默认使用)
         implementation 'com.h2database:h2:2.2.224'
     }
     
@@ -81,9 +80,10 @@ subprojects {
             group = 'build'
             destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
             archiveClassifier.set('original')
-            
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
             from sourceSets.main.output
-            
+
             // 对velocity、spigot、fabric、neoforge模块添加core代码
             if (project.name in ['velocity', 'spigot', 'fabric', 'neoforge']) {
                 from project(':core').sourceSets.main.output

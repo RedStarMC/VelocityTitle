@@ -11,7 +11,7 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import org.example.flashytitles.velocity.manager.TitleManager;
-import org.example.flashytitles.velocity.sync.SyncManager;
+import org.example.flashytitles.velocity.sync.SimplifiedSyncManager;
 import org.slf4j.Logger;
 
 /**
@@ -22,10 +22,10 @@ public class PlayerListener {
     private static final MinecraftChannelIdentifier CHANNEL = MinecraftChannelIdentifier.create("flashytitles", "sync");
     
     private final TitleManager titleManager;
-    private final SyncManager syncManager;
+    private final SimplifiedSyncManager syncManager;
     private final Logger logger;
     
-    public PlayerListener(TitleManager titleManager, SyncManager syncManager, Logger logger) {
+    public PlayerListener(TitleManager titleManager, SimplifiedSyncManager syncManager, Logger logger) {
         this.titleManager = titleManager;
         this.syncManager = syncManager;
         this.logger = logger;

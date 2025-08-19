@@ -16,6 +16,10 @@ public enum MessageType {
     PLAYER_DATA_REQUEST("player_data_req"), // 请求玩家数据
     PLAYER_DATA_RESPONSE("player_data_res"), // 响应玩家数据
     
+    // 权限相关
+    PERMISSION_CHECK("permission_check"),   // 权限检查请求
+    PERMISSION_RESPONSE("permission_res"),  // 权限检查响应
+
     // 系统相关
     RELOAD_CONFIG("reload_config"),         // 重载配置
     SYNC_ALL("sync_all"),                   // 同步所有数据

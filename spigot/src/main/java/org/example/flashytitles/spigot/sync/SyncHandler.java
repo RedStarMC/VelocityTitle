@@ -77,6 +77,7 @@ public class SyncHandler implements PluginMessageListener {
             case PLAYER_QUIT -> handlePlayerQuit(message);
             case SYNC_ALL -> handleSyncAll(message);
             case RELOAD_CONFIG -> handleReloadConfig(message);
+            case PERMISSION_CHECK -> handlePermissionCheck(message);
             default -> plugin.getLogger().warning("收到未知消息类型: " + message.getType());
         }
     }
@@ -185,6 +186,50 @@ public class SyncHandler implements PluginMessageListener {
     private void handleReloadConfig(Message message) {
         plugin.getLogger().info("收到配置重载请求");
         // 这里可以实现配置重载逻辑
+    }
+
+    /**
+     * 处理权限检查请求
+     */
+    private void handlePermissionCheck(Message message) {
+        String playerUuidStr = message.getString("player_uuid");
+        String playerName = message.getString("player_name");
+        String permission = message.getString("permission");
+        String requestId = message.getString("request_id");
+
+        if (playerUuidStr == null || permission == null || requestId == null) {
+            plugin.getLogger().warning("权限检查请求参数不完整");
+            return;
+        }
+
+        try {
+            UUID playerUuid = UUID.fromString(playerUuidStr);
+            Player player = Bukkit.getPlayer(playerUuid);
+
+            boolean hasPermission = false;
+            if (player != null && player.isOnline()) {
+                // 检查玩家权限
+                hasPermission = player.hasPermission(permission);
+                plugin.getLogger().info("权限检查: 玩家 " + player.getName() + " 权限 " + permission + " = " + hasPermission);
+            } else {
+                plugin.getLogger().info("玩家 " + playerName + " 不在线，权限检查失败");
+            }
+
+            // 发送权限检查响应
+            Message response = new Message(MessageType.PERMISSION_RESPONSE)
+                .addData("request_id", requestId)
+                .addData("player_uuid", playerUuidStr)
+                .addData("player_name", playerName)
+                .addData("permission", permission)
+                .addData("has_permission", hasPermission);
+
+            if (player != null) {
+                sendMessage(player, response);
+            }
+
+        } catch (IllegalArgumentException e) {
+            plugin.getLogger().warning("无效的玩家UUID: " + playerUuidStr);
+        }
     }
     
     /**
