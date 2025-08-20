@@ -1,63 +1,21 @@
 package top.redstarmc.plugin.velocitytitle.velocity;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
-import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.connection.PluginMessageEvent;
-import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 public class PluginMessage {
 
     /**
-     * ÇëÇó³ÆºÅÁĞ±í
+     * æ¥æ”¶å­æœæ¶ˆæ¯
      */
-    public static final MinecraftChannelIdentifier TITLE_LIST = MinecraftChannelIdentifier.from("velocitytitle:list");
+    public static final MinecraftChannelIdentifier INCOMING = MinecraftChannelIdentifier.from("velocitytitle:proxy");
 
     /**
-     * ÇëÇóÍæ¼ÒµÄ³ÆºÅÁĞ±í
+     * å‘å­æœå‘é€æ¶ˆæ¯
      */
-    public static final MinecraftChannelIdentifier PLAYER_TITLE = MinecraftChannelIdentifier.from("velocitytitle:player-title");
+    public static final MinecraftChannelIdentifier OUTGOING = MinecraftChannelIdentifier.from("velocitytitle:server");
 
-    /**
-     * ÇëÇóÍæ¼Òµ±Ç°Åå´÷µÄ³ÆºÅ
-     */
-    public static final MinecraftChannelIdentifier PLAYER_WEAR = MinecraftChannelIdentifier.from("velocitytitle:player-wear");
+    private static final LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
 
-    @Subscribe
-    public void onPluginMessageFromBackend(PluginMessageEvent event) {
-        // ÎŞÂÛÀ´Ô´ÈçºÎ£¬Ê×ÏÈ¼ì²é±êÊ¶·ûÊÇ·ñÆ¥Åä¡£
-        // ÕâÔÊĞí½«ËùÓĞÏûÏ¢ÉèÖÃÎª IDENTIFIER as handled£¬
-        // ·ÀÖ¹×ª·¢ÈÎºÎÔ´×Ô¿Í»§¶ËµÄÓÊ¼ş¡£
-        if (!TITLE_LIST.equals(event.getIdentifier())) {
-            return;
-        }
 
-        // ½« PluginMessage ±ê¼ÇÎªÒÑ´¦Àí£¬±íÊ¾ÄÚÈİ
-        // ²»Ó¦×ª·¢µ½ÆäÔ­Ê¼Ä¿µÄµØ¡£
-        event.setResult(PluginMessageEvent.ForwardResult.handled());
-
-        // »òÕß£º
-
-        // ½« PluginMessage ±ê¼ÇÎªÒÑ×ª·¢£¬±íÊ¾ÄÚÈİ
-        // Ó¦¸ÃÍ¨¹ı£¬¾ÍºÃÏñËÙ¶È²»´æÔÚÒ»Ñù¡£
-        //
-        // Ê¹ÓÃÊ±Ó¦¸ñÍâĞ¡ĞÄ£¬
-        // ÒòÎªÈÎºÎ¿Í»§¶Ë¶¼¿ÉÒÔ×ÔÓÉ·¢ËÍÈÎºÎËüÏëÒªµÄ¶«Î÷£¬¼Ù×°ÊÇ´úÀí
-        // event.setResult(PluginMessageEvent.ForwardResult.forward());
-
-        // ½öµ±Ô´ÊÇºó¶Ë·şÎñÆ÷Ê±²Å³¢ÊÔ½âÎöÊı¾İ
-        if (!(event.getSource() instanceof ServerConnection backend)) {
-            return;
-        }
-
-        ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
-        // ´¦ÀíÊı¾İ°üÊı¾İ
-
-        if (in.readUTF().equals("Hello Velocity!")){
-            System.out.println("Hello Velocity!");
-            System.out.println("===========================================================================");
-        }
-
-    }
 }

@@ -72,10 +72,9 @@ public class VelocityTitleVelocity {
 
         logger.info(language.getConfigToml().getString("logs.listener-loading"));
         server.getEventManager().register(this, new Listener());
-        server.getEventManager().register(this, new PluginMessage());
 
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
-        server.getChannelRegistrar().register(PluginMessage.TITLE_LIST);
+        server.getChannelRegistrar().register(PluginMessage.INCOMING, PluginMessage.OUTGOING);
 
         logger.info(language.getConfigToml().getString("logs.end"));
     }

@@ -15,12 +15,12 @@ public enum PlayerTitles implements SQLTable {
     PLAYER_TITLES((table) -> {
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("player_uuid", "VARCHAR(38) NOT NULL");
-        table.addColumn("title_type", "ENUM(prefix,suffix) NOT NULL");
+        table.addColumn("title_type", "VARCHAR(5) NOT NULL");
         table.addColumn("title_name", "VARCHAR(256) NOT NULL");
 
         table.setIndex(IndexType.INDEX, "player_idx", "player_uuid");
         // 唯一约束：防止玩家重复拥有同一个称号
-        table.setIndex(IndexType.UNIQUE_KEY, "player_title_unique", "player_uuid", "title_id");
+        table.setIndex(IndexType.UNIQUE_KEY, "player_title_unique", "player_uuid", "title_name");
     });
     private final Consumer<TableCreateBuilder> builder;
     private @Nullable SQLManager manager;
