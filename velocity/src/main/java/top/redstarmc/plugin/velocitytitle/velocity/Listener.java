@@ -38,7 +38,7 @@ public class Listener {
     @Subscribe
     public void onPluginMessageFromBackend(PluginMessageEvent event) {
 
-        logger.debug("接收到插件消息");
+        logger.debug("接收到插件消息-0");
 
         // 无论来源如何，首先检查标识符是否匹配。
         // 这允许将所有消息设置为 IDENTIFIER as handled，
@@ -47,6 +47,7 @@ public class Listener {
             return;
         }
 
+        logger.debug("接收到插件消息-1");
         // 将 PluginMessage 标记为已处理，表示内容
         // 不应转发到其原始目的地。
         event.setResult(PluginMessageEvent.ForwardResult.handled());
@@ -65,7 +66,7 @@ public class Listener {
             logger.error("Invalid message source (not ServerConnection)");
             return;
         }
-
+        logger.debug("接收到插件消息-2");
 //        try {
 //            // 解析消息（字符串数组）
 //            MessageReader reader = MessageReader.read(event.getData());

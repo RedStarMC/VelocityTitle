@@ -34,7 +34,7 @@ public class PluginMessageBukkit implements PluginMessageListener{
         }
     }
 
-    // ·¢ËÍÏûÏ¢µ½´úÀí
+    // å‘é€æ¶ˆæ¯åˆ°ä»£ç†
     public Future<?> sendMessage(PluginMessageRecipient recipient, String... data) {
         return executor.submit(() -> {
             try {
@@ -48,7 +48,7 @@ public class PluginMessageBukkit implements PluginMessageListener{
         });
     }
 
-    // ´¦Àí½ÓÊÕµ½µÄÏûÏ¢
+    // å¤„ç†æ¥æ”¶åˆ°çš„æ¶ˆæ¯
     @Override
     public void onPluginMessageReceived(String channel, @NotNull Player player, byte[] message) {
         if (!channel.equals(incomingChannel)) {
@@ -64,12 +64,12 @@ public class PluginMessageBukkit implements PluginMessageListener{
         }
     }
 
-    // ÏûÏ¢Ö´ĞĞÂß¼­
+    // æ¶ˆæ¯æ‰§è¡Œé€»è¾‘
     public void execute(String[] data) {
-        System.out.println("======================ÊÕµ½ÁË²å¼şÏûÏ¢");
+        System.out.println("======================æ”¶åˆ°äº†æ’ä»¶æ¶ˆæ¯");
 //        switch (data[0]) {
 //            case "SendPrivateRaw":
-//                // ´¦Àí¿ç·şË½ÁÄ
+//                // å¤„ç†è·¨æœç§èŠ
 //                String to = data[1];
 //                String from = data[2];
 //                String rawJson = data[3];
@@ -81,14 +81,14 @@ public class PluginMessageBukkit implements PluginMessageListener{
 //                }
 //                break;
 //            case "BroadcastRaw":
-//                // ´¦Àí´úÀí×ª·¢µÄ¹ã²¥
+//                // å¤„ç†ä»£ç†è½¬å‘çš„å¹¿æ’­
 //                String uuid = data[1];
 //                String raw = data[2];
 //                String perm = data[3];
 //                List<Integer> ports = data[5].isEmpty() ? List.of() :
 //                        Arrays.stream(data[5].split(";")).map(Integer::parseInt).toList();
 //                Component broadcastMsg = Components.parseRaw(raw);
-//                // Ö»´¦Àí±¾·ş¶Ë¿Ú·ûºÏÌõ¼şµÄÏûÏ¢
+//                // åªå¤„ç†æœ¬æœç«¯å£ç¬¦åˆæ¡ä»¶çš„æ¶ˆæ¯
 //                if (ports.isEmpty() || ports.contains(BukkitProxyManager.getPort())) {
 //                    Bukkit.getOnlinePlayers().stream()
 //                            .filter(p -> perm.isEmpty() || p.hasPermission(perm))
@@ -96,7 +96,7 @@ public class PluginMessageBukkit implements PluginMessageListener{
 //                }
 //                break;
 //            case "GlobalMute":
-//                // ´¦ÀíÈ«¾Ö½ûÑÔ
+//                // å¤„ç†å…¨å±€ç¦è¨€
 //                TrChatBukkit.setGlobalMuting("on".equals(data[1]));
 //                break;
 //        }
