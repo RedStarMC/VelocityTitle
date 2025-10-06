@@ -1,0 +1,66 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url = 'https://maven.aliyun.com/repository/central' }
+        maven { url = 'https://maven.aliyun.com/repository/public' }
+    }
+    dependencies {
+        classpath 'net.fabricmc:fabric-loom:1.6.11'
+    }
+}
+
+plugins {
+    id 'java'
+}
+
+apply plugin: 'fabric-loom'
+
+repositories {
+    // 国内镜像源优先
+    maven { url = 'https://maven.aliyun.com/repository/central' }
+    maven { url = 'https://maven.aliyun.com/repository/public' }
+    maven { url = 'https://maven.aliyun.com/repository/gradle-plugin' }
+    // Fabric相关仓库
+    maven { url = 'https://maven.fabricmc.net/' }
+    // Modrinth Maven for Text Placeholder API
+    maven { url = 'https://api.modrinth.com/maven' }
+    mavenCentral()
+}
+
+dependencies {
+    // Minecraft 和 Fabric
+    minecraft "com.mojang:minecraft:1.21.1"
+    mappings "net.fabricmc:yarn:1.21.1+build.3:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.16.5"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.105.0+1.21.1"
+
+    // Text Placeholder API for Fabric (使用与Loom 1.6.11兼容的版本)
+    modImplementation "maven.modrinth:placeholder-api:2.4.1+1.21"
+
+    // Core 模块
+    implementation project(':core')
+}
+
+java {
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
+    withSourcesJar()
+}
+
+// 修复重复文件问题
+tasks.withType(Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+loom {
+    splitEnvironmentSourceSets()
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}

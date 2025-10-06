@@ -1,14 +1,8 @@
 dependencies {
+    // Velocity API
+    compileOnly 'com.velocitypowered:velocity-api:3.3.0-SNAPSHOT'
+    annotationProcessor 'com.velocitypowered:velocity-api:3.3.0-SNAPSHOT'
+    
+    // Core 模块
     implementation project(':core')
-    compileOnly "com.velocitypowered:velocity-api:3.4.0-SNAPSHOT"
-    implementation 'com.h2database:h2:2.2.220'
-}
-
-repositories {
-    maven { url 'https://repo.codemc.io/repository/maven-releases/' }
-    maven { url 'https://repo.papermc.io/repository/maven-public/' }
-}
-
-jar {
-    archiveBaseName.set("VelocityTitle-Velocity")  // 基础名称
 }
