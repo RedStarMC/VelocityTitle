@@ -5,8 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.PrefixDictionaryOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.SuffixDictionaryOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.database.operate.TitleDictionary;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
@@ -33,7 +32,7 @@ public class DeleteBuilder extends CommandBuilder{
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
 
-                                    PrefixDictionaryOperate.deleteTitle(EasySQLManager.getSqlManager(), name);
+                                    TitleDictionary.deleteTitle(EasySQLManager.getSqlManager(), name);
 
                                     return Command.SINGLE_SUCCESS;
                                 })

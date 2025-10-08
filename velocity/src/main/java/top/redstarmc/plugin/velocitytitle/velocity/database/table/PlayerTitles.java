@@ -3,6 +3,7 @@ package top.redstarmc.plugin.velocitytitle.velocity.database.table;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.SQLTable;
 import cc.carm.lib.easysql.api.builder.TableCreateBuilder;
+import cc.carm.lib.easysql.api.enums.ForeignKeyRule;
 import cc.carm.lib.easysql.api.enums.IndexType;
 import cc.carm.lib.easysql.api.enums.NumberType;
 import org.jetbrains.annotations.NotNull;
@@ -13,19 +14,24 @@ import java.util.function.Consumer;
 
 public enum PlayerTitles implements SQLTable {
     PLAYER_TITLES((table) -> {
-        table.addAutoIncrementColumn("id", NumberType.INT, true, true);
-        table.addColumn("player_uuid", "VARCHAR(38) NOT NULL");
-        table.addColumn("title_type", "VARCHAR(5) NOT NULL");
-        table.addColumn("title_name", "VARCHAR(256) NOT NULL");
+        table.setTableComment("存储玩家所拥有的称号");
 
-        table.setIndex(IndexType.INDEX, "player_idx", "player_uuid");
-        // 唯一约束：防止玩家重复拥有同一个称号
-        table.setIndex(IndexType.UNIQUE_KEY, "player_title_unique", "player_uuid", "title_name");
+        table.addAutoIncrementColumn("id", NumberType.INT, true, true);
+        table.addColumn("player_uuid", "VARCHAR(38) NOT NULL", "玩家 uuid");
+        table.addColumn("title_type", "ENUM(prefix,suffix) NOT NULL", "称号类型，只能有两种字符串");
+        table.addColumn("title_name", "INT NOT NULL", "称号 id 对应主表的自增主键");
+        table.addColumn("time_until","DATETIME NOT NULL", "到期时间，用 DATETIME");
+
+        table.setIndex(IndexType.INDEX, "player_idx", "player_uuid"); // 为玩家uuid设置索引以便 where uuid=''
+        table.setIndex(IndexType.UNIQUE_KEY, "uk_title", "player_uuid", "title_name"); // 防止玩家重复拥有同一个称号
+
+        table.addForeignKey("title_name",null, TitleDictionary.tableName, "id", ForeignKeyRule.CASCADE, ForeignKeyRule.CASCADE);
+
     });
     private final Consumer<TableCreateBuilder> builder;
     private @Nullable SQLManager manager;
 
-    private static final String tableName = "PLAYER_TITLES";
+    public static final String tableName = "PLAYER_TITLES";
 
     PlayerTitles(Consumer<TableCreateBuilder> builder) {
         this.builder = builder;

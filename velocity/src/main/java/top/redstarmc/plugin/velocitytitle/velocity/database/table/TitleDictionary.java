@@ -3,7 +3,6 @@ package top.redstarmc.plugin.velocitytitle.velocity.database.table;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.SQLTable;
 import cc.carm.lib.easysql.api.builder.TableCreateBuilder;
-import cc.carm.lib.easysql.api.enums.IndexType;
 import cc.carm.lib.easysql.api.enums.NumberType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,20 +10,21 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
-public enum PrefixDictionary implements SQLTable {
-    PREFIX_DICTIONARY((table) -> {
+public enum TitleDictionary implements SQLTable {
+    TITLE_DICTIONARY((table) -> {
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
-        table.addColumn("name", "VARCHAR(256) NOT NULL"); // 作为索引
-        table.addColumn("display", "VARCHAR(256) NOT NULL"); // 实际展示
+        table.addColumn("name", "VARCHAR(256) NOT NULL"); // 作为名称
+        table.addColumn("display", "VARCHAR(256) NOT NULL"); // 实际展示的内容
         table.addColumn("description","VARCHAR(256)"); // 描述
-        table.setIndex("name", IndexType.UNIQUE_KEY);
+        table.addColumn("type", "ENUM(prefix,suffix) NOT NULL"); //类型
     });
+
     private final Consumer<TableCreateBuilder> builder;
     private @Nullable SQLManager manager;
 
-    private static final String tableName = "PREFIX_DICTIONARY";
+    public static final String tableName = "TITLE_DICTIONARY";
 
-    PrefixDictionary(Consumer<TableCreateBuilder> builder) {
+    TitleDictionary(Consumer<TableCreateBuilder> builder) {
         this.builder = builder;
     }
 
@@ -49,6 +49,6 @@ public enum PrefixDictionary implements SQLTable {
     }
 
     public static void initialize(SQLManager sqlManager) throws SQLException {
-        PREFIX_DICTIONARY.create(sqlManager);
+        TITLE_DICTIONARY.create(sqlManager);
     }
 }

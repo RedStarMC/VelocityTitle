@@ -5,8 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.PrefixDictionaryOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.SuffixDictionaryOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.database.operate.TitleDictionary;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
@@ -62,7 +61,7 @@ public class CreateBuilder extends CommandBuilder{
                                                     String display = context.getArgument("display", String.class);
                                                     String description = context.getArgument("description", String.class);
 
-                                                    PrefixDictionaryOperate.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
+                                                    TitleDictionary.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
 
                                                     context.getSource().sendMessage(TextSerializers.legacyToComponent(
                                                             language.getConfigToml().getString("commands.create-success")

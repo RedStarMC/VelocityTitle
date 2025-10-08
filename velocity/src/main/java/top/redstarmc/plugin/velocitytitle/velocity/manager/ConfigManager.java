@@ -20,7 +20,7 @@ public class ConfigManager extends AbstractTomlManager {
      */
     @Override
     public void init() {
-        tryCreateFile();  //测试
+        tryCreateFile();
 
         loadConfig();
 

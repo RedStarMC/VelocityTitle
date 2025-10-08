@@ -7,8 +7,7 @@ import cc.carm.lib.easysql.manager.SQLManagerImpl;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DebugHandler;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
-import top.redstarmc.plugin.velocitytitle.velocity.database.table.PrefixDictionary;
-import top.redstarmc.plugin.velocitytitle.velocity.database.table.SuffixDictionary;
+import top.redstarmc.plugin.velocitytitle.velocity.database.table.TitleDictionary;
 
 import java.sql.SQLException;
 
@@ -61,8 +60,7 @@ public class EasySQLManager {
             // 注册数据表
             logger.debugDataBase("正在注册数据表");
 
-            PrefixDictionary.initialize(sqlManager);
-            SuffixDictionary.initialize(sqlManager);
+            TitleDictionary.initialize(sqlManager);
             PlayerTitles.initialize(sqlManager);
             PlayerWear.initialize(sqlManager);
 
