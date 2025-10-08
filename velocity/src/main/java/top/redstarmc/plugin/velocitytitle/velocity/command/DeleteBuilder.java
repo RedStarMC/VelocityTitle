@@ -49,7 +49,7 @@ public class DeleteBuilder extends CommandBuilder{
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
 
-                                    SuffixDictionaryOperate.deleteTitle(EasySQLManager.getSqlManager(), name);
+//                                    SuffixDictionaryOperate.deleteTitle(EasySQLManager.getSqlManager(), name);
 
                                     return Command.SINGLE_SUCCESS;
                                 })

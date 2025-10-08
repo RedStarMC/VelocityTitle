@@ -103,7 +103,7 @@ public class CreateBuilder extends CommandBuilder{
                                             String display = context.getArgument("display", String.class);
                                             String description = context.getArgument("description", String.class);
 
-                                            SuffixDictionaryOperate.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
+//                                            SuffixDictionaryOperate.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
 
                                             context.getSource().sendMessage(TextSerializers.legacyToComponent(
                                                     language.getConfigToml().getString("commands.create-success")
