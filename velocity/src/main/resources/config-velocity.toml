@@ -17,3 +17,4 @@ driver = "org.h2.Driver" # 数据库驱动地址
 url = "jdbc:h2:file:./data/velocitytitle;DB_CLOSE_DELAY=-1;MODE=MYSQL;" # 数据库 URL 地址
 username = "root" # 用户名
 password = "password" # 密码
+executor-pool = 8 # 线程池大小

@@ -20,8 +20,9 @@ public class Listener {
     private static final LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
 
     /**
-     * 进服时保存UUID，以便离线时查验。
-     * 其实是为了适配离线服务器
+     * 进服时保存UUID，以便离线时查验。<br>
+     * 其实是为了适配离线服务器<br>
+     * 保存在 PlayerWear 中，以便后端服务器查询称号时找不到人
      * @param event 连接子服事件
      */
     @Subscribe

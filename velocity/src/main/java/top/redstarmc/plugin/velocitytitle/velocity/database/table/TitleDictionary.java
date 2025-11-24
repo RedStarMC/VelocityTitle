@@ -12,10 +12,12 @@ import java.util.function.Consumer;
 
 public enum TitleDictionary implements SQLTable {
     TITLE_DICTIONARY((table) -> {
+        table.setTableComment("称号库");
+
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("name", "VARCHAR(256) NOT NULL"); // 作为名称
         table.addColumn("display", "VARCHAR(256) NOT NULL"); // 实际展示的内容
-        table.addColumn("description","VARCHAR(256)"); // 描述
+        table.addColumn("description","VARCHAR(256) NOT NULL"); // 描述
         table.addColumn("type", "ENUM(prefix,suffix) NOT NULL"); //类型
     });
 

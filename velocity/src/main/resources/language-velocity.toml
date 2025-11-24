@@ -13,7 +13,7 @@ mode = ""
 
 # 日志提示类
 [logs]
-loading = "插件正在启动~~~"
+loading = "插件正在启动 ~ ~ ~"
 command-loading = "正在注册 命令 ……"
 database-loading = "正在加载 数据库 ……"
 listener-loading = "正在注册 监听器 ……"

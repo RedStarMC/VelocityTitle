@@ -134,9 +134,9 @@ public abstract class AbstractLoggerManager {
             if (message == null) continue;
             sendMessage(INFO_PREFIX + "§c[ERROR] §r" + message + "§r");
         }
-        sendMessage(INFO_PREFIX + "§c[ERROR] §r" + "抛出错误信息 ->" + "§r");
+        sendMessage(INFO_PREFIX + "§c[ERROR] §r" + "错误信息 ->" + "§r");
         sendMessage(INFO_PREFIX + "§c[ERROR] §r" + throwable.getMessage() + "§r");
-        sendMessage(INFO_PREFIX + "§c[ERROR] §r" + "抛出错误堆栈 ->" + "§r");
+        sendMessage(INFO_PREFIX + "§c[ERROR] §r" + "错误堆栈 ->" + "§r");
         throwable.printStackTrace();
     }
 

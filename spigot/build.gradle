@@ -1,6 +1,8 @@
 repositories {
+    mavenCentral()
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
-    maven { url 'https://repo.helpch.at/releases' }
+    maven { url 'https://repo.helpch.at/releases'
+        allowInsecureProtocol = true}
 }
 
 dependencies {

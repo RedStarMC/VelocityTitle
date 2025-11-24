@@ -6,12 +6,12 @@ import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 public class PluginMessage {
 
     /**
-     * 接收子服消息
+     * 接收子服消息的通道
      */
     public static final MinecraftChannelIdentifier INCOMING = MinecraftChannelIdentifier.from("velocitytitle:proxy");
 
     /**
-     * 向子服发送消息
+     * 向子服发送消息的通道
      */
     public static final MinecraftChannelIdentifier OUTGOING = MinecraftChannelIdentifier.from("velocitytitle:server");
 

@@ -4,12 +4,15 @@ import cc.carm.lib.easysql.EasySQL;
 import cc.carm.lib.easysql.hikari.HikariConfig;
 import cc.carm.lib.easysql.hikari.HikariDataSource;
 import cc.carm.lib.easysql.manager.SQLManagerImpl;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DebugHandler;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.TitleDictionary;
 
 import java.sql.SQLException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * <h1>数据库管理器</h1>
@@ -33,11 +36,12 @@ public class EasySQLManager {
 
     /**
      * <h2>初始化数据库</h2>
-     * 从 {@link top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity } 调用。数据库入口方法。
+     * 从 {@link VelocityTitleVelocity } 调用。数据库入口方法。
      */
     public void init(){
-        String mode = config.getConfigToml().getString("database.mode");
 
+        //数据库模式配置
+        String mode = config.getConfigToml().getString("database.mode");
         if(mode.equals("Embedded")){
             logger.info(language.getConfigToml().getString("database.embedded"));
             initEmbedded();
@@ -49,22 +53,27 @@ public class EasySQLManager {
             initEmbedded();
         }
 
+        //错误处理器配置
         sqlManager.setDebugHandler(new DebugHandler(logger));
         sqlManager.setDebugMode(config.getConfigToml().getBoolean("debug-mode"));
 
+        //线程池配置
+        ExecutorService pool = Executors.newFixedThreadPool(Math.toIntExact(config.getConfigToml().getLong("database.executor-pool")));
+        sqlManager.setExecutorPool(pool);
+
         try {
             if (!sqlManager.getConnection().isValid(5)) {
-                logger.error(language.getConfigToml().getString("database.timeout"));
+                logger.error(language.getConfigToml().getString("database.timeout")); //超时
             }
 
             // 注册数据表
-            logger.debugDataBase("正在注册数据表");
+            logger.debugDataBase("正在尝试注册数据表");
 
             TitleDictionary.initialize(sqlManager);
             PlayerTitles.initialize(sqlManager);
             PlayerWear.initialize(sqlManager);
 
-            logger.debugDataBase("数据表注册完毕");
+            logger.debugDataBase("数据表注册执行完毕");
 
         } catch (SQLException e) {
             logger.error(language.getConfigToml().getString("database.failed"));

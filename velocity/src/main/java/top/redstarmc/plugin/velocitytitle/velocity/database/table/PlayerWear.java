@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 
 public enum PlayerWear implements SQLTable {
     PLAYER_WEAR((table) -> {
+        table.setTableComment("存储玩家当前展示的称号");
+
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("player_uuid", "VARCHAR(38) NOT NULL");
         table.addColumn("player_name", "VARCHAR(64) NOT NULL");
