@@ -114,7 +114,7 @@ public class EasySQLManager {
     }
 
 
-    public static SQLManagerImpl getSqlManager() {
+    public SQLManagerImpl getSqlManager() {
         return sqlManager;
     }
 }

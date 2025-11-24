@@ -8,8 +8,6 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import org.jetbrains.annotations.NotNull;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.PlayerWearOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 /**
@@ -32,8 +30,8 @@ public class Listener {
         Player player = VelocityTitleVelocity.getInstance().getServer().getPlayer(name).orElse(null);
 
         if (player == null) return;
-
-        PlayerWearOperate.replaceUUID(EasySQLManager.getSqlManager(), player.getUniqueId().toString(), name);
+        // TODO
+        // PlayerWearOperate.replaceUUID(EasySQLManager.getSqlManager(), player.getUniqueId().toString(), name);
     }
 
     @Subscribe

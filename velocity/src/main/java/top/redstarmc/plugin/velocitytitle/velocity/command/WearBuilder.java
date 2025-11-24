@@ -6,14 +6,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.PlayerWearOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
 
 public class WearBuilder extends CommandBuilder{
     @Override
-    public LiteralArgumentBuilder<CommandSource> build(ConfigManager language) {
+    public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("wear")
                 .requires(source -> source.hasPermission("velocitytitle.wear"))
                 .executes(context -> {
@@ -43,7 +40,7 @@ public class WearBuilder extends CommandBuilder{
                                         return -1;
                                     }
 
-                                    PlayerWearOperate.updateSuffix(EasySQLManager.getSqlManager(), uuid, name);
+                                    //PlayerWearOperate.updateSuffix(EasySQLManager.getSqlManager(), uuid, name);
 
                                     return Command.SINGLE_SUCCESS;
                                 }))
@@ -69,7 +66,7 @@ public class WearBuilder extends CommandBuilder{
                                         return -1;
                                     }
 
-                                    PlayerWearOperate.updatePrefix(EasySQLManager.getSqlManager(), uuid, name);
+                                    //PlayerWearOperate.updatePrefix(EasySQLManager.getSqlManager(), uuid, name);
 
                                     return Command.SINGLE_SUCCESS;
                                 }))

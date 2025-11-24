@@ -7,16 +7,13 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.PlayerTitlesOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
 
 import static net.kyori.adventure.text.Component.text;
 
 public class RevokeBuilder extends CommandBuilder{
     @Override
-    public LiteralArgumentBuilder<CommandSource> build(ConfigManager language) {
+    public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("revoke")
                 .requires(source -> source.hasPermission("velocitytitle.revoke"))
                 .executes(context -> {
@@ -53,7 +50,7 @@ public class RevokeBuilder extends CommandBuilder{
                                             String name = context.getArgument("name", String.class);
                                             String uuid = VelocityTitleVelocity.getInstance().getServer().getPlayer(player_name).orElse(null).getUniqueId().toString();
 
-                                            PlayerTitlesOperate.deletePrefix(EasySQLManager.getSqlManager(), uuid , name);
+                                            //PlayerTitlesOperate.deletePrefix(EasySQLManager.getSqlManager(), uuid , name);
 
                                             return Command.SINGLE_SUCCESS;
                                         })
@@ -88,7 +85,7 @@ public class RevokeBuilder extends CommandBuilder{
                                             String name = context.getArgument("name", String.class);
                                             String uuid = VelocityTitleVelocity.getInstance().getServer().getPlayer(player_name).orElse(null).getUniqueId().toString();
 
-                                            PlayerTitlesOperate.deleteSuffix(EasySQLManager.getSqlManager(), uuid , name);
+                                            //PlayerTitlesOperate.deleteSuffix(EasySQLManager.getSqlManager(), uuid , name);
 
                                             return Command.SINGLE_SUCCESS;
                                         })

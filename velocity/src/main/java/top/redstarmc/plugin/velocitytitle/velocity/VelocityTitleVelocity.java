@@ -96,7 +96,7 @@ public class VelocityTitleVelocity {
                 .aliases("vt")
                 .build();
 
-        commandManager.register(commandMeta,new BrigadierCommand(CommandBuilder.init(language)));
+        commandManager.register(commandMeta,new BrigadierCommand(CommandBuilder.init()));
     }
 
 
@@ -119,6 +119,10 @@ public class VelocityTitleVelocity {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public EasySQLManager getDBManager() {
+        return DBManager;
     }
 
     public File getDataFolder() {
