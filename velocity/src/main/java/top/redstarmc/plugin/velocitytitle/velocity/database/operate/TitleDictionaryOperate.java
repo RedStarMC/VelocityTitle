@@ -19,7 +19,7 @@ public class TitleDictionaryOperate implements EasySQLOperate {
      * @param isPrefix 是否为前缀
      */
     public static void insertTitle(@NotNull SQLManager sqlManager, String name, String display, String description, boolean isPrefix){
-        sqlManager.createInsert(TitleDictionary.TITLE_DICTIONARY.getTableName())
+        sqlManager.createReplace(TitleDictionary.TITLE_DICTIONARY.getTableName()) // 使用 Replace
                 .setColumnNames("name", "display", "description", "type")
                 .setParams(name, display, description, isPrefix ? "prefix" : "suffix")
                 .executeAsync((query) -> {},

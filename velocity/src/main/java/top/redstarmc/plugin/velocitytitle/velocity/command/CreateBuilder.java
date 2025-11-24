@@ -3,17 +3,53 @@ package top.redstarmc.plugin.velocitytitle.velocity.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
+import top.redstarmc.plugin.velocitytitle.velocity.database.operate.TitleDictionaryOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
 
 /**
- * <h1>创建称号</h1>
+ * <h1>创建称号命令</h1>
  */
 public class CreateBuilder extends CommandBuilder{
+
+
+    public RequiredArgumentBuilder<CommandSource, String> preBuild(boolean isPrefix){
+        return BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.string())
+                .executes(context -> {
+                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            language.getConfigToml().getString("commands.parameter-less")
+                    ));
+                    return Command.SINGLE_SUCCESS;
+                })
+                .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
+                        .executes(context -> {
+                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                    language.getConfigToml().getString("commands.parameter-less")
+                            ));
+                            return Command.SINGLE_SUCCESS;
+                        })
+                        .then(BrigadierCommand.requiredArgumentBuilder("description", StringArgumentType.greedyString())
+                                .executes(context -> {
+                                    String name = context.getArgument("name", String.class);
+                                    String display = context.getArgument("display", String.class);
+                                    String description = context.getArgument("description", String.class);
+
+                                    TitleDictionaryOperate.insertTitle(sqlManager, name, display, description, isPrefix);
+
+                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                            language.getConfigToml().getString("commands.create-success")
+                                    ));
+
+                                    return Command.SINGLE_SUCCESS;
+                                })
+                        )
+                );
+    }
+
     @Override
-    public LiteralArgumentBuilder<CommandSource> build(ConfigManager language) {
+    public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("create")
                 .requires(source -> source.hasPermission("velocitytitle.create"))
                 .executes(context -> {
@@ -26,91 +62,26 @@ public class CreateBuilder extends CommandBuilder{
                     ));
                     return Command.SINGLE_SUCCESS;
                 })
-                .then(prefix(language))
-                .then(suffix(language));
-    }
-
-    public LiteralArgumentBuilder<CommandSource> prefix(ConfigManager language){
-        return LiteralArgumentBuilder.<CommandSource>literal("prefix")
-                .requires(source -> source.hasPermission("velocitytitle.create"))
-                .executes(context -> {
-                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                            language.getConfigToml().getString("commands.helps.create-prefix")
-                    ));
-                    return Command.SINGLE_SUCCESS;
-                })
-                .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.string())
+                .then(LiteralArgumentBuilder.<CommandSource>literal("prefix")
+                        .requires(source -> source.hasPermission("velocitytitle.create"))
                         .executes(context -> {
                             context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                    language.getConfigToml().getString("commands.parameter-less")
+                                    language.getConfigToml().getString("commands.helps.create-prefix")
                             ));
                             return Command.SINGLE_SUCCESS;
                         })
-                        .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
-                                        .executes(context -> {
-                                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                                    language.getConfigToml().getString("commands.parameter-less")
-                                            ));
-                                            return Command.SINGLE_SUCCESS;
-                                        })
-                                        .then(BrigadierCommand.requiredArgumentBuilder("description", StringArgumentType.greedyString())
-                                                .executes(context -> {
-                                                    String name = context.getArgument("name", String.class);
-                                                    String display = context.getArgument("display", String.class);
-                                                    String description = context.getArgument("description", String.class);
-                                                    //TODO
-                                                    //TitleDictionaryOperate.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
-
-                                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                                            language.getConfigToml().getString("commands.create-success")
-                                                    ));
-
-                                                    return Command.SINGLE_SUCCESS;
-                                                })
-                                        )
-                        )
-                );
-    }
-
-    public LiteralArgumentBuilder<CommandSource> suffix(ConfigManager language){
-        return LiteralArgumentBuilder.<CommandSource>literal("suffix")
-                .requires(source -> source.hasPermission("velocitytitle.create"))
-                .executes(context -> {
-                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                            language.getConfigToml().getString("commands.helps.create-suffix")
-                    ));
-                    return Command.SINGLE_SUCCESS;
-                })
-                .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.string())
+                        .then(preBuild(true))
+                )
+                .then(LiteralArgumentBuilder.<CommandSource>literal("suffix")
+                        .requires(source -> source.hasPermission("velocitytitle.create"))
                         .executes(context -> {
                             context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                    language.getConfigToml().getString("commands.parameter-less")
+                                    language.getConfigToml().getString("commands.helps.create-suffix")
                             ));
                             return Command.SINGLE_SUCCESS;
                         })
-                        .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
-                                .executes(context -> {
-                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                            language.getConfigToml().getString("commands.parameter-less")
-                                    ));
-                                    return Command.SINGLE_SUCCESS;
-                                })
-                                .then(BrigadierCommand.requiredArgumentBuilder("description", StringArgumentType.greedyString())
-                                        .executes(context -> {
-                                            String name = context.getArgument("name", String.class);
-                                            String display = context.getArgument("display", String.class);
-                                            String description = context.getArgument("description", String.class);
-
-//                                            SuffixDictionaryOperate.insertTitle(EasySQLManager.getSqlManager(), name, display , description);
-
-                                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
-                                                    language.getConfigToml().getString("commands.create-success")
-                                            ));
-
-                                            return Command.SINGLE_SUCCESS;
-                                        })
-                                )
-                        )
+                        .then(preBuild(false))
                 );
     }
+
 }
