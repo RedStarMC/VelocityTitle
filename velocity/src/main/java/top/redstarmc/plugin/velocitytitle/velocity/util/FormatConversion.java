@@ -8,29 +8,29 @@ import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import java.util.UUID;
 
 /**
- * <h1>¸ñÊ½×ª»»Æ÷</h1>
+ * <h1>æ ¼å¼è½¬æ¢å™¨</h1>
  */
 public final class FormatConversion {
 
     /**
-     * @param uuid Íæ¼ÒµÄ {@link UUID}
-     * @return {@link Player} ÊµÀı
+     * @param uuid ç©å®¶çš„ {@link UUID}
+     * @return {@link Player} å®ä¾‹
      */
     public static @Nullable Player uuidToPlayer(UUID uuid){
         return VelocityTitleVelocity.getInstance().getServer().getPlayer(uuid).orElse(null);
     }
 
     /**
-     * @param player_name Íæ¼ÒÃû³Æ
-     * @return {@link Player} Íæ¼ÒÊµÀı
+     * @param player_name ç©å®¶åç§°
+     * @return {@link Player} ç©å®¶å®ä¾‹
      */
     public static @Nullable Player nameToPlayer(@NotNull String player_name){
         return VelocityTitleVelocity.getInstance().getServer().getPlayer(player_name).orElse(null);
     }
 
     /**
-     * @param player_name Íæ¼ÒÃû³Æ
-     * @return Íæ¼ÒµÄ {@link UUID}
+     * @param player_name ç©å®¶åç§°
+     * @return ç©å®¶çš„ {@link UUID}
      */
     public static @Nullable UUID nameToUUID(String player_name){
         Player player = VelocityTitleVelocity.getInstance().getServer().getPlayer(player_name).orElse(null);

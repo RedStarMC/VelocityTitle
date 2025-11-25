@@ -12,10 +12,10 @@ import java.sql.ResultSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * <h1>Êı¾İ¿â²Ù×÷</h1>
- * ¸÷ÖÖÊı¾İ¿â²Ù×÷µÄÊµÏÖ¡£<br>
- * Ê¹ÓÃ {@link SQLManager} ½øĞĞ¸÷ÖÖ²Ù×÷<br>
- * TODO ÎÊÌâ£ºÊÇ·ñĞèÒªÒì²½´¦Àí£¿Èç¹ûĞèÒª£¬ÔõÃ´½øĞĞÒì²½´¦Àí£¿
+ * <h1>æ•°æ®åº“æ“ä½œ</h1>
+ * å„ç§æ•°æ®åº“æ“ä½œçš„å®ç°ã€‚<br>
+ * ä½¿ç”¨ {@link SQLManager} è¿›è¡Œå„ç§æ“ä½œ<br>
+ * TODO é—®é¢˜ï¼šæ˜¯å¦éœ€è¦å¼‚æ­¥å¤„ç†ï¼Ÿå¦‚æœéœ€è¦ï¼Œæ€ä¹ˆè¿›è¡Œå¼‚æ­¥å¤„ç†ï¼Ÿ
  */
 public class DataBaseOperate {
 
@@ -24,15 +24,15 @@ public class DataBaseOperate {
     public static ConfigManager language = VelocityTitleVelocity.getInstance().getLanguage();
 
     /**
-     * ½«Ò»¸öĞÂ³ÆºÅ¼ÓÈë³ÆºÅ¿â
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
-     * @param display Êµ¼ÊµÄÕ¹Ê¾ÄÚÈİ
-     * @param description ÃèÊö
-     * @param isPrefix ÊÇ·ñÎªÇ°×º
+     * å°†ä¸€ä¸ªæ–°ç§°å·åŠ å…¥ç§°å·åº“
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
+     * @param display å®é™…çš„å±•ç¤ºå†…å®¹
+     * @param description æè¿°
+     * @param isPrefix æ˜¯å¦ä¸ºå‰ç¼€
      */
     public static void insertTitle(@NotNull SQLManager sqlManager, String name, String display, String description, boolean isPrefix){
-        sqlManager.createInsert(TitleDictionary.TITLE_DICTIONARY.getTableName()) // Ê¹ÓÃ Replace
+        sqlManager.createInsert(TitleDictionary.TITLE_DICTIONARY.getTableName()) // ä½¿ç”¨ Replace
                 .setColumnNames("name", "display", "description", "type")
                 .setParams(name, display, description, isPrefix ? "prefix" : "suffix")
                 .executeAsync((query) -> {},
@@ -41,19 +41,19 @@ public class DataBaseOperate {
     }
 
     /**
-     * ²éÑ¯Ò»¸ö³ÆºÅĞÅÏ¢
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
-     * @param isPrefix ÊÇ·ñÊÇÇ°×º
+     * æŸ¥è¯¢ä¸€ä¸ªç§°å·ä¿¡æ¯
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
+     * @param isPrefix æ˜¯å¦æ˜¯å‰ç¼€
      */
     public static Title selectTitle(@NotNull SQLManager sqlManager, String name, boolean isPrefix){
         AtomicReference<Title> title = null;
-        sqlManager.createQuery() // ´´½¨Ò»¸ö²éÑ¯
-                .inTable(TitleDictionary.TITLE_DICTIONARY.getTableName()) // Ö¸¶¨±íÃû
-                .selectColumns("name", "display", "description", "type") // Ñ¡ÔñÁĞ
+        sqlManager.createQuery() // åˆ›å»ºä¸€ä¸ªæŸ¥è¯¢
+                .inTable(TitleDictionary.TITLE_DICTIONARY.getTableName()) // æŒ‡å®šè¡¨å
+                .selectColumns("name", "display", "description", "type") // é€‰æ‹©åˆ—
                 .addCondition("name", name)
                 .addCondition("type", isPrefix ? "prefix" : "suffix")
-                .build()/*¹¹½¨²éÑ¯Ìå*/.executeAsync(
+                .build()/*æ„å»ºæŸ¥è¯¢ä½“*/.executeAsync(
                         (query) -> {
                             ResultSet result = query.getResultSet();
                             if(result.next()){
@@ -68,18 +68,18 @@ public class DataBaseOperate {
     }
 
     /**
-     * ±à¼­Ò»¸ö³ÆºÅµÄĞÅÏ¢
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
+     * ç¼–è¾‘ä¸€ä¸ªç§°å·çš„ä¿¡æ¯
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
      */
     public static void updateTitle(@NotNull SQLManager sqlManager, String name){
 
     }
 
     /**
-     * ´Ó³ÆºÅ¿âÉ¾³ıÒ»¸ö³ÆºÅ
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
+     * ä»ç§°å·åº“åˆ é™¤ä¸€ä¸ªç§°å·
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
      */
     public static void deleteTitle(@NotNull SQLManager sqlManager, String name){
         sqlManager.createDelete(TitleDictionary.TITLE_DICTIONARY.getTableName())
@@ -93,28 +93,28 @@ public class DataBaseOperate {
     //-------------------------
 
     /**
-     * ²éÑ¯Íæ¼ÒÊÇ·ñÓµÓĞÕâ¸ö³ÆºÅ
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
-     * @return ÊÇ·ñÓµÓĞ
+     * æŸ¥è¯¢ç©å®¶æ˜¯å¦æ‹¥æœ‰è¿™ä¸ªç§°å·
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
+     * @return æ˜¯å¦æ‹¥æœ‰
      */
     public static boolean queryTitleOfPlayer(@NotNull SQLManager sqlManager, String name){
         return false;
     }
 
     /**
-     * ·ÖÅä³ÆºÅ¸øÍæ¼Ò
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
+     * åˆ†é…ç§°å·ç»™ç©å®¶
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
      */
     public static void divideTitleToPlayer(@NotNull SQLManager sqlManager, String name){
 
     }
 
     /**
-     * ÊÕ»ØÍæ¼ÒµÄ³ÆºÅ
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
+     * æ”¶å›ç©å®¶çš„ç§°å·
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
      */
     public static void retrieveTitleFromPlayer(@NotNull SQLManager sqlManager, String name){
 
@@ -123,18 +123,18 @@ public class DataBaseOperate {
     //-------------------------
 
     /**
-     * ´©´÷Ò»¸ö³ÆºÅ
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param name ³ÆºÅÊ¶±ğ ID
+     * ç©¿æˆ´ä¸€ä¸ªç§°å·
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param name ç§°å·è¯†åˆ« ID
      */
     public static void playerWearTitle(@NotNull SQLManager sqlManager, String name) {
 
     }
 
     /**
-     * Õª³ıÇ°×º»òºó×º
-     * @param sqlManager Êı¾İ¿âÊµÀı
-     * @param isPrefix ÊÇ·ñÊÇÇ°×º
+     * æ‘˜é™¤å‰ç¼€æˆ–åç¼€
+     * @param sqlManager æ•°æ®åº“å®ä¾‹
+     * @param isPrefix æ˜¯å¦æ˜¯å‰ç¼€
      */
     public static void playerPickTitle(@NotNull SQLManager sqlManager, boolean isPrefix){
 

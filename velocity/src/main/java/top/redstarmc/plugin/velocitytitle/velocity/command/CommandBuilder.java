@@ -12,7 +12,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import static net.kyori.adventure.text.Component.text;
 
 /**
- * <h1>ÃüÁî¹¹½¨Æ÷</h1>
+ * <h1>å‘½ä»¤æ„å»ºå™¨</h1>
  */
 public abstract class CommandBuilder {
 
