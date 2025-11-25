@@ -36,7 +36,7 @@ public class CreateBuilder extends CommandBuilder{
                                     String display = context.getArgument("display", String.class);
                                     String description = context.getArgument("description", String.class);
 
-                                    DataBaseOperate.insertTitle(sqlManager, name, display, description, isPrefix);
+                                    DataBaseOperate.insertTitle(context.getSource(), name, display, description, isPrefix);
 
                                     context.getSource().sendMessage(TextSer.legToCom(
                                             language.getConfigToml().getString("commands.create-success")

@@ -33,7 +33,9 @@ reload = "插件配置文件已重载。"
 root = "========VelocityTitle========\n"
 parameter-less = "缺少必要的参数！"
 create-success = "创建成功！"
+unknown = "您操作的称号不存在！"
 console = "控制台不能执行该指令！"
+error = "出现错误！请查看控制台！"
 
 # 命令帮助类
 [commands.helps]

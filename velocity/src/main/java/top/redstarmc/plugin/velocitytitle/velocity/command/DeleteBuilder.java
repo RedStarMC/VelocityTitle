@@ -31,7 +31,7 @@ public class DeleteBuilder extends CommandBuilder{
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
 
-                                    DataBaseOperate.deleteTitle(sqlManager, name);
+                                    DataBaseOperate.deleteTitle(context.getSource(), name);
 
                                     return Command.SINGLE_SUCCESS;
                                 })
@@ -48,7 +48,7 @@ public class DeleteBuilder extends CommandBuilder{
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
 
-                                    DataBaseOperate.deleteTitle(sqlManager, name);
+                                    DataBaseOperate.deleteTitle(context.getSource(), name);
 
                                     return Command.SINGLE_SUCCESS;
                                 })

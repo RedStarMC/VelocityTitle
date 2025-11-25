@@ -5,4 +5,4 @@ import org.jetbrains.annotations.NotNull;
 /**
  * 称号实例
  */
-public record Title(@NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }
+public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }

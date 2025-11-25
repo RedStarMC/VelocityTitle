@@ -22,6 +22,7 @@ public enum TitleDictionary implements SQLTable {
     });
 
     private final Consumer<TableCreateBuilder> builder;
+
     private @Nullable SQLManager manager;
 
     public static final String tableName = "TITLE_DICTIONARY";

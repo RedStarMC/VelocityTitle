@@ -18,7 +18,6 @@ public enum PlayerTitles implements SQLTable {
 
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("player_uuid", "VARCHAR(38) NOT NULL", "玩家 uuid");
-        table.addColumn("title_type", "ENUM(prefix,suffix) NOT NULL", "称号类型，只能有两种字符串");
         table.addColumn("title_name", "INT NOT NULL", "称号 id 对应主表的自增主键");
         table.addColumn("time_until","DATETIME NOT NULL", "到期时间，用 DATETIME");
 
