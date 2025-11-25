@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
-import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 public class WearBuilder extends CommandBuilder{
     @Override
@@ -14,14 +14,14 @@ public class WearBuilder extends CommandBuilder{
         return LiteralArgumentBuilder.<CommandSource>literal("wear")
                 .requires(source -> source.hasPermission("velocitytitle.wear"))
                 .executes(context -> {
-                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                    context.getSource().sendMessage(TextSer.legToCom(
                             language.getConfigToml().getString("commands.parameter-less")
                     ));
                     return Command.SINGLE_SUCCESS;
                 })
                 .then(LiteralArgumentBuilder.<CommandSource>literal("suffix")
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.parameter-less")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -34,7 +34,7 @@ public class WearBuilder extends CommandBuilder{
                                     if(context.getSource() instanceof Player player){
                                         uuid = player.getUniqueId().toString();
                                     }else {
-                                        context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                        context.getSource().sendMessage(TextSer.legToCom(
                                                 language.getConfigToml().getString("commands.console")
                                         ));
                                         return -1;
@@ -47,7 +47,7 @@ public class WearBuilder extends CommandBuilder{
                 )
                 .then(LiteralArgumentBuilder.<CommandSource>literal("prefix")
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.parameter-less")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -60,7 +60,7 @@ public class WearBuilder extends CommandBuilder{
                                     if(context.getSource() instanceof Player player){
                                         uuid = player.getUniqueId().toString();
                                     }else {
-                                        context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                        context.getSource().sendMessage(TextSer.legToCom(
                                                 language.getConfigToml().getString("commands.console")
                                         ));
                                         return -1;

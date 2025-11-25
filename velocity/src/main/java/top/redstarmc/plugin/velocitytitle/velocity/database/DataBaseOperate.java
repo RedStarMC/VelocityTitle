@@ -1,25 +1,38 @@
-package top.redstarmc.plugin.velocitytitle.velocity.database.operate;
+package top.redstarmc.plugin.velocitytitle.velocity.database;
 
 import cc.carm.lib.easysql.api.SQLManager;
 import org.jetbrains.annotations.NotNull;
-import top.redstarmc.plugin.velocitytitle.velocity.database.Title;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.TitleDictionary;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.record.Title;
 
 import java.sql.ResultSet;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TitleDictionaryOperate implements EasySQLOperate {
+/**
+ * <h1>数据库操作</h1>
+ * 各种数据库操作的实现。<br>
+ * 使用 {@link SQLManager} 进行各种操作<br>
+ * TODO 问题：是否需要异步处理？如果需要，怎么进行异步处理？
+ */
+public class DataBaseOperate {
+
+    public static LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
+
+    public static ConfigManager language = VelocityTitleVelocity.getInstance().getLanguage();
 
     /**
      * 将一个新称号加入称号库
      * @param sqlManager 数据库实例
-     * @param name 称号的名字
+     * @param name 称号识别 ID
      * @param display 实际的展示内容
      * @param description 描述
      * @param isPrefix 是否为前缀
      */
     public static void insertTitle(@NotNull SQLManager sqlManager, String name, String display, String description, boolean isPrefix){
-        sqlManager.createReplace(TitleDictionary.TITLE_DICTIONARY.getTableName()) // 使用 Replace
+        sqlManager.createInsert(TitleDictionary.TITLE_DICTIONARY.getTableName()) // 使用 Replace
                 .setColumnNames("name", "display", "description", "type")
                 .setParams(name, display, description, isPrefix ? "prefix" : "suffix")
                 .executeAsync((query) -> {},
@@ -30,7 +43,7 @@ public class TitleDictionaryOperate implements EasySQLOperate {
     /**
      * 查询一个称号信息
      * @param sqlManager 数据库实例
-     * @param name 称号的名字
+     * @param name 称号识别 ID
      * @param isPrefix 是否是前缀
      */
     public static Title selectTitle(@NotNull SQLManager sqlManager, String name, boolean isPrefix){
@@ -46,7 +59,7 @@ public class TitleDictionaryOperate implements EasySQLOperate {
                             if(result.next()){
                                 String display = result.getString("display");
                                 String description = result.getString("description");
-                                title.set(new Title(name, display, description, isPrefix ? "prefix" : "suffix"));
+                                title.set(new Title(name, display, description, isPrefix));
                             }
                         },
                         ((exception, sqlAction) -> logger.crash(exception,language.getConfigToml().getString("database.failed-operate")))
@@ -55,9 +68,18 @@ public class TitleDictionaryOperate implements EasySQLOperate {
     }
 
     /**
+     * 编辑一个称号的信息
+     * @param sqlManager 数据库实例
+     * @param name 称号识别 ID
+     */
+    public static void updateTitle(@NotNull SQLManager sqlManager, String name){
+
+    }
+
+    /**
      * 从称号库删除一个称号
      * @param sqlManager 数据库实例
-     * @param name 称号的名字
+     * @param name 称号识别 ID
      */
     public static void deleteTitle(@NotNull SQLManager sqlManager, String name){
         sqlManager.createDelete(TitleDictionary.TITLE_DICTIONARY.getTableName())
@@ -66,6 +88,56 @@ public class TitleDictionaryOperate implements EasySQLOperate {
                 .executeAsync((query) -> {},
                         ((exception, sqlAction) -> logger.crash(exception,language.getConfigToml().getString("database.failed-operate")))
                 );
+    }
+
+    //-------------------------
+
+    /**
+     * 查询玩家是否拥有这个称号
+     * @param sqlManager 数据库实例
+     * @param name 称号识别 ID
+     * @return 是否拥有
+     */
+    public static boolean queryTitleOfPlayer(@NotNull SQLManager sqlManager, String name){
+        return false;
+    }
+
+    /**
+     * 分配称号给玩家
+     * @param sqlManager 数据库实例
+     * @param name 称号识别 ID
+     */
+    public static void divideTitleToPlayer(@NotNull SQLManager sqlManager, String name){
+
+    }
+
+    /**
+     * 收回玩家的称号
+     * @param sqlManager 数据库实例
+     * @param name 称号识别 ID
+     */
+    public static void retrieveTitleFromPlayer(@NotNull SQLManager sqlManager, String name){
+
+    }
+
+    //-------------------------
+
+    /**
+     * 穿戴一个称号
+     * @param sqlManager 数据库实例
+     * @param name 称号识别 ID
+     */
+    public static void playerWearTitle(@NotNull SQLManager sqlManager, String name) {
+
+    }
+
+    /**
+     * 摘除前缀或后缀
+     * @param sqlManager 数据库实例
+     * @param isPrefix 是否是前缀
+     */
+    public static void playerPickTitle(@NotNull SQLManager sqlManager, boolean isPrefix){
+
     }
 
 }

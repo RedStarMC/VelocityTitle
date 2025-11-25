@@ -3,6 +3,7 @@ package top.redstarmc.plugin.velocitytitle.velocity.database.operate;
 import cc.carm.lib.easysql.api.SQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
 
+@Deprecated
 public class PlayerWearOperate implements EasySQLOperate {
 
     public static void replaceUUID(SQLManager sqlManager, String uuid, String name) {

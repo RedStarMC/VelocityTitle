@@ -6,8 +6,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.TitleDictionaryOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 /**
  * <h1>创建称号命令</h1>
@@ -18,14 +18,14 @@ public class CreateBuilder extends CommandBuilder{
     public RequiredArgumentBuilder<CommandSource, String> preBuild(boolean isPrefix){
         return BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.string())
                 .executes(context -> {
-                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                    context.getSource().sendMessage(TextSer.legToCom(
                             language.getConfigToml().getString("commands.parameter-less")
                     ));
                     return Command.SINGLE_SUCCESS;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.parameter-less")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -36,9 +36,9 @@ public class CreateBuilder extends CommandBuilder{
                                     String display = context.getArgument("display", String.class);
                                     String description = context.getArgument("description", String.class);
 
-                                    TitleDictionaryOperate.insertTitle(sqlManager, name, display, description, isPrefix);
+                                    DataBaseOperate.insertTitle(sqlManager, name, display, description, isPrefix);
 
-                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                    context.getSource().sendMessage(TextSer.legToCom(
                                             language.getConfigToml().getString("commands.create-success")
                                     ));
 
@@ -54,10 +54,10 @@ public class CreateBuilder extends CommandBuilder{
                 .requires(source -> source.hasPermission("velocitytitle.create"))
                 .executes(context -> {
                     CommandSource source = context.getSource();
-                    source.sendMessage(TextSerializers.legacyToComponent(
+                    source.sendMessage(TextSer.legToCom(
                             language.getConfigToml().getString("commands.helps.create-prefix")
                     ));
-                    source.sendMessage(TextSerializers.legacyToComponent(
+                    source.sendMessage(TextSer.legToCom(
                             language.getConfigToml().getString("commands.helps.create-suffix")
                     ));
                     return Command.SINGLE_SUCCESS;
@@ -65,7 +65,7 @@ public class CreateBuilder extends CommandBuilder{
                 .then(LiteralArgumentBuilder.<CommandSource>literal("prefix")
                         .requires(source -> source.hasPermission("velocitytitle.create"))
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.helps.create-prefix")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -75,7 +75,7 @@ public class CreateBuilder extends CommandBuilder{
                 .then(LiteralArgumentBuilder.<CommandSource>literal("suffix")
                         .requires(source -> source.hasPermission("velocitytitle.create"))
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.helps.create-suffix")
                             ));
                             return Command.SINGLE_SUCCESS;

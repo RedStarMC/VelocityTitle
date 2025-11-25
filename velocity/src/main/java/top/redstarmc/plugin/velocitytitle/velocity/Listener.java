@@ -25,11 +25,8 @@ public class Listener {
      */
     @Subscribe
     public void onServerPostConnectEvent(@NotNull ServerPostConnectEvent event){
-        Player player_tmp = event.getPlayer();
-        String name = player_tmp.getUsername();
-        Player player = VelocityTitleVelocity.getInstance().getServer().getPlayer(name).orElse(null);
+        Player player = event.getPlayer();
 
-        if (player == null) return;
         // TODO
         // PlayerWearOperate.replaceUUID(EasySQLManager.getSqlManager(), player.getUniqueId().toString(), name);
     }

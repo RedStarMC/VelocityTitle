@@ -3,6 +3,7 @@ package top.redstarmc.plugin.velocitytitle.velocity.database.operate;
 import cc.carm.lib.easysql.api.SQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
 
+@Deprecated
 public class PlayerTitlesOperate implements EasySQLOperate {
 
     public static void insertPrefix(SQLManager sqlManager, String uuid, String name){

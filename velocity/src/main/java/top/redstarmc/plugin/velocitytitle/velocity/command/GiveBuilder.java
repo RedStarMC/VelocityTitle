@@ -7,7 +7,7 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
-import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -17,14 +17,14 @@ public class GiveBuilder extends CommandBuilder{
         return LiteralArgumentBuilder.<CommandSource>literal("give")
                 .requires(source -> source.hasPermission("velocitytitle.give"))
                 .executes(context -> {
-                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                    context.getSource().sendMessage(TextSer.legToCom(
                             language.getConfigToml().getString("commands.helps.create-prefix")
                     ));
                     return Command.SINGLE_SUCCESS;
                 })
                 .then(LiteralArgumentBuilder.<CommandSource>literal("prefix")
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.parameter-less")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -38,7 +38,7 @@ public class GiveBuilder extends CommandBuilder{
                                     return builder.buildFuture();
                                 })
                                 .executes(context -> {
-                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                    context.getSource().sendMessage(TextSer.legToCom(
                                             language.getConfigToml().getString("commands.parameter-less")
                                     ));
                                     return Command.SINGLE_SUCCESS;
@@ -59,7 +59,7 @@ public class GiveBuilder extends CommandBuilder{
                 )
                 .then(LiteralArgumentBuilder.<CommandSource>literal("suffix")
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.parameter-less")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -73,7 +73,7 @@ public class GiveBuilder extends CommandBuilder{
                                     return builder.buildFuture();
                                 })
                                 .executes(context -> {
-                                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                                    context.getSource().sendMessage(TextSer.legToCom(
                                             language.getConfigToml().getString("commands.parameter-less")
                                     ));
                                     return Command.SINGLE_SUCCESS;

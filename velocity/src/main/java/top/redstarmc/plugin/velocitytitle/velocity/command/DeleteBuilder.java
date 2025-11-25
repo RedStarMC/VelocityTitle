@@ -5,8 +5,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
-import top.redstarmc.plugin.velocitytitle.velocity.database.operate.TitleDictionaryOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.util.TextSerializers;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 public class DeleteBuilder extends CommandBuilder{
 
@@ -15,14 +15,14 @@ public class DeleteBuilder extends CommandBuilder{
         return LiteralArgumentBuilder.<CommandSource>literal("delete")
                 .requires(source -> source.hasPermission("velocitytitle.delete"))
                 .executes(context -> {
-                    context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                    context.getSource().sendMessage(TextSer.legToCom(
                             language.getConfigToml().getString("commands.parameter-less")
                     ));
                     return Command.SINGLE_SUCCESS;
                 })
                 .then(LiteralArgumentBuilder.<CommandSource>literal("prefix")
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.parameter-less")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -31,7 +31,7 @@ public class DeleteBuilder extends CommandBuilder{
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
 
-                                    TitleDictionaryOperate.deleteTitle(sqlManager, name);
+                                    DataBaseOperate.deleteTitle(sqlManager, name);
 
                                     return Command.SINGLE_SUCCESS;
                                 })
@@ -39,7 +39,7 @@ public class DeleteBuilder extends CommandBuilder{
                 )
                 .then(LiteralArgumentBuilder.<CommandSource>literal("suffix")
                         .executes(context -> {
-                            context.getSource().sendMessage(TextSerializers.legacyToComponent(
+                            context.getSource().sendMessage(TextSer.legToCom(
                                     language.getConfigToml().getString("commands.parameter-less")
                             ));
                             return Command.SINGLE_SUCCESS;
@@ -48,7 +48,7 @@ public class DeleteBuilder extends CommandBuilder{
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
 
-                                    TitleDictionaryOperate.deleteTitle(sqlManager, name);
+                                    DataBaseOperate.deleteTitle(sqlManager, name);
 
                                     return Command.SINGLE_SUCCESS;
                                 })

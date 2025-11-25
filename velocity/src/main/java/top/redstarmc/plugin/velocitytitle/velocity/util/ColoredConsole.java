@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 /**
  * <h1>Velocity 控制台染色器</h1>
  */
-public class ColoredConsole {
+public final class ColoredConsole {
 
     private static final LinkedHashMap<String, String> MAP = new LinkedHashMap<>();
 
