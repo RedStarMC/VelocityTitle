@@ -9,6 +9,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import top.redstarmc.plugin.velocitytitle.core.api.TitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.CreateBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.DeleteBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.EditBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 
 import static net.kyori.adventure.text.Component.text;
@@ -53,15 +55,20 @@ public interface VelocityTitleCommand extends TitleCommand {
                 .build();
     }
 
-
     private static LiteralArgumentBuilder<CommandSource> title() {
         return LiteralArgumentBuilder.<CommandSource>literal("title")
-                .requires(source -> source.hasPermission("velocitytitle.title*"))
+                .requires(source
+                        -> source.hasPermission("velocitytitle.title*")
+                        || source.hasPermission("velocitytitle.title")
+                        || source.hasPermission("velocitytitle.admin")
+                )
                 .executes(context -> {
                     context.getSource().sendMessage(text("°ïÖú"));
                     return 1;
                 })
-                .then(new CreateBuilder().build());
+                .then(new CreateBuilder().build())
+                .then(new EditBuilder().build())
+                .then(new DeleteBuilder().build());
     }
 
 }
