@@ -6,25 +6,40 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
+import top.redstarmc.plugin.velocitytitle.core.api.TitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.CreateBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 
 import static net.kyori.adventure.text.Component.text;
 
-/**
- * <h1>å‘½ä»¤æ„å»ºå™¨</h1>
- */
-@Deprecated
-public abstract class CommandBuilder {
+public interface VelocityTitleCommand extends TitleCommand {
 
+    /**
+     * ÓïÑÔÎÄ¼ş
+     */
     public static final ConfigManager language = VelocityTitleVelocity.getInstance().getLanguage();
 
+    /**
+     * ·şÎñÆ÷ÊµÀı
+     */
     public static final ProxyServer proxyServer = VelocityTitleVelocity.getInstance().getServer();
 
-    protected static SQLManager sqlManager = VelocityTitleVelocity.getInstance().getDBManager().getSqlManager();
+    /**
+     * Êı¾İ¿âÊµÀı
+     */
+    public static SQLManager sqlManager = VelocityTitleVelocity.getInstance().getDBManager().getSqlManager();
 
+    /**
+     * ×ÓÃüÁîÊ÷
+     * @return Ö±½ÓÍ¨¹ıÌí¼Óµ½ then() Ìí¼ÓµÄÃüÁîÊ÷
+     */
     public abstract LiteralArgumentBuilder<CommandSource> build();
 
+    /**
+     * ³õÊ¼»¯ÃüÁî·½·¨
+     * @return Õû¸öÃüÁîÊ÷
+     */
     public static LiteralCommandNode<CommandSource> init(){
         return LiteralArgumentBuilder.<CommandSource>literal("VelocityTitle")
                 .executes(context -> {
@@ -32,13 +47,21 @@ public abstract class CommandBuilder {
                             .append(text(language.getConfigToml().getString("commands.helps.open"))));
                     return Command.SINGLE_SUCCESS;
                 })
-                .then(new CreateBuilder().build())
-                .then(new DeleteBuilder().build())
-                .then(new GiveBuilder().build())
                 .then(new HelpBuilder().build())
                 .then(new ReloadBuilder().build())
-                .then(new RevokeBuilder().build())
+                .then(title())
                 .build();
+    }
+
+
+    private static LiteralArgumentBuilder<CommandSource> title() {
+        return LiteralArgumentBuilder.<CommandSource>literal("title")
+                .requires(source -> source.hasPermission("velocitytitle.title*"))
+                .executes(context -> {
+                    context.getSource().sendMessage(text("°ïÖú"));
+                    return 1;
+                })
+                .then(new CreateBuilder().build());
     }
 
 }

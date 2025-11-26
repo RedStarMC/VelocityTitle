@@ -8,6 +8,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
+@Deprecated
 public class WearBuilder extends CommandBuilder{
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {

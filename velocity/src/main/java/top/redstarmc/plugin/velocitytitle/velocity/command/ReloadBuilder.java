@@ -7,7 +7,8 @@ import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
-public class ReloadBuilder extends CommandBuilder{
+public class ReloadBuilder implements VelocityTitleCommand {
+
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("reload")
@@ -23,4 +24,5 @@ public class ReloadBuilder extends CommandBuilder{
                     return Command.SINGLE_SUCCESS;
                 });
     }
+
 }

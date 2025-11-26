@@ -11,6 +11,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
 
+@Deprecated
 public class RevokeBuilder extends CommandBuilder{
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {

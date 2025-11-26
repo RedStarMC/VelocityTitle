@@ -10,7 +10,7 @@ import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import top.redstarmc.plugin.velocitytitle.velocity.command.CommandBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Config;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
@@ -96,7 +96,7 @@ public class VelocityTitleVelocity {
                 .aliases("vt")
                 .build();
 
-        commandManager.register(commandMeta,new BrigadierCommand(CommandBuilder.init()));
+        commandManager.register(commandMeta,new BrigadierCommand(VelocityTitleCommand.init()));
     }
 
 

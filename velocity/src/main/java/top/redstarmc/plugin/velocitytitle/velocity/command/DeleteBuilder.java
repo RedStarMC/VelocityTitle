@@ -8,6 +8,7 @@ import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
+@Deprecated
 public class DeleteBuilder extends CommandBuilder{
 
     @Override

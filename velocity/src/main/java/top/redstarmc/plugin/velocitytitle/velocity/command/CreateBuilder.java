@@ -12,6 +12,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 /**
  * <h1>创建称号命令</h1>
  */
+@Deprecated
 public class CreateBuilder extends CommandBuilder{
 
 
