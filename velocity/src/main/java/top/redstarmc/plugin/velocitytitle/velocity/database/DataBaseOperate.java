@@ -81,7 +81,7 @@ public class DataBaseOperate {
      */
     public static void insertTitle(@NotNull CommandSource source, String name, String display, String description, boolean isPrefix){
         //1.查询该 ID 是否存在
-        if (selectTitle(source, name) == null){
+        if (selectTitle(source, name) != null){
             source.sendMessage(TextSer.legToCom(getLanguage().getConfigToml().getString("commands.unknown"))); //不存在
             return;
         }
@@ -191,7 +191,8 @@ public class DataBaseOperate {
         getSqlManager().createQuery()
                 .inTable(PlayerTitles.tableName)
                 .selectColumns("title_name", "player_uuid")
-                .addCondition(name, UUID)
+                .addCondition("title_name", name)
+                .addCondition("player_uuid", UUID)
                 .build()
                 .executeAsync(
                         query -> {
