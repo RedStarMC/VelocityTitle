@@ -38,9 +38,9 @@ allprojects {
         }
     }
 
-    // 固定使用 Java19
+    // 固定使用 Java21
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(19))
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     processResources {
