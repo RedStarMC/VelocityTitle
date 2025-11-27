@@ -1,14 +1,15 @@
-package top.redstarmc.plugin.velocitytitle.velocity.command;
+package top.redstarmc.plugin.velocitytitle.velocity.command.player;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
+import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 
 import static net.kyori.adventure.text.Component.text;
 
-public class WearBuilder implements VelocityTitleCommand{
+public class RevokeBuilder implements VelocityTitleCommand {
 
     /**
      * 子命令树
@@ -17,24 +18,18 @@ public class WearBuilder implements VelocityTitleCommand{
      */
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
-        return LiteralArgumentBuilder.<CommandSource>literal("wear")
+        return LiteralArgumentBuilder.<CommandSource>literal("revoke")
+                .requires(source
+                        -> source.hasPermission("velocitytitle.player*")
+                        || source.hasPermission("velocitytitle.player.revoke")
+                        || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
                     context.getSource().sendMessage(text("帮助"));
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
-                        .executes(context -> { // 给自己改
-                            String name = context.getArgument("name", String.class);
-
-                            execute(context.getSource(), name);
-
-                            return 1;
-                        })
+                        .executes(context -> 1)
                         .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.string())
-                                .requires(source
-                                    -> source.hasPermission("velocitytitle.wear.other")
-                                    || source.hasPermission("velocitytitle.admin")
-                                )
                                 .suggests((context, builder) -> { // 提供所有的玩家名字
                                     proxyServer.getAllPlayers().forEach(player -> builder.suggest(
                                             player.getUsername(),
@@ -55,10 +50,6 @@ public class WearBuilder implements VelocityTitleCommand{
     }
 
     private void execute(CommandSource source, String name, String player){
-
-    }
-
-    private void execute(CommandSource source, String name){
 
     }
 }

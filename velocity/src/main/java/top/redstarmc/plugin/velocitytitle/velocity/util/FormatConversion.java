@@ -1,5 +1,6 @@
 package top.redstarmc.plugin.velocitytitle.velocity.util;
 
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,6 +37,14 @@ public final class FormatConversion {
         Player player = VelocityTitleVelocity.getInstance().getServer().getPlayer(player_name).orElse(null);
         if (player != null) return player.getUniqueId();
         else return null;
+    }
+
+    public static Player sourceToPlayer(@NotNull CommandSource source){
+        if(source instanceof Player player){
+            return player;
+        }else {
+            return null;
+        }
     }
 
 }
