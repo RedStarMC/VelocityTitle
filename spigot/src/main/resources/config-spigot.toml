@@ -1,0 +1,8 @@
+# 运行在 Spigot 上时的配置
+
+# 不要更改本设置，否则会造成配置重置，后果自负。
+# 更新新的插件版本也会导致配置重置。请务必提前备份配置文件
+version = "@VERSION@"
+
+# 插件提示前缀（可以使用 & 符号）
+plugin-prefix = "[VelocityTitleSpigot] "

@@ -107,7 +107,7 @@ public abstract class AbstractTomlManager {
         try {
             configToml = IOUtils.readToml(file);
         } catch (FileNotFoundException e) {
-            e.printStackTrace(); //TODO 修改输出
+            e.printStackTrace();
         }
     }
 
@@ -122,8 +122,6 @@ public abstract class AbstractTomlManager {
 
         updateFile();
 
-        loadConfig();
-
     }
 
     public final File getFile() {
@@ -133,4 +131,5 @@ public abstract class AbstractTomlManager {
     public final Toml getConfigToml() {
         return configToml;
     }
+
 }

@@ -1,6 +1,8 @@
 package top.redstarmc.plugin.velocitytitle.spigot;
 
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.plugin.java.JavaPlugin;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
 import java.util.concurrent.ExecutorService;
@@ -15,14 +17,38 @@ public class VelocityTitleSpigot extends JavaPlugin {
 
     private PluginMessageBukkit pluginMessage;
 
+    private ConfigManager config;
+
+    private ConfigManager language;
+
     private ExecutorService messageExecutor;
 
     @Override
     public void onEnable() {
+        System.out.println("[VelocityTitle] Loading...");
         instance = this;
-        logger = new LoggerManager("[VelocityTitle]", true);
 
-        logger.debug("测试1");
+        System.out.println("[VelocityTitle] Configurations Loading...");
+        config = new ConfigManager(getDataFolder(), "config-spigot.toml");
+        language = new ConfigManager(getDataFolder(), "language-spigot.toml");
+
+        logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"), true);
+
+        logger.info("Language: "+language.getConfigToml().getString("name"));
+
+        logger.info(language.getConfigToml().getString("logs.loading"));
+        logger.info(language.getConfigToml().getString("logs.author")," pingguomc");
+        logger.debug(language.getConfigToml().getString("logs.debug"));
+        logger.info(language.getConfigToml().getString("logs.website")," https://github.com/RedStarMC/VelocityTitle");
+
+        //=========
+        // TODO 检查服务端是否启用 Velocity 模式
+        //=========
+
+        logger.info(language.getConfigToml().getString("logs.command-loading"));
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            commands.registrar().register(new CommandBuilder().init().build());
+        });
 
         // 1. 初始化线程池（固定大小为8，避免线程过多）
         messageExecutor = Executors.newFixedThreadPool(
@@ -30,23 +56,20 @@ public class VelocityTitleSpigot extends JavaPlugin {
                 r -> new Thread(r, "VelocityTitle-Message-Thread") // 线程命名，便于调试
         );
 
-        logger.debug("测试2");
-
+        logger.info(language.getConfigToml().getString("logs.listener-loading"));
         getServer().getPluginManager().registerEvents(new Listener(), this);
 
-
-
+        logger.info(language.getConfigToml().getString("logs.channel-loading"));
         pluginMessage = new PluginMessageBukkit(messageExecutor, this);
 
-        logger.debug("测试3");
-
-        if (pluginMessage == null) logger.error("空的！");
+        logger.info(language.getConfigToml().getString("logs.end"));
+        logger.warn("当前运行的插件为后端插件，需要在 Velocity 运行 Velocity版插件，否则本插件无法正常运行！");
     }
 
 
     @Override
     public void onDisable() {
-        getServer().getLogger().info("ces");
+
     }
 
 
@@ -56,6 +79,14 @@ public class VelocityTitleSpigot extends JavaPlugin {
 
     public LoggerManager getLoggerManager() {
         return logger;
+    }
+
+    public ConfigManager getNewConfig() {
+        return config;
+    }
+
+    public ConfigManager getLanguage() {
+        return language;
     }
 
     public PluginMessageBukkit getPluginMessage() {

@@ -1,0 +1,32 @@
+# 运行在 Spigot 上时的语言配置
+
+# 不要更改本设置，否则会造成配置重置，后果自负。
+# 更新新的插件版本也会导致配置重置。请务必提前备份配置文件
+version = "@VERSION@"
+
+# 语言名称
+# 将会显示在日志和各种提示中
+name = "简体中文"
+
+[logs]
+loading = "插件正在启动 ~ ~ ~"
+command-loading = "正在注册 命令 ……"
+listener-loading = "正在注册 监听器 ……"
+channel-loading = "正在注册 插件消息通道 ……"
+author = "插件作者："
+thanks = "感谢您使用本插件！"
+end = "===加载完毕==="
+website = "本插件是开源的。Github ："
+reload = "插件配置文件已重载。"
+success = "您已成功加载本插件！本插件只支持 Velocity，请务必使用 Velocity 模式"
+
+[logs.velocity]
+t = "您当前已启用 Velocity 模式"
+f = "您当前未使用 Velocity 模式"
+
+[command]
+root = "========VelocityTitle========\n"
+help = "====命令帮助====\n"
+gui = "/vts gui 打开 GUI （暂未制作）"
+success = "如果您看到了本消息，说明该插件的 Spigot 模块已正常加载"
+console = "控制台不能执行该指令！"

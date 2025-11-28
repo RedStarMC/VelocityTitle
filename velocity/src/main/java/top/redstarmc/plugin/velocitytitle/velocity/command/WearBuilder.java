@@ -11,19 +11,19 @@ import static net.kyori.adventure.text.Component.text;
 public class WearBuilder implements VelocityTitleCommand{
 
     /**
-     * ×ÓÃüÁîÊ÷
+     * å­å‘½ä»¤æ ‘
      *
-     * @return Ö±½ÓÍ¨¹ıÌí¼Óµ½ then() Ìí¼ÓµÄÃüÁîÊ÷
+     * @return ç›´æ¥é€šè¿‡æ·»åŠ åˆ° then() æ·»åŠ çš„å‘½ä»¤æ ‘
      */
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("wear")
                 .executes(context -> {
-                    context.getSource().sendMessage(text("°ïÖú"));
+                    context.getSource().sendMessage(text("å¸®åŠ©"));
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
-                        .executes(context -> { // ¸ø×Ô¼º¸Ä
+                        .executes(context -> { // ç»™è‡ªå·±æ”¹
                             String name = context.getArgument("name", String.class);
 
                             execute(context.getSource(), name);
@@ -35,7 +35,7 @@ public class WearBuilder implements VelocityTitleCommand{
                                     -> source.hasPermission("velocitytitle.wear.other")
                                     || source.hasPermission("velocitytitle.admin")
                                 )
-                                .suggests((context, builder) -> { // Ìá¹©ËùÓĞµÄÍæ¼ÒÃû×Ö
+                                .suggests((context, builder) -> { // æä¾›æ‰€æœ‰çš„ç©å®¶åå­—
                                     proxyServer.getAllPlayers().forEach(player -> builder.suggest(
                                             player.getUsername(),
                                             VelocityBrigadierMessage.tooltip(text(player.getUsername()))
