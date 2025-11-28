@@ -14,9 +14,9 @@ import static net.kyori.adventure.text.Component.text;
 public class CreateBuilder implements VelocityTitleCommand {
 
     /**
-     * ×ÓÃüÁîÊ÷
+     * å­å‘½ä»¤æ ‘
      *
-     * @return Ö±½ÓÍ¨¹ıÌí¼Óµ½ then() Ìí¼ÓµÄÃüÁîÊ÷
+     * @return ç›´æ¥é€šè¿‡æ·»åŠ åˆ° then() æ·»åŠ çš„å‘½ä»¤æ ‘
      */
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
@@ -26,7 +26,7 @@ public class CreateBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.title.create")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("°ïÖú"));
+                    context.getSource().sendMessage(text("å¸®åŠ©"));
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("type", StringArgumentType.word())
@@ -38,7 +38,7 @@ public class CreateBuilder implements VelocityTitleCommand {
                                             String type = context.getArgument("type", String.class);
                                             String name = context.getArgument("name", String.class);
                                             String display = context.getArgument("display", String.class);
-                                            String description = "ÎŞ";
+                                            String description = "æ— ";
 
                                             execute(context.getSource(), type, name, display, description);
 
@@ -67,7 +67,7 @@ public class CreateBuilder implements VelocityTitleCommand {
         } else if (type.equals("suffix") || type.equals("suf") || type.equals("s")) {
             isPrefix = false;
         }else {
-            source.sendMessage(text("´íÎóĞÅÏ¢")); //TODO
+            source.sendMessage(text("é”™è¯¯ä¿¡æ¯")); //TODO
             return;
         }
 

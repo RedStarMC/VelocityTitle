@@ -9,7 +9,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 public class ReloadBuilder implements VelocityTitleCommand {
 
-    //TODO Ôİ²»È·¶¨ÊÇ·ñÄÜÕı³£ÔËĞĞ
+    //TODO æš‚ä¸ç¡®å®šæ˜¯å¦èƒ½æ­£å¸¸è¿è¡Œ
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("reload")

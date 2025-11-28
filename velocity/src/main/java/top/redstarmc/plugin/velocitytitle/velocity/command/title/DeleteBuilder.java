@@ -12,9 +12,9 @@ import static net.kyori.adventure.text.Component.text;
 
 public class DeleteBuilder implements VelocityTitleCommand {
     /**
-     * ×ÓÃüÁîÊ÷
+     * å­å‘½ä»¤æ ‘
      *
-     * @return Ö±½ÓÍ¨¹ıÌí¼Óµ½ then() Ìí¼ÓµÄÃüÁîÊ÷
+     * @return ç›´æ¥é€šè¿‡æ·»åŠ åˆ° then() æ·»åŠ çš„å‘½ä»¤æ ‘
      */
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
@@ -24,7 +24,7 @@ public class DeleteBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.title.delete")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("°ïÖú"));
+                    context.getSource().sendMessage(text("å¸®åŠ©"));
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())

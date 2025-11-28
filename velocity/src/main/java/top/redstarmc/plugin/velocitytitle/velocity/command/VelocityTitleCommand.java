@@ -21,29 +21,29 @@ import static net.kyori.adventure.text.Component.text;
 public interface VelocityTitleCommand extends TitleCommand {
 
     /**
-     * ÓïÑÔÎÄ¼ş
+     * è¯­è¨€æ–‡ä»¶
      */
     static ConfigManager language = VelocityTitleVelocity.getInstance().getLanguage();
 
     /**
-     * ·şÎñÆ÷ÊµÀı
+     * æœåŠ¡å™¨å®ä¾‹
      */
     static ProxyServer proxyServer = VelocityTitleVelocity.getInstance().getServer();
 
     /**
-     * Êı¾İ¿âÊµÀı
+     * æ•°æ®åº“å®ä¾‹
      */
     static SQLManager sqlManager = VelocityTitleVelocity.getInstance().getDBManager().getSqlManager();
 
     /**
-     * ×ÓÃüÁîÊ÷
-     * @return Ö±½ÓÍ¨¹ıÌí¼Óµ½ then() Ìí¼ÓµÄÃüÁîÊ÷
+     * å­å‘½ä»¤æ ‘
+     * @return ç›´æ¥é€šè¿‡æ·»åŠ åˆ° then() æ·»åŠ çš„å‘½ä»¤æ ‘
      */
     LiteralArgumentBuilder<CommandSource> build();
 
     /**
-     * ³õÊ¼»¯ÃüÁî·½·¨
-     * @return Õû¸öÃüÁîÊ÷
+     * åˆå§‹åŒ–å‘½ä»¤æ–¹æ³•
+     * @return æ•´ä¸ªå‘½ä»¤æ ‘
      */
     static LiteralCommandNode<CommandSource> init(){
         return LiteralArgumentBuilder.<CommandSource>literal("VelocityTitle")
@@ -71,7 +71,7 @@ public interface VelocityTitleCommand extends TitleCommand {
                         || source.hasPermission("velocitytitle.admin")
                 )
                 .executes(context -> {
-                    context.getSource().sendMessage(text("°ïÖú"));
+                    context.getSource().sendMessage(text("å¸®åŠ©"));
                     return 1;
                 })
                 .then(new CreateBuilder().build())
@@ -87,7 +87,7 @@ public interface VelocityTitleCommand extends TitleCommand {
     private static LiteralArgumentBuilder<CommandSource> player(){
         return LiteralArgumentBuilder.<CommandSource>literal("player")
                 .executes(context -> {
-                    context.getSource().sendMessage(text("°ïÖú"));
+                    context.getSource().sendMessage(text("å¸®åŠ©"));
                     return 1;
                 })
                 .then(new DivideBuilder().build())
