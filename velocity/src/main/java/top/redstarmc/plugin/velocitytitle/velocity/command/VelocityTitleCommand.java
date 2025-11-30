@@ -59,7 +59,7 @@ public interface VelocityTitleCommand extends TitleCommand {
                 .then(new WearBuilder().build())
                 .then(new PickBuilder().build())
                 .then(new BankBuilder().build())
-                .then(new MetaBuilder().build())
+                //.then(new MetaBuilder().build())
                 .build();
     }
 

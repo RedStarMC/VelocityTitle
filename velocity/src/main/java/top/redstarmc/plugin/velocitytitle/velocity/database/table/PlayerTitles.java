@@ -12,10 +12,11 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
+/**
+ * 存储玩家所拥有的称号
+ */
 public enum PlayerTitles implements SQLTable {
     PLAYER_TITLES((table) -> {
-        table.setTableComment("存储玩家所拥有的称号");
-
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("player_uuid", "VARCHAR(38) NOT NULL", "玩家 uuid");
         table.addColumn("title_name", "INT NOT NULL", "称号 id 对应主表的自增主键");

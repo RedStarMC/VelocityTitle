@@ -64,13 +64,13 @@ public class VelocityTitleVelocity {
         logger.debug(language.getConfigToml().getString("logs.debug"));
         logger.info(language.getConfigToml().getString("logs.website")," https://github.com/RedStarMC/VelocityTitle");
 
-        logger.info(language.getConfigToml().getString("logs.command-loading"));
-        registerCommand();
-        CommandHelp.init();
-
         logger.info(language.getConfigToml().getString("logs.database-loading"));
         DBManager = new EasySQLManager(logger, config, language);
         DBManager.init();
+
+        logger.info(language.getConfigToml().getString("logs.command-loading"));
+        registerCommand();
+        CommandHelp.init();
 
         logger.info(language.getConfigToml().getString("logs.listener-loading"));
         server.getEventManager().register(this, new Listener());
