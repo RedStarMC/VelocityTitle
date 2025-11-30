@@ -17,5 +17,4 @@ public final class TextSer {
     public static @NotNull Component legToCom(String text){
         return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
     }
-
 }

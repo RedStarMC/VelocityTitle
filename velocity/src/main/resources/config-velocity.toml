@@ -4,7 +4,7 @@
 # 更新新的插件版本也会导致配置重置。请务必提前备份配置文件
 version = "@VERSION@"
 
-# 插件提示前缀（可以使用 & 符号）
+# 插件主前缀（可以使用 & 符号）
 plugin-prefix = "[VelocityTitle] "
 
 # 是否开启 Debug 模式

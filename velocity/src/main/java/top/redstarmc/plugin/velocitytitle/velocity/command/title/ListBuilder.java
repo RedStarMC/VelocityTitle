@@ -12,9 +12,9 @@ import static net.kyori.adventure.text.Component.text;
 public class ListBuilder implements VelocityTitleCommand {
 
     /**
-     * ×ÓÃüÁîÊ÷
+     * å­å‘½ä»¤æ ‘
      *
-     * @return Ö±½ÓÍ¨¹ıÌí¼Óµ½ then() Ìí¼ÓµÄÃüÁîÊ÷
+     * @return ç›´æ¥é€šè¿‡æ·»åŠ åˆ° then() æ·»åŠ çš„å‘½ä»¤æ ‘
      */
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
@@ -35,7 +35,7 @@ public class ListBuilder implements VelocityTitleCommand {
     void execute(CommandSource source){
         ArrayList<Title> titles = new ArrayList<Title>();
 
-        //TODO ²éÑ¯ Õ¹Ê¾
+        //TODO æŸ¥è¯¢ å±•ç¤º
 
         for (Title title : titles){
             source.sendMessage(text(title.name()));

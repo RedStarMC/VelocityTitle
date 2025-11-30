@@ -14,6 +14,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.title.CreateBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.DeleteBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.EditBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.ListBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandHelp;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 
 import static net.kyori.adventure.text.Component.text;
@@ -48,18 +49,17 @@ public interface VelocityTitleCommand extends TitleCommand {
     static LiteralCommandNode<CommandSource> init(){
         return LiteralArgumentBuilder.<CommandSource>literal("VelocityTitle")
                 .executes(context -> {
-                    context.getSource().sendMessage(text(language.getConfigToml().getString("commands.root"))
-                            .append(text(language.getConfigToml().getString("commands.helps.open"))));
+                    context.getSource().sendMessage(CommandHelp.root());
                     return Command.SINGLE_SUCCESS;
                 })
-                .then(new HelpBuilder().build())
-                .then(new ReloadBuilder().build())
                 .then(title())
                 .then(player())
-                .then(database())
+                .then(new HelpBuilder().build())
+                .then(new ReloadBuilder().build())
                 .then(new WearBuilder().build())
                 .then(new PickBuilder().build())
                 .then(new BankBuilder().build())
+                .then(new MetaBuilder().build())
                 .build();
     }
 
@@ -71,7 +71,7 @@ public interface VelocityTitleCommand extends TitleCommand {
                         || source.hasPermission("velocitytitle.admin")
                 )
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    context.getSource().sendMessage(CommandHelp.title());
                     return 1;
                 })
                 .then(new CreateBuilder().build())
