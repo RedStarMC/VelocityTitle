@@ -1,7 +1,7 @@
 /*
- * This file is part of VelocityTitle.
+ * This file is part of VelocityTitle(https://github.com/RedStarMC/VelocityTitle).
  *
- * Copyright (C) RedStarMC, pingguomc and contributors
+ * Copyright (C) RedStarMC and contributors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,7 +118,7 @@ public class VelocityTitleVelocity {
                 .aliases("vt")
                 .build();
 
-        commandManager.register(commandMeta,new BrigadierCommand(VelocityTitleCommand.init()));
+        commandManager.register(commandMeta, new BrigadierCommand(VelocityTitleCommand.init()));
     }
 
 

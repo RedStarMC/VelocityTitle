@@ -17,8 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.core.api;
+package top.redstarmc.plugin.velocitytitle.core;
 
-public interface TitleCommand {
-
+public interface Core {
 }

@@ -1,7 +1,7 @@
 /*
- * This file is part of VelocityTitle.
+ * This file is part of VelocityTitle(https://github.com/RedStarMC/VelocityTitle).
  *
- * Copyright (C) RedStarMC, pingguomc and contributors
+ * Copyright (C) RedStarMC and contributors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,18 @@ public class MetaBuilder implements VelocityTitleCommand{
      */
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
-        return null;
+        return LiteralArgumentBuilder.<CommandSource>literal("meta")
+                .requires(source
+                        -> source.hasPermission("velocitytitle.admin")
+                        || source.hasPermission("velocitytitle.meta")
+                )
+                .executes(context -> {
+
+
+
+                    return 1;
+                });
     }
+
+
 }
