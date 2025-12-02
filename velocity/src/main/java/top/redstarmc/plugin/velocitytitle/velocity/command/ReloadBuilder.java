@@ -24,7 +24,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
-import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 public class ReloadBuilder implements VelocityTitleCommand {
 
@@ -37,9 +36,9 @@ public class ReloadBuilder implements VelocityTitleCommand {
 
                     VelocityTitleVelocity.getInstance().onProxyReload(new ProxyReloadEvent());
 
-                    context.getSource().sendMessage(TextSer.legToCom(
-                            language.getConfigToml().getString("logs.reload")
-                    ));
+//TODO                    context.getSource().sendMessage(TextSer.legToCom(
+//                            language.getConfigToml().getString("logs.reload")
+//                    ));
 
                     return Command.SINGLE_SUCCESS;
                 });

@@ -23,6 +23,7 @@ allprojects {
     dependencies {
         compileOnly 'org.jetbrains:annotations:23.0.0'
         implementation 'com.moandjiezana.toml:toml4j:0.7.2'
+        implementation "net.kyori:adventure-api:4.25.0"
         implementation 'cc.carm.lib:easysql-hikaricp:0.4.7'
     }
 

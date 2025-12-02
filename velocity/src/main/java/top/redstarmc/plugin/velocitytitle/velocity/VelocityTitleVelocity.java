@@ -79,9 +79,9 @@ public class VelocityTitleVelocity {
         logger.info("Language: "+language.getConfigToml().getString("name"));
 
         logger.info(language.getConfigToml().getString("logs.loading"));
-        logger.info(language.getConfigToml().getString("logs.author")," pingguomc");
+        logger.info(language.getConfigToml().getString("logs.author") + " pingguomc");
         logger.debug(language.getConfigToml().getString("logs.debug"));
-        logger.info(language.getConfigToml().getString("logs.website")," https://github.com/RedStarMC/VelocityTitle");
+        logger.info(language.getConfigToml().getString("logs.website") + " https://github.com/RedStarMC/VelocityTitle");
 
         logger.info(language.getConfigToml().getString("logs.database-loading"));
         DBManager = new EasySQLManager(logger, config, language);

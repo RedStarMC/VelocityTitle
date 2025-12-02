@@ -54,6 +54,9 @@ delete-p = " &b- &7<&fname&7> &9-> &f称号的 ID，具有唯一性 &r"
 
 list = "&btitle list &9- &b列出已知的称号&r"
 
+[commands.players]
+
+
 [commands.tips]
 
 

@@ -20,11 +20,14 @@
 package top.redstarmc.plugin.velocitytitle.velocity.configuration;
 
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.api.AbstractTomlManager;
 import top.redstarmc.plugin.velocitytitle.core.util.toStrings;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
+
+import java.util.List;
 
 public class CommandHelp {
 
@@ -32,6 +35,7 @@ public class CommandHelp {
 
     private static final String sharp = "&9>&r ";
 
+    @Deprecated
     private static final String next = "\n";
 
     public static void init(){
@@ -47,39 +51,33 @@ public class CommandHelp {
     }
 
 
-
-
-
-
-
-
-     public static Component root(){
-        return TextSer.legToCom(
-                prefix() + head() + next
-                + language.getConfigToml().getString("commands.help")
+    public static @NotNull List<Component> root(){
+        return TextSer.toComponentList(
+                prefix() + head(),
+                prefix() + language.getConfigToml().getString("commands.help")
         );
     }
 
-    public static Component help(){
-        return TextSer.legToCom(
-                prefix() + head() + next
-                + sharp + "&a/vt title <create|edit|delete|list>&r" + next
-                + sharp + "&a/vt player <divide|revoke|delete|list>&r" + next
-                + sharp + "&a/vt bank [player]&r" + next
-                + sharp + "&a/vt pick [player]&r" + next
-                + sharp + "&a/vt wear <name> [player]&r" + next
-                + sharp + "&a/vt reload" + next
-                + sharp + "&a/vt meta"
+    public static @NotNull List<Component> help(){
+        return TextSer.toComponentList(
+                prefix() + head(),
+                sharp + "&a/vt title <create|edit|delete|list>&r" ,
+                sharp + "&a/vt player <divide|revoke|delete|list>&r" ,
+                sharp + "&a/vt bank [player]&r" ,
+                sharp + "&a/vt pick [player]&r" ,
+                sharp + "&a/vt wear <name> [player]&r" ,
+                sharp + "&a/vt reload" ,
+                sharp + "&a/vt meta"
         );
     }
 
-    public static Component title(){
-        return TextSer.legToCom(
-                prefix() + language.getConfigToml().getString("commands.title") + next
-                + sharp + language.getConfigToml().getString("commands.titles.create") + next
-                + sharp + language.getConfigToml().getString("commands.titles.edit") + next
-                + sharp + language.getConfigToml().getString("commands.titles.delete") + next
-                + sharp + language.getConfigToml().getString("commands.titles.list") + next
+    public static @NotNull List<Component> title(){
+        return TextSer.toComponentList(
+                prefix() + language.getConfigToml().getString("commands.title"),
+                sharp + language.getConfigToml().getString("commands.titles.create"),
+                sharp + language.getConfigToml().getString("commands.titles.edit"),
+                sharp + language.getConfigToml().getString("commands.titles.delete"),
+                sharp + language.getConfigToml().getString("commands.titles.list")
         );
     }
 

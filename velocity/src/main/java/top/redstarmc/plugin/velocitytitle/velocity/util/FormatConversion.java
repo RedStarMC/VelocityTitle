@@ -58,7 +58,7 @@ public final class FormatConversion {
         else return null;
     }
 
-    public static Player sourceToPlayer(@NotNull CommandSource source){
+    public static @Nullable Player sourceToPlayer(@NotNull CommandSource source){
         if(source instanceof Player player){
             return player;
         }else {
