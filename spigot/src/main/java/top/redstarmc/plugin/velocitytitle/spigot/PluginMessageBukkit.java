@@ -24,7 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.jetbrains.annotations.NotNull;
-import top.redstarmc.plugin.velocitytitle.core.util.MessageReader;
+import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -57,7 +57,7 @@ public class PluginMessageBukkit implements PluginMessageListener{
     public Future<?> sendMessage(PluginMessageRecipient recipient, String... data) {
         return executor.submit(() -> {
             try {
-                byte[][] messages = MessageReader.buildMessage(data);
+                byte[][] messages = NetWorkReader.buildMessage(data);
                 for (byte[] msg : messages) {
                     recipient.sendPluginMessage(plugin, outgoingChannel, msg);
                 }
@@ -74,7 +74,7 @@ public class PluginMessageBukkit implements PluginMessageListener{
             return;
         }
         try {
-            MessageReader reader = MessageReader.read(message);
+            NetWorkReader reader = NetWorkReader.read(message);
             if (reader.isCompleted()) {
                 execute(reader.build());
             }

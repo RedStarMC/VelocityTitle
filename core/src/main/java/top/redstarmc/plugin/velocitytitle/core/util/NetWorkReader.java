@@ -39,35 +39,35 @@ import java.util.List;
  * 使用示例：
  * <pre>
  * // 序列化：将字符串数组转为字节数组（发送时）
- * byte[][] data = MessageReader.buildMessage("BroadcastRaw", "player123", "Hello");
+ * byte[][] data = NetWorkReader.buildMessage("BroadcastRaw", "player123", "Hello");
  *
  * // 反序列化：将接收的字节数组解析为字符串数组（接收时）
- * MessageReader reader = MessageReader.read(receivedBytes);
+ * NetWorkReader reader = NetWorkReader.read(receivedBytes);
  * if (reader.isCompleted()) {
  *     String[] parts = reader.build();
  *     // 处理业务逻辑
  * }
  * </pre>
  */
-public class MessageReader {
+public class NetWorkReader {
     private final List<String> parts = new ArrayList<>();
     private boolean completed = false;
 
     /**
      * 私有构造方法，禁止外部直接实例化，需通过 {@link #read(byte[])} 创建实例。
      */
-    private MessageReader() {}
+    private NetWorkReader() {}
 
     /**
-     * 将字节数组解析为 MessageReader 实例，提取其中的字符串数组。
+     * 将字节数组解析为 NetWorkReader 实例，提取其中的字符串数组。
      * 解析逻辑：先读取数组长度，再依次读取每个字符串（使用 UTF-8 编码）。
      *
      * @param data 待解析的字节数组（通常来自网络传输）
-     * @return 包含解析结果的 MessageReader 实例
+     * @return 包含解析结果的 NetWorkReader 实例
      * @throws IOException 若字节数组格式错误或读取失败（如长度不匹配）
      */
-    public static MessageReader read(byte[] data) throws IOException {
-        MessageReader reader = new MessageReader();
+    public static NetWorkReader read(byte[] data) throws IOException {
+        NetWorkReader reader = new NetWorkReader();
         try (DataInputStream in = new DataInputStream(new ByteArrayInputStream(data))) {
             int length = in.readInt(); // 读取字符串数组的长度
             for (int i = 0; i < length; i++) {

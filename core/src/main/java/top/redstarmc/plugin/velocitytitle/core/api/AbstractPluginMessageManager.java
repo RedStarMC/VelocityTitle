@@ -19,6 +19,12 @@
 
 package top.redstarmc.plugin.velocitytitle.core.api;
 
-public interface TitleCommand {
+public abstract class AbstractPluginMessageManager {
+
+
+    public void build(){
+
+    }
+
 
 }

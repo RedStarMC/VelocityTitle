@@ -20,6 +20,7 @@
 package top.redstarmc.plugin.velocitytitle.spigot;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
@@ -50,6 +51,7 @@ public class VelocityTitleSpigot extends JavaPlugin {
         System.out.println("[VelocityTitle] Configurations Loading...");
         config = new ConfigManager(getDataFolder(), "config-spigot.toml");
         language = new ConfigManager(getDataFolder(), "language-spigot.toml");
+        config.init();language.init();
 
         logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"), true);
 
@@ -81,6 +83,12 @@ public class VelocityTitleSpigot extends JavaPlugin {
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
         pluginMessage = new PluginMessageBukkit(messageExecutor, this);
 
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new HookPlaceholderAPI().register();
+        }else {
+            logger.error("无法加载PAPI！");
+        }
+
         logger.info(language.getConfigToml().getString("logs.end"));
         logger.warn("当前运行的插件为后端插件，需要在 Velocity 运行 Velocity版插件，否则本插件无法正常运行！");
     }
@@ -88,7 +96,7 @@ public class VelocityTitleSpigot extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        super.onDisable();
     }
 
 

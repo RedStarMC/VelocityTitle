@@ -84,7 +84,7 @@ public class Listener {
         logger.debug("接收到插件消息-2");
 //        try {
 //            // 解析消息（字符串数组）
-//            MessageReader reader = MessageReader.read(event.getData());
+//            NetWorkReader reader = NetWorkReader.read(event.getData());
 //            if (reader.isCompleted()) {
 //                String[] data = reader.build();
 //                execute(data, source);
