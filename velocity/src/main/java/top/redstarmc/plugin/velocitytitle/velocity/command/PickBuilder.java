@@ -28,6 +28,9 @@ import top.redstarmc.plugin.velocitytitle.velocity.util.FormatConversion;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * 摘除佩戴的称号
+ */
 public class PickBuilder implements VelocityTitleCommand{
     /**
      * 子命令树

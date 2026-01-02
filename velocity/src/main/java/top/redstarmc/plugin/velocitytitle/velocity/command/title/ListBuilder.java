@@ -28,6 +28,9 @@ import java.util.ArrayList;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * 称号操作-列出称号
+ */
 public class ListBuilder implements VelocityTitleCommand {
 
     /**

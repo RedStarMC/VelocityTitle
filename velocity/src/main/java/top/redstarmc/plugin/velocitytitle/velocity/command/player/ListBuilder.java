@@ -23,7 +23,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 
+/**
+ * 玩家称号-列出称号
+ */
 public class ListBuilder implements VelocityTitleCommand {
+
     /**
      * 子命令树
      *
@@ -31,6 +35,7 @@ public class ListBuilder implements VelocityTitleCommand {
      */
     @Override
     public LiteralArgumentBuilder<CommandSource> build() {
-        return null;
+        return LiteralArgumentBuilder.<CommandSource>literal("list");
     }
+
 }

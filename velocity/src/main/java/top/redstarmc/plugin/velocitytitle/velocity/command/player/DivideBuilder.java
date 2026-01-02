@@ -28,6 +28,9 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * 玩家称号-分配称号
+ */
 public class DivideBuilder implements VelocityTitleCommand {
 
     /**

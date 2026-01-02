@@ -28,6 +28,9 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * 玩家称号-取消分配
+ */
 public class RevokeBuilder implements VelocityTitleCommand {
 
     /**

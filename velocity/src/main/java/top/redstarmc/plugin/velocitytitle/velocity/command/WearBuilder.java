@@ -27,6 +27,9 @@ import com.velocitypowered.api.command.VelocityBrigadierMessage;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * 玩家穿戴称号
+ */
 public class WearBuilder implements VelocityTitleCommand{
 
     /**

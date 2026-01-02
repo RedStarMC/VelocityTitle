@@ -26,10 +26,12 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
-import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * 称号操作-创建称号
+ */
 public class CreateBuilder implements VelocityTitleCommand {
 
     /**
@@ -90,7 +92,7 @@ public class CreateBuilder implements VelocityTitleCommand {
             return;
         }
 
-        DataBaseOperate.insertTitle(source, name, display, description, isPrefix);
+//        TODO DataBaseOperate.insertTitle(source, name, display, description, isPrefix);
 
     }
 

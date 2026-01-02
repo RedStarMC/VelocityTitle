@@ -38,6 +38,11 @@ import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
 
+/**
+ * <h1>插件命令器</h1>
+ * 作为接口规范其他命令实现
+ * 合并、注册命令树
+ */
 public interface VelocityTitleCommand {
 
     /**

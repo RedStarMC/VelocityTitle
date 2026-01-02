@@ -31,6 +31,7 @@ import static net.kyori.adventure.text.Component.text;
 /**
  * 查看玩家拥有的称号列表
  */
+@Deprecated
 public class BankBuilder implements VelocityTitleCommand{
     /**
      * 子命令树
