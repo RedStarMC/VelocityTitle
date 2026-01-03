@@ -26,6 +26,7 @@ import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -38,6 +39,9 @@ import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(
         id = "velocity_title",
@@ -52,6 +56,8 @@ public class VelocityTitleVelocity {
     private Config config;
 
     private Language language;
+
+    private static final ExecutorService DB_POOL = Executors.newFixedThreadPool(16);
 
     private EasySQLManager DBManager;
 
@@ -110,6 +116,22 @@ public class VelocityTitleVelocity {
         logger.info(language.getConfigToml().getString("logs.reload"));
     }
 
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event){
+        DB_POOL.shutdown();
+        try {
+            // 等待10秒让所有任务完成
+            if (!DB_POOL.awaitTermination(10, TimeUnit.SECONDS)) {
+                logger.warn("[线程池] 仍有数据库操作未完成，正在强制关闭");
+                DB_POOL.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            logger.error("[线程池] 关闭过程被异常中断，正在重试");
+            DB_POOL.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
+
     private void registerCommand(){
         CommandManager commandManager = server.getCommandManager();
 
@@ -149,6 +171,10 @@ public class VelocityTitleVelocity {
 
     public File getDataFolder() {
         return dataFolder;
+    }
+
+    public static ExecutorService getDbPool(){
+        return DB_POOL;
     }
 
     public static VelocityTitleVelocity getInstance() {

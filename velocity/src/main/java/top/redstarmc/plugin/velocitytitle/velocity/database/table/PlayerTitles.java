@@ -38,13 +38,13 @@ public enum PlayerTitles implements SQLTable {
     PLAYER_TITLES((table) -> {
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("player_uuid", "VARCHAR(38) NOT NULL", "玩家 uuid");
-        table.addColumn("title_name", "INT NOT NULL", "称号 id 对应主表的自增主键");
+        table.addColumn("title_id", "INT NOT NULL", "称号 id 对应主表的自增主键");
         table.addColumn("time_until","DATETIME NOT NULL", "到期时间，用 DATETIME");
 
         table.setIndex(IndexType.INDEX, "player_idx", "player_uuid"); // 为玩家uuid设置索引以便 where uuid=''
-        table.setIndex(IndexType.UNIQUE_KEY, "uk_title", "player_uuid", "title_name"); // 防止玩家重复拥有同一个称号
+        table.setIndex(IndexType.UNIQUE_KEY, "uk_title", "player_uuid", "title_id"); // 防止玩家重复拥有同一个称号
 
-        table.addForeignKey("title_name",null, TitleDictionary.tableName, "id", ForeignKeyRule.CASCADE, ForeignKeyRule.CASCADE);
+        table.addForeignKey("title_id",null, TitleDictionary.tableName, "id", ForeignKeyRule.CASCADE, ForeignKeyRule.CASCADE);
 
     });
     private final Consumer<TableCreateBuilder> builder;

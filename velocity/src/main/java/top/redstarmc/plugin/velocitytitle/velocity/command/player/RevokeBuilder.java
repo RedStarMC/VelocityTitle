@@ -25,6 +25,7 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -72,6 +73,7 @@ public class RevokeBuilder implements VelocityTitleCommand {
     }
 
     private void execute(CommandSource source, String name, String player){
-
+        DataBaseOperate.retrieveTitleFromPlayer(source, name, player)
+                .thenRunAsync(() -> source.sendMessage(text("操作成功")));
     }
 }

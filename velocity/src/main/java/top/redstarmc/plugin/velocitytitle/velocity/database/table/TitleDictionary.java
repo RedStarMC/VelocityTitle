@@ -22,6 +22,7 @@ package top.redstarmc.plugin.velocitytitle.velocity.database.table;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.SQLTable;
 import cc.carm.lib.easysql.api.builder.TableCreateBuilder;
+import cc.carm.lib.easysql.api.enums.IndexType;
 import cc.carm.lib.easysql.api.enums.NumberType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,6 +40,8 @@ public enum TitleDictionary implements SQLTable {
         table.addColumn("display", "VARCHAR(256) NOT NULL"); // 实际展示的内容
         table.addColumn("description","VARCHAR(256) NOT NULL"); // 描述
         table.addColumn("type", "ENUM('prefix','suffix') NOT NULL"); //类型
+
+        table.setIndex("name", IndexType.UNIQUE_KEY);
     });
 
     private final Consumer<TableCreateBuilder> builder;

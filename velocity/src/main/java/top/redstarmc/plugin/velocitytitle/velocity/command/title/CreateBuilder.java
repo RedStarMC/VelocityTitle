@@ -26,6 +26,7 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -61,6 +62,8 @@ public class CreateBuilder implements VelocityTitleCommand {
                                             String display = context.getArgument("display", String.class);
                                             String description = "无";
 
+                                            context.getSource().sendMessage(text("正常创建 debug1"));
+
                                             execute(context.getSource(), type, name, display, description);
 
                                             return Command.SINGLE_SUCCESS;
@@ -82,6 +85,9 @@ public class CreateBuilder implements VelocityTitleCommand {
     }
 
     private void execute(CommandSource source, @NotNull String type, String name, String display, String description){
+
+        source.sendMessage(text("正常创建 debug2"));
+
         boolean isPrefix;
         if  (type.equals("prefix") || type.equals("pre") || type.equals("p")){
             isPrefix = true;
@@ -92,7 +98,13 @@ public class CreateBuilder implements VelocityTitleCommand {
             return;
         }
 
-//        TODO DataBaseOperate.insertTitle(source, name, display, description, isPrefix);
+        source.sendMessage(text("正常创建 debug3"));
+
+        DataBaseOperate.insertTitle(source, name, display, description, isPrefix)
+                .thenAcceptAsync( action -> source.sendMessage(text("创建成功"))).exceptionally(ex -> {
+                    source.sendMessage(text("创建失败"));
+                    return null;
+                });
 
     }
 

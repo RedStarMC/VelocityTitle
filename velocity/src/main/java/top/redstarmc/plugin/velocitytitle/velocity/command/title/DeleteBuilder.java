@@ -25,6 +25,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -59,7 +60,7 @@ public class DeleteBuilder implements VelocityTitleCommand {
     }
 
     void execute(CommandSource source, String name){
-//        TODO DataBaseOperate.deleteTitle(source, name);
+        DataBaseOperate.deleteTitle(source, name).thenRunAsync(() -> source.sendMessage(text("删除成功")));
     }
 
 }

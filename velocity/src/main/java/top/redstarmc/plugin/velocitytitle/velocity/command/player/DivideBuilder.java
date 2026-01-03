@@ -25,6 +25,7 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -72,7 +73,8 @@ public class DivideBuilder implements VelocityTitleCommand {
     }
 
     private void execute(CommandSource source, String name, String player){
-
+        DataBaseOperate.divideTitleToPlayer(source, name, player)
+                .thenRunAsync(() -> source.sendMessage(text("创建成功")));
     }
 
 }
