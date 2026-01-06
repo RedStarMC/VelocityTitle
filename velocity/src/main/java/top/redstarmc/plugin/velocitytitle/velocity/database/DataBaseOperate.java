@@ -24,6 +24,7 @@ import com.velocitypowered.api.command.CommandSource;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
+import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.TitleDictionary;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
@@ -39,7 +40,6 @@ import static net.kyori.adventure.text.Component.text;
  * <h1>数据库操作</h1>
  * 各种数据库操作的实现。<br>
  * 使用 {@link SQLManager} 进行各种操作<br>
- * TODO 问题：是否需要异步处理？如果需要，怎么进行异步处理？
  * TODO 错误信息和成功信息反馈
  */
 public class DataBaseOperate {
@@ -368,75 +368,115 @@ public class DataBaseOperate {
 
     //-------------------------
 
-//    /**
-//     * 穿戴一个称号
-//     * @param source 命令发送者
-//     * @param name 称号识别 ID
-//     * @param uuid 被执行玩家 UUID
-//     */
-//    public static void playerWearTitle(@NotNull CommandSource source, String name, String uuid) {
-//        //1.判断称号是否可用
-//        if (!queryTitleOfPlayer(source, name, uuid)) return;
-//        //2.查询是前缀还是后缀
-//        Title title = selectTitle(source, name);
-//        //3.加入
-//        getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
-//                .setColumnNames("player_uuid", title.isPrefix() ? "prefix" : "suffix")
-//                .setParams(title.isPrefix() ? "prefix" : "suffix", name)
-//                .executeAsync((query) -> {},
-//                        ((exception, sqlAction) -> {
-//                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
-//                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
-//                        })
-//                );
-//    }
-//
-//    /**
-//     * 查询玩家当前穿戴的称号
-//     * @param source 命令发送者
-//     * @param uuid 被执行玩家 UUID
-//     * @param isPrefix 是否是前缀
-//     */
-//    public static Title playerWoreTitle(@NotNull CommandSource source, String uuid, boolean isPrefix){
-//        AtomicReference<String> name = null;
-//        getSqlManager().createQuery()
-//                .inTable(PlayerWear.PLAYER_WEAR.getTableName())
-//                .selectColumns("player_uuid", isPrefix ? "prefix" : "suffix")
-//                .addCondition("player_uuid", uuid)
-//                .build()
-//                .executeAsync((query) -> {
-//                            ResultSet result = query.getResultSet();
-//                            if(result.next()){
-//                                name.set(result.getString(isPrefix ? "prefix" : "suffix"));
-//                            }
-//                        },
-//                        ((exception, sqlAction) -> {
-//                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
-//                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
-//                        })
-//                );
-//        if(name.get() == null) return null;
-////        return selectTitle(source, name.get());
-//        return null;
-//    }
-//
-//    /**
-//     * 摘除前缀或后缀
-//     * @param source 命令发送者
-//     * @param uuid 被执行玩家 UUID
-//     * @param isPrefix 是否是前缀
-//     */
-//    public static void playerPickTitle(@NotNull CommandSource source, String uuid, boolean isPrefix){
-//        getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
-//                .setColumnNames("uuid", isPrefix ? "prefix" : "suffix")
-//                .setParams("uuid", uuid)
-//                .setParams(isPrefix ? "prefix" : "suffix", null)
-//                .executeAsync((query) -> {},
-//                        ((exception, sqlAction) -> {
-//                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
-//                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
-//                        })
-//                );
-//    }
+    public static CompletableFuture<Boolean> wearTitle(@NotNull CommandSource source, String name, String uuid){
+        return selectTitle(source, name)
+                .thenCompose(title -> {
+                    if (title == null){
+                        return CompletableFuture.completedFuture(false);
+                    }
+
+                    return queryTitleOfPlayer(source, uuid, title.id())
+                            .thenCompose(isExist -> {
+                                if (!isExist){
+                                    return CompletableFuture.completedFuture(false);
+                                }
+
+                                CompletableFuture<Boolean> wear = new CompletableFuture<>();
+
+                                getSqlManager().createInsert(PlayerWear.PLAYER_WEAR.getTableName())
+                                        .setColumnNames("player_uuid", title.isPrefix() ? "prefix" : "suffix")
+                                        .setParams(uuid, title.id())
+                                        .executeAsync(
+                                                (query) -> wear.complete(true),
+                                                ((exception, sqlAction) -> {
+                                                    logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                                                    source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                                                    wear.completeExceptionally(exception);
+                                                })
+                                        );
+
+                                return wear;
+
+                            });
+                });
+    }
+
+    public static CompletableFuture<Title> playerWoreTitle(@NotNull CommandSource source, String uuid, boolean isPrefix){
+        CompletableFuture<Title> titleCompletableFuture = new CompletableFuture<>();
+
+        getSqlManager().createQuery()
+                .inTable(PlayerWear.PLAYER_WEAR.getTableName())
+                .selectColumns("player_uuid", isPrefix ? "prefix" : "suffix")
+                .addCondition("player_uuid", uuid)
+                .build()
+                .executeAsync(
+                        (query) -> {
+                            ResultSet result = query.getResultSet();
+                            if (result.next()) {
+                                int id = result.getInt(isPrefix ? "prefix" : "suffix");
+
+                                getSqlManager().createQuery()
+                                        .inTable(TitleDictionary.TITLE_DICTIONARY.getTableName())
+                                        .selectColumns("id", "name", "display", "description", "type")
+                                        .addCondition("id", id)
+                                        .build().executeAsync(
+                                                (query2) -> {
+                                                    ResultSet result2 = query2.getResultSet();
+                                                    if (result2.next()) {
+                                                        String display = result2.getString("display");
+                                                        String description = result2.getString("description");
+                                                        String name = result2.getString("name");
+                                                        Title title = new Title(id, name, display, description, isPrefix);
+                                                        titleCompletableFuture.complete(title);
+                                                    } else {
+                                                        titleCompletableFuture.complete(null);
+                                                    }
+                                                },
+                                                ((exception, sqlAction) -> {
+                                                    logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                                                    source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                                                    titleCompletableFuture.completeExceptionally(exception);
+                                                })
+                                        );
+
+                            } else {
+                                titleCompletableFuture.complete(null);
+                            }
+                        },
+                        ((exception, sqlAction) -> {
+                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                            titleCompletableFuture.completeExceptionally(exception);
+                        })
+                );
+
+
+        return  titleCompletableFuture;
+    }
+
+    /**
+     * 摘除前缀或后缀
+     * @param source 命令发送者
+     * @param uuid 被执行玩家 UUID
+     * @param isPrefix 是否是前缀
+     */
+    public static CompletableFuture<Boolean> playerPickTitle(@NotNull CommandSource source, String uuid, boolean isPrefix){
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
+                .setColumnNames("uuid", isPrefix ? "prefix" : "suffix")
+                .setParams("uuid", uuid)
+                .setParams(isPrefix ? "prefix" : "suffix", null)
+                .executeAsync(
+                        (query) -> future.complete(true),
+                        ((exception, sqlAction) -> {
+                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                            future.completeExceptionally(exception);
+                        })
+                );
+
+        return future;
+    }
 
 }
