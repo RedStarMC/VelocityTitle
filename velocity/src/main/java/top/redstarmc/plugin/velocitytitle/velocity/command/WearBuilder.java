@@ -24,6 +24,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
+import com.velocitypowered.api.proxy.Player;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.util.FormatConversion;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -76,11 +79,21 @@ public class WearBuilder implements VelocityTitleCommand{
                 );
     }
 
-    private void execute(CommandSource source, String name, String player){
+    private void execute(CommandSource source, String name, String player_name){
+
+        Player player = proxyServer.getPlayer(player_name).orElse(null);
+
+        if (player != null) { //TODO 需要防离线
+            DataBaseOperate.wearTitle(source, name, player.getUniqueId().toString());
+        }
 
     }
 
     private void execute(CommandSource source, String name){
+        String player_name = FormatConversion.sourceToPlayer(source).getUsername();
 
+        if (player_name == null) return;
+
+        execute(source, name, player_name);
     }
 }
