@@ -25,6 +25,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -35,12 +36,14 @@ public class PluginMessageBukkit implements PluginMessageListener{
     private final String outgoingChannel;
     private final ExecutorService executor;
     private final VelocityTitleSpigot plugin;
+    private final LoggerManager log;
 
-    public PluginMessageBukkit(ExecutorService executor, VelocityTitleSpigot server) {
+    public PluginMessageBukkit(ExecutorService executor, VelocityTitleSpigot server, LoggerManager loggerManager) {
         this.plugin = server;
         this.incomingChannel = "velocitytitle:server";
         this.outgoingChannel = "velocitytitle:proxy";
         this.executor = executor;
+        this.log = loggerManager;
         registerChannels();
     }
 
@@ -62,7 +65,7 @@ public class PluginMessageBukkit implements PluginMessageListener{
                     recipient.sendPluginMessage(plugin, outgoingChannel, msg);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.crash(e, "发送消息到代理时出错");
             }
         });
     }
@@ -70,22 +73,32 @@ public class PluginMessageBukkit implements PluginMessageListener{
     // 处理接收到的消息
     @Override
     public void onPluginMessageReceived(String channel, @NotNull Player player, byte[] message) {
+        log.debug("接收到插件消息，开始处理");
+
         if (!channel.equals(incomingChannel)) {
+            log.debug("插件消息【安全过滤1】已触发");
             return;
         }
+
+        if (!player.getServer().getMessenger().isIncomingChannelRegistered(plugin, channel)) {
+            log.debug("插件消息【安全过滤2】已触发");
+            return;
+        }
+
         try {
+            log.debug("开始解码插件消息");
             NetWorkReader reader = NetWorkReader.read(message);
             if (reader.isCompleted()) {
                 execute(reader.build());
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.crash(e, "解码插件消息时出错");
         }
+
     }
 
     // 消息执行逻辑
     public void execute(String[] data) {
-        System.out.println("======================收到了插件消息");
 //        switch (data[0]) {
 //            case "SendPrivateRaw":
 //                // 处理跨服私聊

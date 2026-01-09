@@ -77,11 +77,11 @@ public class VelocityTitleSpigot extends JavaPlugin {
                 r -> new Thread(r, "VelocityTitle-Message-Thread") // 线程命名，便于调试
         );
 
-        logger.info(language.getConfigToml().getString("logs.listener-loading"));
-        getServer().getPluginManager().registerEvents(new Listener(), this);
+//        logger.info(language.getConfigToml().getString("logs.listener-loading"));
+//        getServer().getPluginManager().registerEvents(new Listener(), this);
 
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
-        pluginMessage = new PluginMessageBukkit(messageExecutor, this);
+        pluginMessage = new PluginMessageBukkit(messageExecutor, this, logger);
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HookPlaceholderAPI().register();
