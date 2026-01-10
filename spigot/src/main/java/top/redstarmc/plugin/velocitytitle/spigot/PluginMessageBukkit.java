@@ -28,6 +28,7 @@ import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -99,6 +100,9 @@ public class PluginMessageBukkit implements PluginMessageListener{
 
     // 消息执行逻辑
     public void execute(String[] data) {
+
+        log.debug("接收到的插件消息", "==========", Arrays.toString(data), "==========");
+
 //        switch (data[0]) {
 //            case "SendPrivateRaw":
 //                // 处理跨服私聊

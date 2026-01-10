@@ -19,15 +19,17 @@
 
 package top.redstarmc.plugin.velocitytitle.velocity;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteStreams;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * <h1>插件监听器</h1>
@@ -82,26 +84,22 @@ public class Listener {
             return;
         }
         logger.debug("接收到插件消息-2");
-//        try {
-//            // 解析消息（字符串数组）
-//            NetWorkReader reader = NetWorkReader.read(event.getData());
-//            if (reader.isCompleted()) {
-//                String[] data = reader.build();
-//                execute(data, source);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
-        logger.debug(event.toString());
-
-        ByteArrayDataInput in = ByteStreams.newDataInput(event.getData());
-        // 处理数据包数据
-
-        if (in.readUTF().equals("Hello Velocity!")){
-            System.out.println("Hello Velocity!");
-            System.out.println("===========================================================================");
+        try {
+            NetWorkReader netWorkReader = NetWorkReader.read(event.getData());
+            if (netWorkReader.isCompleted()){
+                analysisPM(netWorkReader.build());
+            }
+        } catch (IOException e) {
+            logger.crash(e, "解码插件消息时出错");
         }
+
+    }
+
+    public void analysisPM(String[] data){
+
+        logger.debug("接收到的插件消息", "==========", Arrays.toString(data), "==========");
+
 
     }
 
