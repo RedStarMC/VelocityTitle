@@ -24,7 +24,9 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import top.redstarmc.plugin.velocitytitle.velocity.TestPluginMessageToBack;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.DivideBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.RevokeBuilder;
@@ -86,6 +88,17 @@ public interface VelocityTitleCommand {
                 .then(LiteralArgumentBuilder.<CommandSource>literal("help")
                         .executes(context -> {
                             TextSer.sendComponentList(context.getSource(), CommandHelp.help());
+                            return 1;
+                        })
+                )
+                .then(LiteralArgumentBuilder.<CommandSource>literal("test1")
+                        .executes(context -> {
+                            CommandSource source = context.getSource();
+                            if(source instanceof Player player){
+                                TestPluginMessageToBack.test(player);
+                            }else{
+                                VelocityTitleVelocity.getInstance().getLogger().debug("非玩家执行");
+                            }
                             return 1;
                         })
                 )
