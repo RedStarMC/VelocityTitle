@@ -22,6 +22,7 @@ package top.redstarmc.plugin.velocitytitle.spigot;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
@@ -42,6 +43,8 @@ public class VelocityTitleSpigot extends JavaPlugin {
     private ConfigManager language;
 
     private ExecutorService messageExecutor;
+
+    private CacheManager cacheManager;
 
     @Override
     public void onEnable() {
@@ -83,6 +86,9 @@ public class VelocityTitleSpigot extends JavaPlugin {
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
         pluginMessage = new PluginMessageBukkit(messageExecutor, this, logger);
 
+        logger.info("加载缓存");
+        cacheManager = new CacheManager( logger, this);
+
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HookPlaceholderAPI().register();
         }else {
@@ -97,6 +103,7 @@ public class VelocityTitleSpigot extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+        cacheManager.asyncCacheRemoveAll();
     }
 
 
@@ -118,5 +125,9 @@ public class VelocityTitleSpigot extends JavaPlugin {
 
     public PluginMessageBukkit getPluginMessage() {
         return pluginMessage;
+    }
+
+    public CacheManager getCacheManager() {
+        return cacheManager;
     }
 }

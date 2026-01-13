@@ -28,7 +28,6 @@ import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.TitleDictionary;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
-import top.redstarmc.plugin.velocitytitle.velocity.record.Title;
 
 import java.sql.ResultSet;
 import java.util.concurrent.CompletableFuture;

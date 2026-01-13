@@ -17,28 +17,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity;
+package top.redstarmc.plugin.velocitytitle.velocity.database;
 
-import com.velocitypowered.api.proxy.Player;
-import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
-public class TestPluginMessageToBack {
-
-    public static void test(Player player){
-
-        String[] d = {"UpdateTitle","uuid-----------------","title_type","title_display","others"};
-
-        try {
-            byte[][] data = NetWorkReader.buildMessage(d);
-
-
-
-        } catch (IOException e) {
-            VelocityTitleVelocity.getInstance().getLogger().crash(e, "≤‚ ‘ ß∞‹");
-        }
-
-    }
-
-}
+/**
+ * Áß∞Âè∑ÂÆû‰æã
+ */
+public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }

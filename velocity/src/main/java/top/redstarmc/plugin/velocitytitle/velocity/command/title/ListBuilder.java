@@ -22,7 +22,7 @@ package top.redstarmc.plugin.velocitytitle.velocity.command.title;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
-import top.redstarmc.plugin.velocitytitle.velocity.record.Title;
+import top.redstarmc.plugin.velocitytitle.velocity.database.Title;
 
 import java.util.ArrayList;
 

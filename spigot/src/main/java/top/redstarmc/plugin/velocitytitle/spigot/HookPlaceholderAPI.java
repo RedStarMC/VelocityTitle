@@ -22,8 +22,13 @@ package top.redstarmc.plugin.velocitytitle.spigot;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HookPlaceholderAPI extends PlaceholderExpansion {
+
+    CacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
 
     /**
      * 此扩展的占位符标识符。可能不包含 {@literal %},
@@ -73,22 +78,36 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
         String[] par = params.split("_");
         switch (par[0].toLowerCase()) {
             case "prefix":
-                return prefix();
+                return prefix(player);
             case "suffix":
-                return suffix();
+                return suffix(player);
             case "version":
                 return getVersion();
             default:
-                return "Can't Find";
+                return "";
         }
     }
 
-    public String prefix(){
-        return "aaaa";//
+    public String prefix(Player player){
+        AtomicReference<String> display = new AtomicReference<>("");
+        cacheManager.asyncCacheGet(player.getUniqueId().toString())
+                .thenAccept(playerTitleCache -> {
+                    if (playerTitleCache.prefix() != null){
+                        display.set(playerTitleCache.prefix().display());
+                    }
+                });
+        return display.get();
     }
 
-    public String suffix(){
-        return "你好后缀！";
+    public String suffix(Player player){
+        AtomicReference<String> display = new AtomicReference<>("");
+        cacheManager.asyncCacheGet(player.getUniqueId().toString())
+                .thenAccept(playerTitleCache -> {
+                    if (playerTitleCache.suffix() != null){
+                        display.set(playerTitleCache.suffix().display());
+                    }
+                });
+        return display.get();
     }
 
 }

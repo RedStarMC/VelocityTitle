@@ -28,7 +28,7 @@ public class TestPluginMessageToBack {
 
     public static void test(Player player){
 
-        String[] d = {"UpdateTitle","uuid-----------------","title_type","title_display","others"};
+        String[] d = {"UpdateTitle","uuid-----------------","title_name","title_type","title_display","isPrefix"};
 
         try {
             byte[][] data = NetWorkReader.buildMessage(d);

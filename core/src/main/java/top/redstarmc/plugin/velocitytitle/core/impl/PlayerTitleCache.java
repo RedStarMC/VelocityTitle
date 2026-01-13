@@ -17,7 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.record;
+package top.redstarmc.plugin.velocitytitle.core.impl;
 
-public record WearTitle() {
-}
+import org.jetbrains.annotations.Nullable;
+
+public record PlayerTitleCache(@Nullable TitleCache prefix, @Nullable TitleCache suffix) { }

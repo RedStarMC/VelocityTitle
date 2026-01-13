@@ -17,11 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.record;
+package top.redstarmc.plugin.velocitytitle.core.impl;
 
-import org.jetbrains.annotations.NotNull;
-
-/**
- * 称号实例
- */
-public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }
+public record TitleCache(String name, String display, String description) {
+}
