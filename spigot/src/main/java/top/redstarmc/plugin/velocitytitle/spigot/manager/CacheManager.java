@@ -21,6 +21,7 @@ package top.redstarmc.plugin.velocitytitle.spigot.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
 import top.redstarmc.plugin.velocitytitle.spigot.VelocityTitleSpigot;
 
@@ -42,7 +43,7 @@ public class CacheManager {
         this.plugin = plugin;
     }
 
-    public CompletableFuture<Void> asyncCachePut(String uuid, PlayerTitleCache playerTitle){
+    public CompletableFuture<Void> asyncCachePut(@NotNull String uuid, @NotNull PlayerTitleCache playerTitle){
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -53,7 +54,7 @@ public class CacheManager {
         return future;
     }
 
-    public CompletableFuture<PlayerTitleCache> asyncCacheGet(String uuid){
+    public CompletableFuture<PlayerTitleCache> asyncCacheGet(@NotNull String uuid){
         CompletableFuture<PlayerTitleCache> future = new CompletableFuture<>();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -64,7 +65,8 @@ public class CacheManager {
                 // 发送获取称号请求
                 Player player = VelocityTitleSpigot.getInstance().getServer().getPlayer(UUID.fromString(uuid));
                 if (player != null && player.isOnline()) {
-                    plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid);
+                    plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid)
+                            .thenRunAsync(() -> logger.debug("插件消息：已请求玩家称号数据。UUID: "+uuid));
                 }else {
                     logger.warn("被请求获取称号的玩家不在线");
                 }
@@ -78,7 +80,7 @@ public class CacheManager {
         return future;
     }
 
-    public CompletableFuture<Void> asyncCacheRemove(String uuid){
+    public CompletableFuture<Void> asyncCacheRemove(@NotNull String uuid){
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {

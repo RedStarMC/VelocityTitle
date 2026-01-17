@@ -39,10 +39,7 @@ public class TestPluginMessageToBack {
                         for (byte[] msg : data){
                             serverConnection.sendPluginMessage(PluginMessage.OUTGOING, msg);
                         }
-                    }, () -> {
-                            VelocityTitleVelocity.getInstance().getLogger().warn("服务器连接为空！");
-                    });
-
+                    }, () -> VelocityTitleVelocity.getInstance().getLogger().warn("服务器连接为空！"));
 
         } catch (IOException e) {
             VelocityTitleVelocity.getInstance().getLogger().crash(e, "测试失败");

@@ -88,7 +88,7 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
         }
     }
 
-    public String prefix(Player player){
+    public String prefix(@NotNull Player player){
         AtomicReference<String> display = new AtomicReference<>("");
         cacheManager.asyncCacheGet(player.getUniqueId().toString())
                 .thenAccept(playerTitleCache -> {
@@ -99,7 +99,7 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
         return display.get();
     }
 
-    public String suffix(Player player){
+    public String suffix(@NotNull Player player){
         AtomicReference<String> display = new AtomicReference<>("");
         cacheManager.asyncCacheGet(player.getUniqueId().toString())
                 .thenAccept(playerTitleCache -> {

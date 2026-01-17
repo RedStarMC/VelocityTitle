@@ -111,75 +111,39 @@ public class PluginMessageBukkit implements PluginMessageListener{
 
         switch (data[0]) {
             case "UpdateTitle":
-                String uuid = data[1];
+                String uuid1 = data[1];
                 String title_name = data[2];
                 String title_type = data[3];
                 String title_display = data[4];
 //                String others = data[5];
-                TitleCache title = new TitleCache(title_name, title_display);
-                cache.asyncCacheGet(uuid)
+                cache.asyncCacheGet(uuid1)
                         .thenAcceptAsync(playerTitleCache -> {
 
                             if (playerTitleCache == null){
                                 if (title_type.equals("prefix")){
-                                    cache.asyncCachePut(uuid, new PlayerTitleCache(new TitleCache(title_name, title_display), null));
+                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), null));
                                 }else {
-                                    cache.asyncCachePut(uuid, new PlayerTitleCache(null, new TitleCache(title_name, title_display)));
+                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(null, new TitleCache(title_name, title_display)));
                                 }
                             }else {
                                 if(title_type.equals("prefix")){
                                     TitleCache suffix = playerTitleCache.suffix();
-                                    cache.asyncCachePut(uuid, new PlayerTitleCache(new TitleCache(title_name, title_display), suffix));
+                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), suffix));
                                 }else {
                                     TitleCache prefix = playerTitleCache.prefix();
-                                    cache.asyncCachePut(uuid, new PlayerTitleCache(prefix, new TitleCache(title_name, title_display)));
+                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(prefix, new TitleCache(title_name, title_display)));
                                 }
                             }
 
-
-                            cache.asyncCachePut(uuid, null);
-
                         });
             case "DeleteTitle":
-                //
+                String uuid2 = data[1];
+                cache.asyncCacheRemove(uuid2);
             case "DeleteAll":
-                //
+                cache.asyncCacheRemoveAll();
             case "Others":
                 //
         }
-//        switch (data[0]) {
-//            case "SendPrivateRaw":
-//                // 处理跨服私聊
-//                String to = data[1];
-//                String from = data[2];
-//                String rawJson = data[3];
-//                String fallback = data.length > 4 ? data[4] : "";
-//                Component message = Components.parseRaw(rawJson);
-//                Player target = Bukkit.getPlayer(to);
-//                if (target != null) {
-//                    target.sendMessage(message);
-//                }
-//                break;
-//            case "BroadcastRaw":
-//                // 处理代理转发的广播
-//                String uuid = data[1];
-//                String raw = data[2];
-//                String perm = data[3];
-//                List<Integer> ports = data[5].isEmpty() ? List.of() :
-//                        Arrays.stream(data[5].split(";")).map(Integer::parseInt).toList();
-//                Component broadcastMsg = Components.parseRaw(raw);
-//                // 只处理本服端口符合条件的消息
-//                if (ports.isEmpty() || ports.contains(BukkitProxyManager.getPort())) {
-//                    Bukkit.getOnlinePlayers().stream()
-//                            .filter(p -> perm.isEmpty() || p.hasPermission(perm))
-//                            .forEach(p -> p.sendMessage(UUID.fromString(uuid), broadcastMsg));
-//                }
-//                break;
-//            case "GlobalMute":
-//                // 处理全局禁言
-//                TrChatBukkit.setGlobalMuting("on".equals(data[1]));
-//                break;
-//        }
     }
 
 
