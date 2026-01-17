@@ -21,16 +21,16 @@ package top.redstarmc.plugin.velocitytitle.spigot;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-
-public class VelocityTitleSpigot extends JavaPlugin {
+public class VelocityTitleSpigot extends JavaPlugin implements Listener {
 
     private static VelocityTitleSpigot instance;
 
@@ -41,8 +41,6 @@ public class VelocityTitleSpigot extends JavaPlugin {
     private ConfigManager config;
 
     private ConfigManager language;
-
-    private ExecutorService messageExecutor;
 
     private CacheManager cacheManager;
 
@@ -74,20 +72,14 @@ public class VelocityTitleSpigot extends JavaPlugin {
             commands.registrar().register(new CommandBuilder().init().build());
         });
 
-        // 1. 初始化线程池（固定大小为8，避免线程过多）
-        messageExecutor = Executors.newFixedThreadPool(
-                8,
-                r -> new Thread(r, "VelocityTitle-Message-Thread") // 线程命名，便于调试
-        );
-
-//        logger.info(language.getConfigToml().getString("logs.listener-loading"));
-//        getServer().getPluginManager().registerEvents(new Listener(), this);
-
-        logger.info(language.getConfigToml().getString("logs.channel-loading"));
-        pluginMessage = new PluginMessageBukkit(messageExecutor, this, logger);
+        logger.info(language.getConfigToml().getString("logs.listener-loading"));
+        getServer().getPluginManager().registerEvents(this, this);
 
         logger.info("加载缓存");
         cacheManager = new CacheManager( logger, this);
+
+        logger.info(language.getConfigToml().getString("logs.channel-loading"));
+        pluginMessage = new PluginMessageBukkit(this, logger, cacheManager);
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HookPlaceholderAPI().register();
@@ -102,8 +94,13 @@ public class VelocityTitleSpigot extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        super.onDisable();
         cacheManager.asyncCacheRemoveAll();
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        String uuid = e.getPlayer().getUniqueId().toString();
+        cacheManager.asyncCacheRemove(uuid);
     }
 
 

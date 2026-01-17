@@ -19,5 +19,5 @@
 
 package top.redstarmc.plugin.velocitytitle.core.impl;
 
-public record TitleCache(String name, String display, String description) {
+public record TitleCache(String name, String display) {
 }

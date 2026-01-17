@@ -20,10 +20,12 @@
 package top.redstarmc.plugin.velocitytitle.spigot.manager;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
 import top.redstarmc.plugin.velocitytitle.spigot.VelocityTitleSpigot;
 
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -44,10 +46,8 @@ public class CacheManager {
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-
             CACHE.put(uuid, playerTitle);
             future.complete(null);
-
         });
 
         return future;
@@ -61,8 +61,13 @@ public class CacheManager {
             PlayerTitleCache playerTitle = CACHE.get(uuid);
 
             if (playerTitle == null){
-                //TODO 发送获取称号请
-                this.logger.warn("a");
+                // 发送获取称号请求
+                Player player = VelocityTitleSpigot.getInstance().getServer().getPlayer(UUID.fromString(uuid));
+                if (player != null && player.isOnline()) {
+                    plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid);
+                }else {
+                    logger.warn("被请求获取称号的玩家不在线");
+                }
                 future.complete(null);
             }else{
                 future.complete(playerTitle);

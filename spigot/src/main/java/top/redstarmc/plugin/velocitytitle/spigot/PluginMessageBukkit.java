@@ -24,26 +24,28 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
+import top.redstarmc.plugin.velocitytitle.core.impl.TitleCache;
 import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 public class PluginMessageBukkit implements PluginMessageListener{
     private final String incomingChannel;
     private final String outgoingChannel;
-    private final ExecutorService executor;
     private final VelocityTitleSpigot plugin;
     private final LoggerManager log;
+    private final CacheManager cache;
 
-    public PluginMessageBukkit(ExecutorService executor, VelocityTitleSpigot server, LoggerManager loggerManager) {
+    public PluginMessageBukkit(VelocityTitleSpigot server, LoggerManager loggerManager, CacheManager cache) {
         this.plugin = server;
+        this.cache = cache;
         this.incomingChannel = "velocitytitle:server";
         this.outgoingChannel = "velocitytitle:proxy";
-        this.executor = executor;
         this.log = loggerManager;
         registerChannels();
     }
@@ -58,17 +60,21 @@ public class PluginMessageBukkit implements PluginMessageListener{
     }
 
     // 发送消息到代理
-    public Future<?> sendMessage(PluginMessageRecipient recipient, String... data) {
-        return executor.submit(() -> {
+    public CompletableFuture<Void> sendMessage(PluginMessageRecipient recipient, String... data) {
+        CompletableFuture<Void> completableFuture = new CompletableFuture<>();
+        Bukkit.getScheduler().runTaskAsynchronously(plugin , () -> {
             try {
                 byte[][] messages = NetWorkReader.buildMessage(data);
                 for (byte[] msg : messages) {
                     recipient.sendPluginMessage(plugin, outgoingChannel, msg);
                 }
+                completableFuture.complete(null);
             } catch (IOException e) {
                 log.crash(e, "发送消息到代理时出错");
+                completableFuture.completeExceptionally(e);
             }
         });
+        return completableFuture;
     }
 
     // 处理接收到的消息
@@ -103,6 +109,44 @@ public class PluginMessageBukkit implements PluginMessageListener{
 
         log.debug("接收到的插件消息", "==========", Arrays.toString(data), "==========");
 
+        switch (data[0]) {
+            case "UpdateTitle":
+                String uuid = data[1];
+                String title_name = data[2];
+                String title_type = data[3];
+                String title_display = data[4];
+//                String others = data[5];
+                TitleCache title = new TitleCache(title_name, title_display);
+                cache.asyncCacheGet(uuid)
+                        .thenAcceptAsync(playerTitleCache -> {
+
+                            if (playerTitleCache == null){
+                                if (title_type.equals("prefix")){
+                                    cache.asyncCachePut(uuid, new PlayerTitleCache(new TitleCache(title_name, title_display), null));
+                                }else {
+                                    cache.asyncCachePut(uuid, new PlayerTitleCache(null, new TitleCache(title_name, title_display)));
+                                }
+                            }else {
+                                if(title_type.equals("prefix")){
+                                    TitleCache suffix = playerTitleCache.suffix();
+                                    cache.asyncCachePut(uuid, new PlayerTitleCache(new TitleCache(title_name, title_display), suffix));
+                                }else {
+                                    TitleCache prefix = playerTitleCache.prefix();
+                                    cache.asyncCachePut(uuid, new PlayerTitleCache(prefix, new TitleCache(title_name, title_display)));
+                                }
+                            }
+
+
+                            cache.asyncCachePut(uuid, null);
+
+                        });
+            case "DeleteTitle":
+                //
+            case "DeleteAll":
+                //
+            case "Others":
+                //
+        }
 //        switch (data[0]) {
 //            case "SendPrivateRaw":
 //                // 处理跨服私聊
