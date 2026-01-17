@@ -316,11 +316,11 @@ public class DataBaseOperate {
                                 //授予称号
                                 CompletableFuture<Boolean> divideFuture = new CompletableFuture<>();
                                 getSqlManager().createInsert(PlayerTitles.tableName)
-                                        .setColumnNames("player_uuid", "title_name", "time_until")
+                                        .setColumnNames("player_uuid", "title_id", "time_until")
                                         .setParams(
                                                 player_uuid,
                                                 title.id(),
-                                                0
+                                                0L
                                         )
                                         .executeAsync(
                                                 query -> divideFuture.complete(true),
@@ -428,7 +428,7 @@ public class DataBaseOperate {
                                                         Title title = new Title(id, name, display, description, isPrefix);
                                                         titleCompletableFuture.complete(title);
                                                     } else {
-                                                        titleCompletableFuture.complete(null);
+                                                        titleCompletableFuture.complete(new Title(0, null, null, null, true));
                                                     }
                                                 },
                                                 ((exception, sqlAction) -> {

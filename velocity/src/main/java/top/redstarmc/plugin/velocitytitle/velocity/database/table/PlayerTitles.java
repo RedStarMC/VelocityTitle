@@ -39,7 +39,7 @@ public enum PlayerTitles implements SQLTable {
         table.addAutoIncrementColumn("id", NumberType.INT, true, true);
         table.addColumn("player_uuid", "VARCHAR(38) NOT NULL", "玩家 uuid");
         table.addColumn("title_id", "INT NOT NULL", "称号 id 对应主表的自增主键");
-        table.addColumn("time_until","DATETIME NOT NULL", "到期时间，用 DATETIME");
+        table.addColumn("time_until","BIGINT NOT NULL", "到期时间，用 DATETIME");
 
         table.setIndex(IndexType.INDEX, "player_idx", "player_uuid"); // 为玩家uuid设置索引以便 where uuid=''
         table.setIndex(IndexType.UNIQUE_KEY, "uk_title", "player_uuid", "title_id"); // 防止玩家重复拥有同一个称号

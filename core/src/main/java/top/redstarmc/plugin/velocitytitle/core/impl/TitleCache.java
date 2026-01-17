@@ -19,5 +19,7 @@
 
 package top.redstarmc.plugin.velocitytitle.core.impl;
 
-public record TitleCache(String name, String display) {
+import org.jetbrains.annotations.NotNull;
+
+public record TitleCache(@NotNull String name, @NotNull String display) {
 }

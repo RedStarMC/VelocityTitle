@@ -19,9 +19,7 @@
 
 package top.redstarmc.plugin.velocitytitle.velocity.database;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * 称号实例
  */
-public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }
+public record Title(int id, String name, String display, String description, boolean isPrefix) { }

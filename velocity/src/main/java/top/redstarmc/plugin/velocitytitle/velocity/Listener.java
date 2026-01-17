@@ -22,14 +22,17 @@ package top.redstarmc.plugin.velocitytitle.velocity;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
+import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * <h1>插件监听器</h1>
@@ -100,6 +103,21 @@ public class Listener {
 
         logger.debug("接收到的插件消息", "==========", Arrays.toString(data), "==========");
 
+        if (data[0].equals("GetTitle")) {
+            String uuid = data[1];
+            String type = data[2];
+            VelocityTitleVelocity.getInstance().getServer().getPlayer(UUID.fromString(uuid))
+                    .ifPresentOrElse(
+                            player -> {
+                                ConsoleCommandSource source = VelocityTitleVelocity.getInstance().getServer().getConsoleCommandSource();
+                                DataBaseOperate.playerWoreTitle(source, uuid, type.equals("prefix"))
+                                        .thenAcceptAsync(title -> {
+                                            PluginMessage.sendMessage(player, "UpdateTitle", uuid, title.name(), type, title.display());
+                                        });
+                            },
+                            () -> logger.warn("服务器连接为空！")
+                    );
+        }
 
     }
 

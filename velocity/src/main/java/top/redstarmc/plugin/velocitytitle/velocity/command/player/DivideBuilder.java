@@ -24,6 +24,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 
@@ -62,9 +63,9 @@ public class DivideBuilder implements VelocityTitleCommand {
                                 })
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
-                                    String player = context.getArgument("player", String.class);
+                                    String player_name = context.getArgument("player", String.class);
 
-                                    execute(context.getSource(), name, player);
+                                    execute(context.getSource(), name, player_name);
 
                                     return 1;
                                 })
@@ -72,9 +73,14 @@ public class DivideBuilder implements VelocityTitleCommand {
                 );
     }
 
-    private void execute(CommandSource source, String name, String player){
-        DataBaseOperate.divideTitleToPlayer(source, name, player)
-                .thenRunAsync(() -> source.sendMessage(text("创建成功")));
+    private void execute(CommandSource source, String name, String player_name){
+        VelocityTitleVelocity.getInstance().getServer().getPlayer(player_name).ifPresentOrElse(
+                player -> {
+                    DataBaseOperate.divideTitleToPlayer(source, name, player.getUniqueId().toString())
+                            .thenRunAsync(() -> source.sendMessage(text("创建成功")));
+                },
+                () -> source.sendMessage(text("玩家不在线或不存在"))
+        );
     }
 
 }

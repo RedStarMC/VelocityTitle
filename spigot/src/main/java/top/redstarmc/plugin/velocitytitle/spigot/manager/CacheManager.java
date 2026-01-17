@@ -65,8 +65,10 @@ public class CacheManager {
                 // 发送获取称号请求
                 Player player = VelocityTitleSpigot.getInstance().getServer().getPlayer(UUID.fromString(uuid));
                 if (player != null && player.isOnline()) {
-                    plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid)
-                            .thenRunAsync(() -> logger.debug("插件消息：已请求玩家称号数据。UUID: "+uuid));
+                    plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid, "prefix")
+                            .thenRunAsync(() -> logger.debug("插件消息：已请求玩家称号前缀数据。UUID: "+uuid));
+                    plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid, "suffix")
+                            .thenRunAsync(() -> logger.debug("插件消息：已请求玩家称号后缀数据。UUID: "+uuid));
                 }else {
                     logger.warn("被请求获取称号的玩家不在线");
                 }

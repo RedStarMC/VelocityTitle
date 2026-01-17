@@ -95,6 +95,7 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         cacheManager.asyncCacheRemoveAll();
+        //
     }
 
     @EventHandler
