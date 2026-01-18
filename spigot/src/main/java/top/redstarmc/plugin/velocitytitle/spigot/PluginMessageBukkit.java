@@ -116,32 +116,40 @@ public class PluginMessageBukkit implements PluginMessageListener{
                 String title_type = data[3];
                 String title_display = data[4];
 //                String others = data[5];
-                cache.asyncCacheGet(uuid1)
-                        .thenAcceptAsync(playerTitleCache -> {
 
-                            if (playerTitleCache == null){
-                                if (title_type.equals("prefix")){
-                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), null));
-                                }else {
-                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(null, new TitleCache(title_name, title_display)));
-                                }
-                            }else {
-                                if(title_type.equals("prefix")){
-                                    TitleCache suffix = playerTitleCache.suffix();
-                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), suffix));
-                                }else {
-                                    TitleCache prefix = playerTitleCache.prefix();
-                                    cache.asyncCachePut(uuid1, new PlayerTitleCache(prefix, new TitleCache(title_name, title_display)));
-                                }
-                            }
+                PlayerTitleCache playerTitleCache = cache.CacheGet(uuid1);
 
-                        });
+                if (playerTitleCache == null){
+                    if (title_type.equals("prefix")){
+                        cache.CachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), null));
+                        log.debug("动作1");
+                    }else {
+                        cache.CachePut(uuid1, new PlayerTitleCache(null, new TitleCache(title_name, title_display)));
+                        log.debug("动作2");
+                    }
+                }else {
+                    if(title_type.equals("prefix")){
+                        TitleCache suffix = playerTitleCache.suffix();
+                        cache.CachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), suffix));
+                        log.debug("动作3");
+                    }else {
+                        TitleCache prefix = playerTitleCache.prefix();
+                        cache.CachePut(uuid1, new PlayerTitleCache(prefix, new TitleCache(title_name, title_display)));
+                        log.debug("动作4");
+                    }
+                }
+
+                log.debug(Arrays.toString(data));
+                break;
             case "DeleteTitle":
                 String uuid2 = data[1];
-                cache.asyncCacheRemove(uuid2);
+                cache.CacheRemove(uuid2);
+                break;
             case "DeleteAll":
-                cache.asyncCacheRemoveAll();
+                cache.CacheRemoveAll();
+                break;
             case "Others":
+                break;
                 //
         }
     }

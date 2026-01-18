@@ -57,6 +57,8 @@ public class VelocityTitleVelocity {
 
     private Language language;
 
+    private PluginMessage pluginMessage;
+
     private static final ExecutorService DB_POOL = Executors.newFixedThreadPool(16);
 
     private EasySQLManager DBManager;
@@ -102,6 +104,7 @@ public class VelocityTitleVelocity {
 
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
         server.getChannelRegistrar().register(PluginMessage.INCOMING, PluginMessage.OUTGOING);
+        pluginMessage = new PluginMessage(logger);
 
         logger.info(language.getConfigToml().getString("logs.end"));
     }
@@ -167,6 +170,10 @@ public class VelocityTitleVelocity {
 
     public EasySQLManager getDBManager() {
         return DBManager;
+    }
+
+    public PluginMessage getPluginMessage() {
+        return pluginMessage;
     }
 
     public File getDataFolder() {

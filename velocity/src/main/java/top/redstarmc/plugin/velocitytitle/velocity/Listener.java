@@ -22,7 +22,6 @@ package top.redstarmc.plugin.velocitytitle.velocity;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
-import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import org.jetbrains.annotations.NotNull;
@@ -50,9 +49,7 @@ public class Listener {
     @Subscribe
     public void onServerPostConnectEvent(@NotNull ServerPostConnectEvent event){
         Player player = event.getPlayer();
-
-        // TODO
-        // PlayerWearOperate.replaceUUID(EasySQLManager.getSqlManager(), player.getUniqueId().toString(), name);
+        DataBaseOperate.savePlayer(player.getUniqueId().toString(), player.getUsername());
     }
 
     @Subscribe
@@ -109,10 +106,18 @@ public class Listener {
             VelocityTitleVelocity.getInstance().getServer().getPlayer(UUID.fromString(uuid))
                     .ifPresentOrElse(
                             player -> {
-                                ConsoleCommandSource source = VelocityTitleVelocity.getInstance().getServer().getConsoleCommandSource();
-                                DataBaseOperate.playerWoreTitle(source, uuid, type.equals("prefix"))
+                                DataBaseOperate.playerWoreTitle(player, uuid, type.equals("prefix"))
                                         .thenAcceptAsync(title -> {
-                                            PluginMessage.sendMessage(player, "UpdateTitle", uuid, title.name(), type, title.display());
+                                            logger.info("测试信息1");
+                                            String[] temp;
+                                            if(title == null){
+                                                temp = new String[]{"UpdateTitle", uuid, "", type, ""};
+                                            }else {
+                                                temp = new String[]{"UpdateTitle", uuid, title.name(), type, title.display()};
+                                            }
+                                            logger.info(Arrays.toString(temp));
+                                            VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                            logger.info("测试信息2");
                                         });
                             },
                             () -> logger.warn("服务器连接为空！")

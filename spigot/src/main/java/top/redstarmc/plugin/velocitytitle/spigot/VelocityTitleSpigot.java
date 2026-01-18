@@ -94,14 +94,14 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        cacheManager.asyncCacheRemoveAll();
+        cacheManager.CacheRemoveAll();
         //
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         String uuid = e.getPlayer().getUniqueId().toString();
-        cacheManager.asyncCacheRemove(uuid);
+        cacheManager.CacheRemove(uuid);
     }
 
 

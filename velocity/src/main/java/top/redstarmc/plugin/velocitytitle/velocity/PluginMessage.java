@@ -21,11 +21,10 @@ package top.redstarmc.plugin.velocitytitle.velocity;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
-import java.io.IOException;
+import java.util.Arrays;
 
 public class PluginMessage {
 
@@ -39,10 +38,16 @@ public class PluginMessage {
      */
     public static final MinecraftChannelIdentifier OUTGOING = MinecraftChannelIdentifier.from("velocitytitle:server");
 
-    private static final LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
+    private final LoggerManager logger;
 
-    public static void sendMessage(@NotNull Player player, String... d){
+    public PluginMessage(LoggerManager logger) {
+        this.logger = logger;
+    }
+
+    public void sendMessageT(Player player, String[] d){
+        logger.info("测试测试测");
         try {
+            logger.debug("正在准备发送插件数据", Arrays.toString(d));
             byte[][] data = NetWorkReader.buildMessage(d);
 
             player.getCurrentServer().ifPresentOrElse
@@ -52,7 +57,8 @@ public class PluginMessage {
                         }
                     }, () -> logger.warn("服务器连接为空！"));
 
-        } catch (IOException e) {
+            logger.debug("插件消息发送完毕");
+        } catch (Exception e) {
             logger.crash(e, "发送插件消息失败");
         }
     }

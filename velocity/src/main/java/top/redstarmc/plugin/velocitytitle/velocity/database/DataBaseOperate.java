@@ -21,6 +21,7 @@ package top.redstarmc.plugin.velocitytitle.velocity.database;
 
 import cc.carm.lib.easysql.api.SQLManager;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
@@ -85,7 +86,7 @@ public class DataBaseOperate {
                                 String display = result.getString("display");
                                 String description = result.getString("description");
                                 int id = result.getInt("id");
-                                boolean isPrefix = result.getString("type").equals("suffix");
+                                boolean isPrefix = result.getString("type").equals("prefix");
                                 Title title = new Title(id, name, display, description, isPrefix);
                                 future.complete(title);
                             } else {
@@ -349,16 +350,15 @@ public class DataBaseOperate {
      */
     public static @NotNull CompletableFuture<Boolean> retrieveTitleFromPlayer(@NotNull CommandSource source,@NotNull String name,@NotNull String UUID){
         CompletableFuture<Boolean> deletePlayerTitle = new CompletableFuture<>();
-
-        getSqlManager().createDelete(PlayerTitles.tableName)
-                .addCondition("title_name", name)
-                .addCondition("player_uuid", UUID)
-                .build()
+        //TODO 应该请求ID而不是name
+        getSqlManager().createReplace(PlayerTitles.tableName)
+                .setColumnNames("title_name", "player_uuid", "prefix", "suffix")
+                .setParams(name, UUID, null, null)
                 .executeAsync((query) -> deletePlayerTitle.complete(true),
                         ((exception, sqlAction) -> {
-                            deletePlayerTitle.completeExceptionally(exception);
                             logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
                             source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                            deletePlayerTitle.completeExceptionally(exception);
                         })
                 );
 
@@ -366,6 +366,25 @@ public class DataBaseOperate {
     }
 
     //-------------------------
+
+    public static CompletableFuture<Boolean> savePlayer(String player_uuid, String player_name){
+        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+
+        getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
+                .setColumnNames("player_uuid", "player_name")
+                .setParams(player_uuid, player_name)
+                .executeAsync(
+                        (query) -> completableFuture.complete(true),
+                        ((exception, sqlAction) -> {
+                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                            completableFuture.completeExceptionally(exception);
+                        })
+
+                );
+
+
+        return completableFuture;
+    }
 
     public static CompletableFuture<Boolean> wearTitle(@NotNull CommandSource source, String name, String uuid){
         return selectTitle(source, name)
@@ -382,11 +401,19 @@ public class DataBaseOperate {
 
                                 CompletableFuture<Boolean> wear = new CompletableFuture<>();
 
-                                getSqlManager().createInsert(PlayerWear.PLAYER_WEAR.getTableName())
-                                        .setColumnNames("player_uuid", title.isPrefix() ? "prefix" : "suffix")
-                                        .setParams(uuid, title.id())
-                                        .executeAsync(
-                                                (query) -> wear.complete(true),
+                                getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
+                                        .addCondition("player_uuid", uuid)
+                                        .setColumnValues(title.isPrefix() ? "prefix" : "suffix", title.id())
+                                        .build().executeAsync(
+                                                (query) -> {
+                                                    if (source instanceof Player player){
+                                                        String[] temp = {"UpdateTitle", player.getUniqueId().toString(), title.name(), title.isPrefix() ? "prefix" : "suffix", title.display()};
+                                                        VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                                        wear.complete(true);
+                                                    }else {
+                                                        wear.complete(false);
+                                                    }
+                                                },
                                                 ((exception, sqlAction) -> {
                                                     logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
                                                     source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
@@ -428,7 +455,7 @@ public class DataBaseOperate {
                                                         Title title = new Title(id, name, display, description, isPrefix);
                                                         titleCompletableFuture.complete(title);
                                                     } else {
-                                                        titleCompletableFuture.complete(new Title(0, null, null, null, true));
+                                                        titleCompletableFuture.complete(null);
                                                     }
                                                 },
                                                 ((exception, sqlAction) -> {
@@ -439,6 +466,7 @@ public class DataBaseOperate {
                                         );
 
                             } else {
+                                logger.error("特殊触发 top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate.playerWoreTitle");
                                 titleCompletableFuture.complete(null);
                             }
                         },

@@ -22,13 +22,15 @@ package top.redstarmc.plugin.velocitytitle.spigot;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
-
-import java.util.concurrent.atomic.AtomicReference;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
 public class HookPlaceholderAPI extends PlaceholderExpansion {
 
     CacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
+
+    LoggerManager log = VelocityTitleSpigot.getInstance().getLoggerManager();
 
     /**
      * 此扩展的占位符标识符。可能不包含 {@literal %},
@@ -72,7 +74,7 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String params) {
-        if (player == null && !player.isOnline()) {
+        if (player == null || !player.isOnline()) {
             return "UNKNOWN";
         }
         String[] par = params.split("_");
@@ -84,30 +86,28 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
             case "version":
                 return getVersion();
             default:
+                log.warn("请求错误！");
                 return "";
         }
     }
 
     public String prefix(@NotNull Player player){
-        AtomicReference<String> display = new AtomicReference<>("");
-        cacheManager.asyncCacheGet(player.getUniqueId().toString())
-                .thenAccept(playerTitleCache -> {
-                    if (playerTitleCache.prefix() != null && playerTitleCache.prefix().display() != null){
-                        display.set(playerTitleCache.prefix().display());
-                    }
-                });
-        return display.get();
+        PlayerTitleCache playerTitleCache = cacheManager.CacheGet(player.getUniqueId().toString());
+        if (playerTitleCache.prefix() != null){
+            return playerTitleCache.prefix().display();
+        }else {
+            return "";
+        }
     }
 
     public String suffix(@NotNull Player player){
-        AtomicReference<String> display = new AtomicReference<>("");
-        cacheManager.asyncCacheGet(player.getUniqueId().toString())
-                .thenAccept(playerTitleCache -> {
-                    if (playerTitleCache.suffix() != null && playerTitleCache.suffix().display() != null){
-                        display.set(playerTitleCache.suffix().display());
-                    }
-                });
-        return display.get();
+
+        PlayerTitleCache playerTitleCache = cacheManager.CacheGet(player.getUniqueId().toString());
+        if (playerTitleCache.suffix() != null){
+            return playerTitleCache.suffix().display();
+        }else {
+            return "";
+        }
     }
 
 }

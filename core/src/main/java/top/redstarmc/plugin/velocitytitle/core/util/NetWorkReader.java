@@ -19,6 +19,8 @@
 
 package top.redstarmc.plugin.velocitytitle.core.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +88,7 @@ public class NetWorkReader {
      * @return 包含序列化结果的字节数组（外层数组用于支持分片传输，当前实现为单个数组）
      * @throws IOException 若字符串序列化失败（如包含不支持的字符）
      */
-    public static byte[][] buildMessage(String... parts) throws IOException {
+    public static byte[][] buildMessage(@NotNull String... parts) throws IOException {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
              DataOutputStream dataOut = new DataOutputStream(out)) {
             dataOut.writeInt(parts.length); // 写入数组长度

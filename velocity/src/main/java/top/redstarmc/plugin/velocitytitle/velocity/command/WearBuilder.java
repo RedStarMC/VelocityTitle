@@ -80,16 +80,25 @@ public class WearBuilder implements VelocityTitleCommand{
     }
 
     private void execute(CommandSource source, String name, String player_name){
+        if (!(source instanceof Player)){
+            source.sendMessage(text("仅允许玩家操作"));
+            return;
+        }//TODO 临时操作
 
         Player player = proxyServer.getPlayer(player_name).orElse(null);
 
         if (player != null) { //TODO 需要防离线
             DataBaseOperate.wearTitle(source, name, player.getUniqueId().toString());
+            player.sendMessage(text("穿戴成功"));
         }
 
     }
 
     private void execute(CommandSource source, String name){
+        if (!(source instanceof Player)){
+            source.sendMessage(text("仅允许玩家操作"));
+            return;
+        }
         String player_name = FormatConversion.sourceToPlayer(source).getUsername();
 
         if (player_name == null) return;
