@@ -26,7 +26,6 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import com.velocitypowered.api.proxy.Player;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.util.FormatConversion;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -68,10 +67,10 @@ public class WearBuilder implements VelocityTitleCommand{
                                     return builder.buildFuture();
                                 })
                                 .executes(context -> {
-                                    String name = context.getArgument("name", String.class);
+                                    String title_name = context.getArgument("name", String.class);
                                     String player = context.getArgument("player", String.class);
 
-                                    execute(context.getSource(), name, player);
+                                    execute(context.getSource(), title_name, player);
 
                                     return 1;
                                 })
@@ -79,30 +78,24 @@ public class WearBuilder implements VelocityTitleCommand{
                 );
     }
 
-    private void execute(CommandSource source, String name, String player_name){
-        if (!(source instanceof Player)){
-            source.sendMessage(text("仅允许玩家操作"));
-            return;
-        }//TODO 临时操作
-
+    private void execute(CommandSource source, String title_name, String player_name) {
         Player player = proxyServer.getPlayer(player_name).orElse(null);
-
-        if (player != null) { //TODO 需要防离线
-            DataBaseOperate.wearTitle(source, name, player.getUniqueId().toString());
-            player.sendMessage(text("穿戴成功"));
+        if (player == null) {
+            DataBaseOperate.selectPlayerUUID(source, player_name)
+                    .thenAccept(uuid -> {
+                        DataBaseOperate.wearTitle(source, title_name, uuid);
+                    });
+        } else {
+            DataBaseOperate.wearTitle(source, title_name, player.getUniqueId().toString());
         }
-
     }
 
-    private void execute(CommandSource source, String name){
-        if (!(source instanceof Player)){
-            source.sendMessage(text("仅允许玩家操作"));
-            return;
+    private void execute(CommandSource source, String title_name) {
+        if (source instanceof Player player) {
+            String player_uuid = player.getUniqueId().toString();
+            DataBaseOperate.wearTitle(source, title_name, player_uuid);
+        } else {
+            source.sendMessage(text("仅允许玩家操作自己的称号穿戴情况"));
         }
-        String player_name = FormatConversion.sourceToPlayer(source).getUsername();
-
-        if (player_name == null) return;
-
-        execute(source, name, player_name);
     }
 }
