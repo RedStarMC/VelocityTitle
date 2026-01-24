@@ -31,14 +31,14 @@ import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 import java.sql.ResultSet;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 import static net.kyori.adventure.text.Component.text;
 
 /**
  * <h1>数据库操作</h1>
- * 各种数据库操作的实现。<br>
+ * 各种数据库操作的方法，全部为静态方法<br>
  * 使用 {@link SQLManager} 进行各种操作<br>
  * TODO 错误信息和成功信息反馈
  */
@@ -46,14 +46,14 @@ public class DataBaseOperate {
 
     static LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
 
-    static ExecutorService DB_POOL = VelocityTitleVelocity.getDbPool();
-
     private static ConfigManager getLanguage() {
         return VelocityTitleVelocity.getInstance().getLanguage();
+        //
     }
 
     private static SQLManager getSqlManager() {
         return VelocityTitleVelocity.getInstance().getDBManager().getSqlManager();
+        //
     }
 
     /*
@@ -62,14 +62,16 @@ public class DataBaseOperate {
 
     /**
      * 查询称号信息（CompletableFuture）
-     * @param source 命令发送者
-     * @param name 称号名称
+     *
+     * @param source     命令发送者
+     * @param title_name 称号名称
+     *
      * @return CompletableFuture<Title> - 异步返回查询结果
      */
-    public static @NotNull CompletableFuture<Title> selectTitle(CommandSource source, String name) {
+    public static @NotNull CompletableFuture<Title> selectTitle(CommandSource source, String title_name) {
         CompletableFuture<Title> future = new CompletableFuture<>();
 
-        if (name == null || name.isEmpty()) {
+        if (title_name == null || title_name.isEmpty()) {
             future.complete(null);
             return future;
         }
@@ -78,7 +80,7 @@ public class DataBaseOperate {
             getSqlManager().createQuery()
                     .inTable(TitleDictionary.TITLE_DICTIONARY.getTableName())
                     .selectColumns("id", "name", "display", "description", "type")
-                    .addCondition("name", name)
+                    .addCondition("name", title_name)
                     .build().executeAsync(
                     (query) -> {
                             ResultSet result = query.getResultSet();
@@ -87,7 +89,7 @@ public class DataBaseOperate {
                                 String description = result.getString("description");
                                 int id = result.getInt("id");
                                 boolean isPrefix = result.getString("type").equals("prefix");
-                                Title title = new Title(id, name, display, description, isPrefix);
+                                Title title = new Title(id, title_name, display, description, isPrefix);
                                 future.complete(title);
                             } else {
                                 future.complete(null);
@@ -110,14 +112,16 @@ public class DataBaseOperate {
 
     /**
      * 查询玩家是否拥有指定的称号（CompletableFuture）
-     * @param UUID 玩家UUID
-     * @param id 称号ID，自增主键，为int类型
+     *
+     * @param player_uuid 玩家UUID
+     * @param title_id    称号ID，自增主键，为int类型
+     *
      * @return CompletableFuture<Boolean>
      */
-    public static CompletableFuture<Boolean> queryTitleOfPlayer(CommandSource source, String UUID, int id) {
+    public static CompletableFuture<Boolean> queryTitleOfPlayer(CommandSource source, String player_uuid, int title_id) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        if (UUID == null || id < 0) {
+        if (player_uuid == null || title_id < 0) {
             future.complete(false);
             return future;
         }
@@ -126,16 +130,16 @@ public class DataBaseOperate {
             getSqlManager().createQuery()
                     .inTable(PlayerTitles.tableName)
                     .selectColumns("id")
-                    .addCondition("player_uuid", UUID)
-                    .addCondition("title_id", id)
+                    .addCondition("player_uuid", player_uuid)
+                    .addCondition("title_id", title_id)
                     .build().executeAsync(
-                    (query) -> future.complete(query.getResultSet().next()),
-                    (exception, sqlAction) -> {
-                        logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
-                        source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
-                        future.completeExceptionally(exception);
-                    }
-            );
+                            (query) -> future.complete(query.getResultSet().next()),
+                            (exception, sqlAction) -> {
+                                logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                                source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                                future.completeExceptionally(exception);
+                            }
+                    );
         } catch (Exception exception) {
             logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
             source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
@@ -145,6 +149,38 @@ public class DataBaseOperate {
         return future;
     }
 
+    /**
+     * 通过玩家名称获得离线玩家的UUID
+     *
+     * @param source      命令执行者
+     * @param player_name 玩家名称
+     *
+     * @return 玩家UUID
+     */
+    public static CompletableFuture<String> selectPlayerUUID(CommandSource source, String player_name) {
+        CompletableFuture<String> uuidCompletableFuture = new CompletableFuture<>();
+
+        getSqlManager().createQuery()
+                .inTable(PlayerWear.PLAYER_WEAR.getTableName())
+                .selectColumns("player_uuid")
+                .addCondition("player_name", player_name)
+                .build().executeAsync(
+                        (query) -> {
+                            ResultSet result = query.getResultSet();
+                            if (result.next()) {
+                                uuidCompletableFuture.complete(result.getString("player_uuid"));
+                            }
+                        },
+                        (exception, sqlAction) -> {
+                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                            uuidCompletableFuture.completeExceptionally(exception);
+                        }
+                );
+
+        return uuidCompletableFuture;
+    }
+
 
     /*
      插入
@@ -152,17 +188,19 @@ public class DataBaseOperate {
 
     /**
      * 将一个新称号加入称号库
-     * @param source 命令发送者
-     * @param name 称号名称
-     * @param display 实际的展示内容
+     *
+     * @param source      命令发送者
+     * @param title_name  称号名称
+     * @param display     实际的展示内容
      * @param description 描述
-     * @param isPrefix 是否为前缀
+     * @param isPrefix    是否为前缀
+     *
      * @return CompletableFuture<Boolean> - 异步返回是否成功
      */
-    public static CompletableFuture<Boolean> insertTitle(@NotNull CommandSource source, String name, String display, String description, boolean isPrefix) {
+    public static CompletableFuture<Boolean> insertTitle(@NotNull CommandSource source, String title_name, String display, String description, boolean isPrefix) {
 
         // 检查称号是否存在
-        return selectTitle(source, name)
+        return selectTitle(source, title_name)
                 .thenCompose(existingTitle -> {
                     if (existingTitle != null) {
                         // 称号已存在, 失败
@@ -174,7 +212,7 @@ public class DataBaseOperate {
                     try {
                         getSqlManager().createInsert(TitleDictionary.TITLE_DICTIONARY.getTableName())
                                 .setColumnNames("name", "display", "description", "type")
-                                .setParams(name, display, description, isPrefix ? "prefix" : "suffix")
+                                .setParams(title_name, display, description, isPrefix ? "prefix" : "suffix")
                                 .executeAsync(
                                         (query) -> insertFuture.complete(true),
                                         ((exception, sqlAction) -> {
@@ -247,12 +285,13 @@ public class DataBaseOperate {
 
     /**
      * 从称号库删除一个称号
-     * @param source 命令发送者
-     * @param name 称号名称
+     *
+     * @param source     命令发送者
+     * @param title_name 称号名称
      */
-    public static CompletableFuture<Boolean> deleteTitle(@NotNull CommandSource source, String name){
+    public static CompletableFuture<Boolean> deleteTitle(@NotNull CommandSource source, String title_name) {
 
-        return selectTitle(source, name)
+        return selectTitle(source, title_name)
                 .thenCompose(existingTitle -> {
                     if (existingTitle == null) {
                         // 称号不存在, 失败
@@ -264,7 +303,7 @@ public class DataBaseOperate {
                     try {
 
                         getSqlManager().createDelete(TitleDictionary.TITLE_DICTIONARY.getTableName())
-                                .addCondition("name", name)
+                                .addCondition("name", title_name)
                                 .build()
                                 .executeAsync((query) -> insertFuture.complete(true),
                                         ((exception, sqlAction) -> {
@@ -295,21 +334,22 @@ public class DataBaseOperate {
 
     /**
      * 分配称号给玩家
-     * @param source 命令发送者
-     * @param name 称号识别 ID
+     *
+     * @param source      命令发送者
+     * @param title_name  称号名称
      * @param player_uuid 要给的玩家的 uuid
      */
-    public static CompletableFuture<Boolean> divideTitleToPlayer(@NotNull CommandSource source,@NotNull String name,@NotNull String player_uuid){
+    public static CompletableFuture<Boolean> divideTitleToPlayer(@NotNull CommandSource source, @NotNull String title_name, @NotNull String player_uuid) {
 
-        return selectTitle(source, name)
+        return selectTitle(source, title_name)
                 .thenCompose(title -> {
-                    if (title == null){
+                    if (title == null) {
                         return CompletableFuture.completedFuture(false);
                     }
 
                     return queryTitleOfPlayer(source, player_uuid, title.id())
-                            .thenCompose(isExist-> {
-                                if (isExist){
+                            .thenCompose(isExist -> {
+                                if (isExist) {
                                     source.sendMessage(text("玩家已经拥有该称号"));
                                     return CompletableFuture.completedFuture(false);
                                 }
@@ -344,25 +384,33 @@ public class DataBaseOperate {
 
     /**
      * 收回玩家的称号
-     * @param source 命令发送者
-     * @param name 称号识别 ID
-     * @param UUID 被执行玩家 UUID
+     *
+     * @param source      命令发送者
+     * @param title_name  称号识别 ID
+     * @param player_uuid 被执行玩家 UUID
      */
-    public static @NotNull CompletableFuture<Boolean> retrieveTitleFromPlayer(@NotNull CommandSource source,@NotNull String name,@NotNull String UUID){
-        CompletableFuture<Boolean> deletePlayerTitle = new CompletableFuture<>();
-        //TODO 应该请求ID而不是name
-        getSqlManager().createReplace(PlayerTitles.tableName)
-                .setColumnNames("title_name", "player_uuid", "prefix", "suffix")
-                .setParams(name, UUID, null, null)
-                .executeAsync((query) -> deletePlayerTitle.complete(true),
-                        ((exception, sqlAction) -> {
-                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
-                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
-                            deletePlayerTitle.completeExceptionally(exception);
-                        })
-                );
+    public static @NotNull CompletableFuture<Boolean> retrieveTitleFromPlayer(
+            @NotNull CommandSource source, @NotNull String title_name, @NotNull String player_uuid) {
 
-        return deletePlayerTitle;
+        return selectTitle(source, title_name)
+                .thenCompose(title -> {
+                    CompletableFuture<Boolean> deletePlayerTitle = new CompletableFuture<>();
+
+                    getSqlManager().createDelete(PlayerTitles.PLAYER_TITLES.getTableName())
+                            .addCondition("player_uuid", player_uuid)
+                            .addCondition("title_id", title.id())
+                            .build()
+                            .executeAsync(
+                                    (query) -> deletePlayerTitle.complete(true),
+                                    ((exception, sqlAction) -> {
+                                        logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                                        source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                                        deletePlayerTitle.completeExceptionally(exception);
+                                    })
+                            );
+
+                    return deletePlayerTitle;
+                });
     }
 
     //-------------------------
@@ -386,33 +434,43 @@ public class DataBaseOperate {
         return completableFuture;
     }
 
-    public static CompletableFuture<Boolean> wearTitle(@NotNull CommandSource source, String name, String uuid){
-        return selectTitle(source, name)
+    /**
+     * 穿戴称号操作
+     *
+     * @param source      命令执行者
+     * @param title_name  称号名称
+     * @param player_uuid 玩家 UUID
+     *
+     * @return 是否成功执行
+     */
+    public static CompletableFuture<Boolean> wearTitle(@NotNull CommandSource source, String title_name, String player_uuid) {
+        return selectTitle(source, title_name)
                 .thenCompose(title -> {
-                    if (title == null){
+                    if (title == null) {
                         return CompletableFuture.completedFuture(false);
                     }
 
-                    return queryTitleOfPlayer(source, uuid, title.id())
+                    return queryTitleOfPlayer(source, player_uuid, title.id())
                             .thenCompose(isExist -> {
-                                if (!isExist){
+                                if (! isExist) {
                                     return CompletableFuture.completedFuture(false);
                                 }
 
                                 CompletableFuture<Boolean> wear = new CompletableFuture<>();
 
                                 getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
-                                        .addCondition("player_uuid", uuid)
+                                        .addCondition("player_uuid", player_uuid)
                                         .setColumnValues(title.isPrefix() ? "prefix" : "suffix", title.id())
                                         .build().executeAsync(
                                                 (query) -> {
-                                                    if (source instanceof Player player){
-                                                        String[] temp = {"UpdateTitle", player.getUniqueId().toString(), title.name(), title.isPrefix() ? "prefix" : "suffix", title.display()};
-                                                        VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
-                                                        wear.complete(true);
-                                                    }else {
-                                                        wear.complete(false);
+                                                    Optional<Player> optionalPlayer = VelocityTitleVelocity.getInstance().getServer().getPlayer(player_uuid);
+                                                    if (optionalPlayer.isPresent()) {
+                                                        Player player = optionalPlayer.get();
+                                                        String[] temp = {"UpdateTitle", player_uuid, title.name(), title.isPrefix() ? "prefix" : "suffix", title.display()};
+                                                        VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player/*随机挑选玩家*/, temp);
                                                     }
+                                                    // 不在线则无需发送，当玩家上线时会自动佩戴。
+                                                    wear.complete(true);
                                                 },
                                                 ((exception, sqlAction) -> {
                                                     logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));

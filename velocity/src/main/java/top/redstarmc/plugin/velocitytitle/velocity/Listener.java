@@ -79,15 +79,15 @@ public class Listener {
         // event.setResult(PluginMessageEvent.ForwardResult.forward());
 
         // 仅当源是后端服务器时才尝试解析数据
-        if (!(event.getSource() instanceof ServerConnection source)) {
-            logger.error("Invalid message source (not ServerConnection)");
+        if (! (event.getSource() instanceof ServerConnection)) {
+            logger.warn("Invalid message source (not ServerConnection)");
             return;
         }
         logger.debug("接收到插件消息-2");
 
         try {
             NetWorkReader netWorkReader = NetWorkReader.read(event.getData());
-            if (netWorkReader.isCompleted()){
+            if (netWorkReader.isCompleted()) {
                 analysisPM(netWorkReader.build());
             }
         } catch (IOException e) {
