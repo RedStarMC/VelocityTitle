@@ -19,9 +19,15 @@
 
 package top.redstarmc.plugin.velocitytitle.velocity.command.title;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+
+import static net.kyori.adventure.text.Component.text;
 
 public class MetaBuilder implements VelocityTitleCommand {
 
@@ -39,11 +45,36 @@ public class MetaBuilder implements VelocityTitleCommand {
                 )
                 .executes(context -> {
 
-
-
+                    context.getSource().sendMessage(text("请输入称号名称或id"));
 
                     return 1;
-                });
+                })
+                .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
+                        .executes(context -> {
+                            String title_name = context.getArgument("name", String.class);
+                            CommandSource source = context.getSource();
+
+                            DataBaseOperate.selectTitleWithName(source, title_name)
+                                    .thenAcceptAsync(title -> {
+                                        source.sendMessage(text("Name: " + title.name() + "\n" + "Display: " + title.display() + "\n" + "Description: " + title.description()));
+                                    });
+
+                            return 1;
+                        })
+                )
+                .then(BrigadierCommand.requiredArgumentBuilder("id", IntegerArgumentType.integer(1))
+                        .executes(context -> {
+                            Integer title_id = context.getArgument("id", Integer.class);
+                            CommandSource source = context.getSource();
+
+                            DataBaseOperate.selectTitleWithID(source, title_id)
+                                    .thenAcceptAsync(title -> {
+                                        source.sendMessage(text("Name: " + title.name() + "\n" + "Display: " + title.display() + "\n" + "Description: " + title.description()));
+                                    });
+
+                            return 1;
+                        })
+                );
     }
 
 

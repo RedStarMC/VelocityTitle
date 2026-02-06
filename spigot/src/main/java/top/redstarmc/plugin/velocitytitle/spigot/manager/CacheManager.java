@@ -46,6 +46,7 @@ public class CacheManager {
     }
 
     public PlayerTitleCache CacheGet(@NotNull String uuid){
+        //TODO 每隔一段时间发送一次
         PlayerTitleCache playerTitle = CACHE.get(uuid);
 
         if (playerTitle == null){

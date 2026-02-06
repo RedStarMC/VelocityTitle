@@ -122,20 +122,20 @@ public class PluginMessageBukkit implements PluginMessageListener{
                 if (playerTitleCache == null){
                     if (title_type.equals("prefix")){
                         cache.CachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), null));
-                        log.debug("动作1");
+
                     }else {
                         cache.CachePut(uuid1, new PlayerTitleCache(null, new TitleCache(title_name, title_display)));
-                        log.debug("动作2");
+
                     }
                 }else {
                     if(title_type.equals("prefix")){
                         TitleCache suffix = playerTitleCache.suffix();
                         cache.CachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), suffix));
-                        log.debug("动作3");
+
                     }else {
                         TitleCache prefix = playerTitleCache.prefix();
                         cache.CachePut(uuid1, new PlayerTitleCache(prefix, new TitleCache(title_name, title_display)));
-                        log.debug("动作4");
+
                     }
                 }
 

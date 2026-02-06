@@ -86,8 +86,6 @@ public class CreateBuilder implements VelocityTitleCommand {
 
     private void execute(CommandSource source, @NotNull String type, String name, String display, String description){
 
-        source.sendMessage(text("正常创建 debug2"));
-
         boolean isPrefix;
         if  (type.equals("prefix") || type.equals("pre") || type.equals("p")){
             isPrefix = true;
@@ -97,8 +95,6 @@ public class CreateBuilder implements VelocityTitleCommand {
             source.sendMessage(text("错误信息")); //TODO
             return;
         }
-
-        source.sendMessage(text("正常创建 debug3"));
 
         DataBaseOperate.insertTitle(source, name, display, description, isPrefix)
                 .thenAcceptAsync( action -> source.sendMessage(text("创建成功"))).exceptionally(ex -> {
