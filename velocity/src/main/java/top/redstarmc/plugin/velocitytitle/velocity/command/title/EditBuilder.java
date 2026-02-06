@@ -81,11 +81,11 @@ public class EditBuilder implements VelocityTitleCommand {
     }
 
     private void executeDisplay(CommandSource source, String name, String display) {
-        //
+
     }
 
     private void executeDescription(CommandSource source, String name, String description) {
-        //
+
     }
 
 }
