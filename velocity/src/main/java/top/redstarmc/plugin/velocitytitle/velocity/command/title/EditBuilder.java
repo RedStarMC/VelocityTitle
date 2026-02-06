@@ -29,6 +29,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import static net.kyori.adventure.text.Component.text;
 
 /**
+ * TODO
  * 称号操作-编辑称号
  */
 public class EditBuilder implements VelocityTitleCommand {
@@ -79,12 +80,12 @@ public class EditBuilder implements VelocityTitleCommand {
                 );
     }
 
-    void executeDisplay(CommandSource source, String name, String display){
-        //TODO
+    private void executeDisplay(CommandSource source, String name, String display) {
+        //
     }
 
-    void executeDescription(CommandSource source, String name, String description){
-
+    private void executeDescription(CommandSource source, String name, String description) {
+        //
     }
 
 }

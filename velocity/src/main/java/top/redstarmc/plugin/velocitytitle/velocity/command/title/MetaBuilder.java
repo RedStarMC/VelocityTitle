@@ -17,12 +17,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.command;
+package top.redstarmc.plugin.velocitytitle.velocity.command.title;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.CommandSource;
+import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 
-public class MetaBuilder implements VelocityTitleCommand{
+public class MetaBuilder implements VelocityTitleCommand {
 
     /**
      * 子命令树

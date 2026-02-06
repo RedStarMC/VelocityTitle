@@ -60,7 +60,7 @@ public class ListBuilder implements VelocityTitleCommand {
         //TODO 查询 展示
 
         for (Title title : titles){
-            source.sendMessage(text(title.name()));
+            source.sendMessage(text(title.name() + " " + title.display() + " " + title.description() + "\n"));
         }
 
     }
