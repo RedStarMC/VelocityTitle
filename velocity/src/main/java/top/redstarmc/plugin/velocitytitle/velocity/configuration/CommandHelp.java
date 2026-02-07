@@ -61,13 +61,9 @@ public class CommandHelp {
     public static @NotNull List<Component> help(){
         return TextSer.toComponentList(
                 prefix() + head(),
-                sharp + "&a/vt title <create|edit|delete|list>&r" ,
-                sharp + "&a/vt player <divide|revoke|delete|list>&r" ,
-                sharp + "&a/vt bank [player]&r" ,
-                sharp + "&a/vt pick [player]&r" ,
-                sharp + "&a/vt wear <name> [player]&r" ,
-                sharp + "&a/vt reload" ,
-                sharp + "&a/vt meta"
+                sharp + "&a/vt title < create | edit | delete | list | meta >&r",
+                sharp + "&a/vt player < divide | revoke | wear | pick | list >&r",
+                sharp + "&a/vt reload"
         );
     }
 
@@ -77,10 +73,20 @@ public class CommandHelp {
                 sharp + language.getConfigToml().getString("commands.titles.create"),
                 sharp + language.getConfigToml().getString("commands.titles.edit"),
                 sharp + language.getConfigToml().getString("commands.titles.delete"),
-                sharp + language.getConfigToml().getString("commands.titles.list")
+                sharp + language.getConfigToml().getString("commands.titles.list"),
+                sharp + language.getConfigToml().getString("commands.titles.meta")
         );
     }
 
-
+    public static @NotNull List<Component> player() {
+        return TextSer.toComponentList(
+                prefix() + language.getConfigToml().getString("commands.player"),
+                sharp + language.getConfigToml().getString("commands.players.divide"),
+                sharp + language.getConfigToml().getString("commands.players.revoke"),
+                sharp + language.getConfigToml().getString("commands.players.wera"),
+                sharp + language.getConfigToml().getString("commands.players.pick"),
+                sharp + language.getConfigToml().getString("commands.players.list")
+        );
+    }
 
 }

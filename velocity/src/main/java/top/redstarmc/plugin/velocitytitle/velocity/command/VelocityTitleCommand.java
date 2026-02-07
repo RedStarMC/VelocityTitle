@@ -30,15 +30,10 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.player.DivideBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.PickBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.RevokeBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.WearBuilder;
-import top.redstarmc.plugin.velocitytitle.velocity.command.title.CreateBuilder;
-import top.redstarmc.plugin.velocitytitle.velocity.command.title.DeleteBuilder;
-import top.redstarmc.plugin.velocitytitle.velocity.command.title.EditBuilder;
-import top.redstarmc.plugin.velocitytitle.velocity.command.title.ListBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.*;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandHelp;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
-
-import static net.kyori.adventure.text.Component.text;
 
 /**
  * <h1>插件命令器</h1>
@@ -81,9 +76,6 @@ public interface VelocityTitleCommand {
                 .then(title())
                 .then(player())
                 .then(new ReloadBuilder().build())
-                .then(new WearBuilder().build())
-                .then(new PickBuilder().build())
-                //.then(new MetaBuilder().build())
                 .then(LiteralArgumentBuilder.<CommandSource>literal("help")
                         .executes(context -> {
                             TextSer.sendComponentList(context.getSource(), CommandHelp.help());
@@ -107,7 +99,8 @@ public interface VelocityTitleCommand {
                 .then(new CreateBuilder().build())
                 .then(new EditBuilder().build())
                 .then(new DeleteBuilder().build())
-                .then(new ListBuilder().build());
+                .then(new ListBuilder().build())
+                .then(new MetaBuilder().build());
     }
 
     private static LiteralArgumentBuilder<CommandSource> database(){
@@ -117,11 +110,14 @@ public interface VelocityTitleCommand {
     private static LiteralArgumentBuilder<CommandSource> player(){
         return LiteralArgumentBuilder.<CommandSource>literal("player")
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    TextSer.sendComponentList(context.getSource(), CommandHelp.player());
                     return 1;
                 })
                 .then(new DivideBuilder().build())
-                .then(new RevokeBuilder().build());
+                .then(new RevokeBuilder().build())
+                .then(new top.redstarmc.plugin.velocitytitle.velocity.command.player.ListBuilder().build())
+                .then(new PickBuilder().build())
+                .then(new WearBuilder().build());
     }
 
 }

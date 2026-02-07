@@ -44,18 +44,29 @@ database = "&bdatabase 子命令：&f（/vt database ...）&r"
 
 [commands.titles]
 create = "&btitle create &9- &b创建一个称号&r"
-create-p = " &b- &7<&fname&7> &9-> &f称号的 ID，具有唯一性 &r\n &b- &7<&fdisplay&7> &9-> &f称号对外展示的形式，可以使用中文和颜色代码 &r\n &b- &7[&fdescription&7] &9-> &f 称号的描述 &r"
+create-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7<&fdisplay&7> &9-> &f称号对外展示的形式，可以使用中文和颜色代码 &r\n &b- &7[&fdescription&7] &9-> &f 称号的描述 &r"
 
 edit = "&btitle edit &9- &b编辑一个称号&r"
-edit-p = " &b- &7<&fname&7> &9-> &f称号的 ID，具有唯一性 &r\n &b- &7(&fdisplay|description&7) &9-> &f任意选择一个进行编辑 &r\n &b- &7<&fdisplay/description&7> &9-> &f 将前面选定的项设为此值 &r"
+edit-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7(&fdisplay|description&7) &9-> &f任意选择一个进行编辑 &r\n &b- &7<&fdisplay/description&7> &9-> &f 将前面选定的项设为此值 &r"
 
 delete = "&btitle delete &9- &b删除一个称号&r"
-delete-p = " &b- &7<&fname&7> &9-> &f称号的 ID，具有唯一性 &r"
+delete-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r"
 
 list = "&btitle list &9- &b列出已知的称号&r"
 
-[commands.players]
+meta = "&btitle meta &9- &b列出指定称号的信息&r"
+meta-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r"
 
+[commands.players]
+divide = "&btitle divide &9- &b向指定的玩家分配一个称号&r"
+
+revoke = "&btitle revoke &9- &b收回该玩家被分配的称号&r"
+
+wear = "&btitle wear &9- &b穿戴称号&r"
+
+pick = "&btitle pick &9- &b摘除称号&r"
+
+list = "&btitle list &9- &b列出玩家拥有的全部称号&r"
 
 [commands.tips]
 
