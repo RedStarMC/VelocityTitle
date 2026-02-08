@@ -62,8 +62,6 @@ public class CreateBuilder implements VelocityTitleCommand {
                                             String display = context.getArgument("display", String.class);
                                             String description = "无";
 
-                                            context.getSource().sendMessage(text("正常创建 debug1"));
-
                                             execute(context.getSource(), type, name, display, description);
 
                                             return Command.SINGLE_SUCCESS;

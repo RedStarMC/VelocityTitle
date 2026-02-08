@@ -20,6 +20,7 @@
 package top.redstarmc.plugin.velocitytitle.spigot;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
@@ -94,7 +95,7 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
     public String prefix(@NotNull Player player){
         PlayerTitleCache playerTitleCache = cacheManager.CacheGet(player.getUniqueId().toString());
         if (playerTitleCache.prefix() != null){
-            return playerTitleCache.prefix().display();
+            return ChatColor.translateAlternateColorCodes('&', playerTitleCache.prefix().display());
         }else {
             return "";
         }
@@ -104,7 +105,7 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
 
         PlayerTitleCache playerTitleCache = cacheManager.CacheGet(player.getUniqueId().toString());
         if (playerTitleCache.suffix() != null){
-            return playerTitleCache.suffix().display();
+            return ChatColor.translateAlternateColorCodes('&', playerTitleCache.suffix().display());
         }else {
             return "";
         }

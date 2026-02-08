@@ -108,16 +108,14 @@ public class Listener {
                             player -> {
                                 DataBaseOperate.playerWoreTitle(player, uuid, type.equals("prefix"))
                                         .thenAcceptAsync(title -> {
-                                            logger.info("测试信息1");
                                             String[] temp;
                                             if(title == null){
                                                 temp = new String[]{"UpdateTitle", uuid, "", type, ""};
                                             }else {
                                                 temp = new String[]{"UpdateTitle", uuid, title.name(), type, title.display()};
                                             }
-                                            logger.info(Arrays.toString(temp));
+                                            logger.debug(Arrays.toString(temp));
                                             VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
-                                            logger.info("测试信息2");
                                         });
                             },
                             () -> logger.warn("服务器连接为空！")

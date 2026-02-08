@@ -161,7 +161,7 @@ public class DataBaseOperate {
      *
      * @return CompletableFuture<Boolean>
      */
-    public static CompletableFuture<Boolean> queryTitleOfPlayer(CommandSource source, String player_uuid, int title_id) {
+    public static @NotNull CompletableFuture<Boolean> queryTitleOfPlayer(CommandSource source, String player_uuid, int title_id) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         if (player_uuid == null || title_id < 0) {
@@ -200,7 +200,7 @@ public class DataBaseOperate {
      *
      * @return 玩家UUID
      */
-    public static CompletableFuture<String> selectPlayerUUID(CommandSource source, String player_name) {
+    public static @NotNull CompletableFuture<String> selectPlayerUUID(CommandSource source, String player_name) {
         CompletableFuture<String> uuidCompletableFuture = new CompletableFuture<>();
 
         getSqlManager().createQuery()
@@ -240,7 +240,7 @@ public class DataBaseOperate {
      *
      * @return CompletableFuture<Boolean> - 异步返回是否成功
      */
-    public static CompletableFuture<Boolean> insertTitle(@NotNull CommandSource source, String title_name, String display, String description, boolean isPrefix) {
+    public static @NotNull CompletableFuture<Boolean> insertTitle(@NotNull CommandSource source, String title_name, String display, String description, boolean isPrefix) {
 
         // 检查称号是否存在
         return selectTitleWithName(source, title_name)
@@ -286,7 +286,7 @@ public class DataBaseOperate {
      * @param source 命令发送者
      * @param title {@link Title} 要编辑的称号实例
      */
-    public static CompletableFuture<Boolean> updateTitle(@NotNull CommandSource source, @NotNull Title title){
+    public static @NotNull CompletableFuture<Boolean> updateTitle(@NotNull CommandSource source, @NotNull Title title) {
         return selectTitleWithName(source, title.name())
                 .thenCompose(existingTitle -> {
                     if (existingTitle == null) {
@@ -332,7 +332,7 @@ public class DataBaseOperate {
      * @param source     命令发送者
      * @param title_name 称号名称
      */
-    public static CompletableFuture<Boolean> deleteTitle(@NotNull CommandSource source, String title_name) {
+    public static @NotNull CompletableFuture<Boolean> deleteTitle(@NotNull CommandSource source, String title_name) {
 
         return selectTitleWithName(source, title_name)
                 .thenCompose(existingTitle -> {
@@ -382,7 +382,7 @@ public class DataBaseOperate {
      * @param title_name  称号名称
      * @param player_uuid 要给的玩家的 uuid
      */
-    public static CompletableFuture<Boolean> divideTitleToPlayer(@NotNull CommandSource source, @NotNull String title_name, @NotNull String player_uuid) {
+    public static @NotNull CompletableFuture<Boolean> divideTitleToPlayer(@NotNull CommandSource source, @NotNull String title_name, @NotNull String player_uuid) {
 
         return selectTitleWithName(source, title_name)
                 .thenCompose(title -> {
@@ -458,7 +458,7 @@ public class DataBaseOperate {
 
     //-------------------------
 
-    public static CompletableFuture<Boolean> savePlayer(String player_uuid, String player_name){
+    public static @NotNull CompletableFuture<Boolean> savePlayer(String player_uuid, String player_name) {
         CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
 
         getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
@@ -486,7 +486,7 @@ public class DataBaseOperate {
      *
      * @return 是否成功执行
      */
-    public static CompletableFuture<Boolean> wearTitle(@NotNull CommandSource source, String title_name, String player_uuid) {
+    public static @NotNull CompletableFuture<Boolean> wearTitle(@NotNull CommandSource source, String title_name, String player_uuid) {
         return selectTitleWithName(source, title_name)
                 .thenCompose(title -> {
                     if (title == null) {
@@ -528,7 +528,16 @@ public class DataBaseOperate {
                 });
     }
 
-    public static CompletableFuture<Title> playerWoreTitle(@NotNull CommandSource source, String uuid, boolean isPrefix){
+    /**
+     * 获得玩家当前穿戴的称号
+     *
+     * @param source
+     * @param uuid
+     * @param isPrefix
+     *
+     * @return
+     */
+    public static @NotNull CompletableFuture<Title> playerWoreTitle(@NotNull CommandSource source, String uuid, boolean isPrefix) {
         CompletableFuture<Title> titleCompletableFuture = new CompletableFuture<>();
 
         getSqlManager().createQuery()
@@ -570,8 +579,8 @@ public class DataBaseOperate {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
-                .setColumnNames("uuid", isPrefix ? "prefix" : "suffix")
-                .setParams("uuid", uuid)
+                .setColumnNames("player_uuid", isPrefix ? "prefix" : "suffix")
+                .setParams("player_uuid", uuid)
                 .setParams(isPrefix ? "prefix" : "suffix", null)
                 .executeAsync(
                         (query) -> future.complete(true),
@@ -614,6 +623,48 @@ public class DataBaseOperate {
                                                 titleList.add(title);
                                             }
                                         });
+                            }
+
+                            completableFuture.complete(titleList);
+                        },
+                        ((exception, sqlAction) -> {
+                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                            completableFuture.completeExceptionally(exception);
+                        })
+                );
+
+        return completableFuture;
+    }
+
+    /**
+     * 查询称号列表
+     *
+     * @param source 命令执行者
+     *
+     * @return CompletableFuture<List < Title>>
+     */
+    public static CompletableFuture<List<Title>> selectTitleList(CommandSource source) {
+        CompletableFuture<List<Title>> completableFuture = new CompletableFuture<>();
+
+        getSqlManager().createQuery().inTable(TitleDictionary.TITLE_DICTIONARY.getTableName())
+                .selectColumns("id", "name", "display", "description", "type")
+                .build()
+                .executeAsync(
+                        (query) -> {
+                            ResultSet resultSet = query.getResultSet();
+                            List<Title> titleList = new ArrayList<>();
+
+                            while ( resultSet.next() ) {
+                                int id = resultSet.getInt("id");
+                                String name = resultSet.getString("name");
+                                String display = resultSet.getString("display");
+                                String description = resultSet.getString("description");
+                                String type = resultSet.getString("type");
+
+                                titleList.add(
+                                        new Title(id, name, display, description, type.equals("prefix"))
+                                );
                             }
 
                             completableFuture.complete(titleList);

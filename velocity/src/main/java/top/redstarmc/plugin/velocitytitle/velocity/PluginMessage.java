@@ -45,7 +45,6 @@ public class PluginMessage {
     }
 
     public void sendMessageT(Player player, String[] d){
-        logger.info("测试测试测");
         try {
             logger.debug("正在准备发送插件数据", Arrays.toString(d));
             byte[][] data = NetWorkReader.buildMessage(d);

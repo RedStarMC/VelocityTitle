@@ -83,7 +83,7 @@ public class CommandHelp {
                 prefix() + language.getConfigToml().getString("commands.player"),
                 sharp + language.getConfigToml().getString("commands.players.divide"),
                 sharp + language.getConfigToml().getString("commands.players.revoke"),
-                sharp + language.getConfigToml().getString("commands.players.wera"),
+                sharp + language.getConfigToml().getString("commands.player.wear"),
                 sharp + language.getConfigToml().getString("commands.players.pick"),
                 sharp + language.getConfigToml().getString("commands.players.list")
         );

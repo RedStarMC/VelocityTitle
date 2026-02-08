@@ -67,7 +67,7 @@ public abstract class AbstractTomlManager {
             try {
                 IOUtils.createDirectory(dataFolder);
             } catch (IOException e) {
-                throw new RuntimeException(e); //TODO 输出待测试
+                throw new RuntimeException(e);
             }
         }
         if (!file.exists()) {
@@ -75,7 +75,7 @@ public abstract class AbstractTomlManager {
                 IOUtils.createFile(file);
                 injectConfigFromFile();
             } catch (IOException e) {
-                throw new RuntimeException(e); //TODO 输出待测试
+                throw new RuntimeException(e);
             }
         }
     }

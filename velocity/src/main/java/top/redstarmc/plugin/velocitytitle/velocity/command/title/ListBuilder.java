@@ -22,9 +22,8 @@ package top.redstarmc.plugin.velocitytitle.velocity.command.title;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.database.Title;
-
-import java.util.ArrayList;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -55,13 +54,16 @@ public class ListBuilder implements VelocityTitleCommand {
     }
 
     void execute(CommandSource source){
-        ArrayList<Title> titles = new ArrayList<Title>();
 
-        //TODO 查询 展示
-
-        for (Title title : titles){
-            source.sendMessage(text(title.name() + " " + title.display() + " " + title.description() + "\n"));
-        }
+        DataBaseOperate.selectTitleList(source)
+                .thenAcceptAsync(titles -> {
+                    for ( Title title : titles ) {
+                        source.sendMessage(text("查询结果如下：\n"));
+                        source.sendMessage(
+                                text(title.name() + " " + title.display() + " " + title.description() + "\n")
+                        );
+                    }
+                });
 
     }
 
