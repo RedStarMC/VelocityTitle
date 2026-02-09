@@ -31,10 +31,9 @@ import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -300,8 +299,8 @@ public class DataBaseOperate {
 
                         getSqlManager().createUpdate(TitleDictionary.TITLE_DICTIONARY.getTableName())
                                 .addCondition("name", title.name())
-                                .setColumnValues("display", title.display())
-                                .setColumnValues("description", title.description())
+                                .addColumnValue("display", title.display())
+                                .addColumnValue("description", title.description())
                                 .build().executeAsync(
                                         (query) -> insertFuture.complete(true),
                                         ((exception, sqlAction) -> {
@@ -461,7 +460,8 @@ public class DataBaseOperate {
     public static @NotNull CompletableFuture<Boolean> savePlayer(String player_uuid, String player_name) {
         CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
 
-        getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
+        //TODO 修改为先查询再执行
+        getSqlManager().createInsert(PlayerWear.PLAYER_WEAR.getTableName())
                 .setColumnNames("player_uuid", "player_name")
                 .setParams(player_uuid, player_name)
                 .executeAsync(
@@ -503,10 +503,11 @@ public class DataBaseOperate {
 
                                 getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
                                         .addCondition("player_uuid", player_uuid)
-                                        .setColumnValues(title.isPrefix() ? "prefix" : "suffix", title.id())
+                                        .addColumnValue(title.isPrefix() ? "prefix" : "suffix", title.id())
                                         .build().executeAsync(
                                                 (query) -> {
-                                                    Optional<Player> optionalPlayer = VelocityTitleVelocity.getInstance().getServer().getPlayer(player_uuid);
+                                                    Optional<Player> optionalPlayer = VelocityTitleVelocity.getInstance()
+                                                            .getServer().getPlayer(UUID.fromString(player_uuid));
                                                     if (optionalPlayer.isPresent()) {
                                                         Player player = optionalPlayer.get();
                                                         String[] temp = {"UpdateTitle", player_uuid, title.name(), title.isPrefix() ? "prefix" : "suffix", title.display()};
@@ -531,19 +532,19 @@ public class DataBaseOperate {
     /**
      * 获得玩家当前穿戴的称号
      *
-     * @param source
-     * @param uuid
-     * @param isPrefix
+     * @param source 命令发送者
+     * @param player_uuid 玩家的 UUID
+     * @param isPrefix 是否为前缀
      *
-     * @return
+     * @return 称号实例
      */
-    public static @NotNull CompletableFuture<Title> playerWoreTitle(@NotNull CommandSource source, String uuid, boolean isPrefix) {
+    public static @NotNull CompletableFuture<Title> playerWoreTitle(@NotNull CommandSource source, String player_uuid, boolean isPrefix) {
         CompletableFuture<Title> titleCompletableFuture = new CompletableFuture<>();
 
         getSqlManager().createQuery()
                 .inTable(PlayerWear.PLAYER_WEAR.getTableName())
                 .selectColumns("player_uuid", isPrefix ? "prefix" : "suffix")
-                .addCondition("player_uuid", uuid)
+                .addCondition("player_uuid", player_uuid)
                 .build()
                 .executeAsync(
                         (query) -> {
@@ -572,24 +573,55 @@ public class DataBaseOperate {
     /**
      * 摘除前缀或后缀
      * @param source 命令发送者
-     * @param uuid 被执行玩家 UUID
-     * @param isPrefix 是否是前缀
+     * @param player_uuid 被执行玩家 UUID
+     * @param type 称号类型
      */
-    public static CompletableFuture<Boolean> playerPickTitle(@NotNull CommandSource source, String uuid, boolean isPrefix){
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
+    public static CompletableFuture<Void> playerPickTitle(@NotNull CommandSource source, String player_uuid, TitleType type) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
-        getSqlManager().createReplace(PlayerWear.PLAYER_WEAR.getTableName())
-                .setColumnNames("player_uuid", isPrefix ? "prefix" : "suffix")
-                .setParams("player_uuid", uuid)
-                .setParams(isPrefix ? "prefix" : "suffix", null)
-                .executeAsync(
-                        (query) -> future.complete(true),
-                        ((exception, sqlAction) -> {
-                            logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
-                            source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
-                            future.completeExceptionally(exception);
-                        })
-                );
+        if ( type == TitleType.ALL ) {
+            getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
+                    .addCondition("player_uuid", player_uuid)
+                    .addColumnValue("prefix", null)
+                    .addColumnValue("suffix", null)
+                    .build()
+                    .executeAsync(
+                            (query) -> {
+                                future.complete(null);
+                            },
+                            ((exception, sqlAction) -> {
+                                logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                                source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                                future.completeExceptionally(exception);
+                            })
+                    );
+        } else if ( type == TitleType.PREFIX ) {
+            getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
+                    .addCondition("player_uuid", player_uuid)
+                    .addColumnValue("prefix", null)
+                    .build()
+                    .executeAsync(
+                            (query) -> future.complete(null),
+                            ((exception, sqlAction) -> {
+                                logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                                source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                                future.completeExceptionally(exception);
+                            })
+                    );
+        } else {
+            getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
+                    .addCondition("player_uuid", player_uuid)
+                    .addColumnValue("suffix", null)
+                    .build()
+                    .executeAsync(
+                            (query) -> future.complete(null),
+                            ((exception, sqlAction) -> {
+                                logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));
+                                source.sendMessage(text(getLanguage().getConfigToml().getString("commands.error")));
+                                future.completeExceptionally(exception);
+                            })
+                    );
+        }
 
         return future;
     }
@@ -613,19 +645,27 @@ public class DataBaseOperate {
                 .executeAsync(
                         (query) -> {
                             ResultSet resultSet = query.getResultSet();
-                            List<Title> titleList = new ArrayList<>();
+                            List<CompletableFuture<Title>> futures = new ArrayList<>();
 
+                            // 收集所有异步查询
                             while (resultSet.next()) {
                                 int titleId = resultSet.getInt("title_id");
-                                selectTitleWithID(source, titleId)
-                                        .thenAcceptAsync(title -> {
-                                            if (title != null) {
-                                                titleList.add(title);
-                                            }
-                                        });
+                                futures.add(selectTitleWithID(source, titleId));
                             }
 
-                            completableFuture.complete(titleList);
+                            // 等待所有查询完成后再组装结果
+                            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                                    .thenAccept(v -> {
+                                        List<Title> titleList = futures.stream()
+                                                .map(CompletableFuture :: join)  // 此时都已完成，不会阻塞
+                                                .filter(Objects :: nonNull)
+                                                .collect(Collectors.toList());
+                                        completableFuture.complete(titleList);
+                                    })
+                                    .exceptionally(ex -> {
+                                        completableFuture.completeExceptionally(ex);
+                                        return null;
+                                    });
                         },
                         ((exception, sqlAction) -> {
                             logger.crash(exception, getLanguage().getConfigToml().getString("database.failed-operate"));

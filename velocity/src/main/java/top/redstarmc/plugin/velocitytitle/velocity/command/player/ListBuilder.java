@@ -28,6 +28,9 @@ import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.database.Title;
@@ -41,6 +44,8 @@ import static net.kyori.adventure.text.Component.text;
  * 列出玩家自己的称号列表
  */
 public class ListBuilder implements VelocityTitleCommand {
+
+    private static final Logger log = LoggerFactory.getLogger(ListBuilder.class);
 
     /**
      * 子命令树
@@ -85,13 +90,19 @@ public class ListBuilder implements VelocityTitleCommand {
     private void execute(@NotNull CommandSource source, @NotNull String player_uuid) {
         DataBaseOperate.selectPlayerTitleList(source, player_uuid)
                 .thenAcceptAsync(titleList -> {
-                    TextComponent textComponent = Component.text("你所拥有的称号列表\n");
+                    TextComponent.Builder builder = Component.text()
+                            .append(Component.text("§a你所拥有的称号列表\n"));
+
+                    VelocityTitleVelocity.getInstance().getLogger().info(titleList.toString());
 
                     for (Title title : titleList) {
-                        textComponent.append(Component.text("Name: " + title.name() + " Display: " + title.display() + " D:" + title.description() + "\n"));
+                        builder.append(Component.text(
+                                String.format("§eName: §f%s §7| §eDisplay: §f%s §7| §eDescription: §f%s\n",
+                                        title.name(), title.display(), title.description())
+                        ));
                     }
 
-                    source.sendMessage(textComponent);
+                    source.sendMessage(builder.build());
 
                 });
     }

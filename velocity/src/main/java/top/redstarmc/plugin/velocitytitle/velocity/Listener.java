@@ -101,18 +101,18 @@ public class Listener {
         logger.debug("接收到的插件消息", "==========", Arrays.toString(data), "==========");
 
         if (data[0].equals("GetTitle")) {
-            String uuid = data[1];
+            String player_uuid = data[1];
             String type = data[2];
-            VelocityTitleVelocity.getInstance().getServer().getPlayer(UUID.fromString(uuid))
+            VelocityTitleVelocity.getInstance().getServer().getPlayer(UUID.fromString(player_uuid))
                     .ifPresentOrElse(
                             player -> {
-                                DataBaseOperate.playerWoreTitle(player, uuid, type.equals("prefix"))
+                                DataBaseOperate.playerWoreTitle(player, player_uuid, type.equals("prefix"))
                                         .thenAcceptAsync(title -> {
                                             String[] temp;
                                             if(title == null){
-                                                temp = new String[]{"UpdateTitle", uuid, "", type, ""};
+                                                temp = new String[] {"UpdateTitle", player_uuid, "", type, ""};
                                             }else {
-                                                temp = new String[]{"UpdateTitle", uuid, title.name(), type, title.display()};
+                                                temp = new String[] {"UpdateTitle", player_uuid, title.name(), type, title.display()};
                                             }
                                             logger.debug(Arrays.toString(temp));
                                             VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);

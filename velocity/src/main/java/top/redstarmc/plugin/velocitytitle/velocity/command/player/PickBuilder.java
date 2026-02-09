@@ -26,9 +26,13 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.database.TitleType;
 
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static net.kyori.adventure.text.Component.text;
@@ -105,16 +109,39 @@ public class PickBuilder implements VelocityTitleCommand {
 
         switch (type) {
             case "all":
-                DataBaseOperate.playerPickTitle(source, player_uuid, true);
-                DataBaseOperate.playerPickTitle(source, player_uuid, false);
+                DataBaseOperate.playerPickTitle(source, player_uuid, TitleType.ALL)
+                        .thenRunAsync(() -> {
+                            sendMessage(player_uuid, new String[] {"DeleteTitle", player_uuid});
+                        });
+                break;
             case "prefix":
-                DataBaseOperate.playerPickTitle(source, player_uuid, true);
+                DataBaseOperate.playerPickTitle(source, player_uuid, TitleType.PREFIX)
+                        .thenRunAsync(() -> {
+                            sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                        });
+                break;
             case "suffix":
-                DataBaseOperate.playerPickTitle(source, player_uuid, false);
+                DataBaseOperate.playerPickTitle(source, player_uuid, TitleType.SUFFIX)
+                        .thenRunAsync(() -> {
+                            sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                        });
+                break;
             default:
                 source.sendMessage(text("您输入的参数错误！(类型必须是 all、prefix、suffix 中的一个)"));
+                break;
         }
 
+    }
+
+    private void sendMessage(String player_uuid, String[] d) {
+
+        Optional<Player> optionalPlayer = VelocityTitleVelocity.getInstance()
+                .getServer().getPlayer(UUID.fromString(player_uuid));
+
+        optionalPlayer.ifPresent(player -> {
+            VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, d);
+        });
+        //不在线则无需发送，因为上线时会自动发送
     }
 
 }

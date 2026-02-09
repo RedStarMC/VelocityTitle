@@ -17,25 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.util;
+package top.redstarmc.plugin.velocitytitle.velocity.database;
 
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-/**
- * <h1>格式转换器</h1>
- */
-public final class FormatConversion {
-
-    @Deprecated
-    public static @Nullable Player sourceToPlayer(@NotNull CommandSource source){
-        if(source instanceof Player player){
-            return player;
-        }else {
-            return null;
-        }
-    }
-
+public enum TitleType {
+    PREFIX, SUFFIX, ALL
 }
