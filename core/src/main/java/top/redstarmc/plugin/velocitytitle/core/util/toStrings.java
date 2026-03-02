@@ -19,15 +19,41 @@
 
 package top.redstarmc.plugin.velocitytitle.core.util;
 
-import org.slf4j.helpers.MessageFormatter;
-
 public class toStrings {
 
     /**
-     * 字符串按照 slf4j 方式进行格式化返回
+     * 按照 SLF4J 风格将 {} 占位符替换为参数值。
+     * <p>示例: format("Hello {}, you are {} years old", "Alice", 30)
+     *       -> "Hello Alice, you are 30 years old"</p>
+     *
+     * @param format 含 {} 占位符的模板字符串
+     * @param params 替换参数
      * @return 格式化后的字符串
      */
     public static String format(String format, Object... params) {
-        return MessageFormatter.arrayFormat(format, params).getMessage();
+        if ( format == null || params == null || params.length == 0 ) {
+            return format;
+        }
+
+        StringBuilder sb = new StringBuilder(format.length() + 64);
+        int paramIdx = 0;
+        int i = 0;
+
+        while ( i < format.length() ) {
+            if ( i + 1 < format.length() && format.charAt(i) == '{' && format.charAt(i + 1) == '}' ) {
+                if ( paramIdx < params.length ) {
+                    sb.append(params[paramIdx]);
+                    paramIdx++;
+                } else {
+                    sb.append("{}");  // 参数不够时保留原始占位符
+                }
+                i += 2;
+            } else {
+                sb.append(format.charAt(i));
+                i++;
+            }
+        }
+
+        return sb.toString();
     }
 }

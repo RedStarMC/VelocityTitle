@@ -32,6 +32,18 @@ import java.util.List;
  */
 public final class TextSer {
 
+    public static Component parseSectionColorCode(String input) {
+        // 构建以§为前缀的Legacy解析器
+        LegacyComponentSerializer serializer = LegacyComponentSerializer.builder()
+                .character('§') // 指定颜色代码前缀为§
+                .hexColors() // 可选：支持1.16+的十六进制颜色（如§x§a§b§c§d§e§f）
+                .build();
+
+        // 直接解析包含§的字符串
+        return serializer.deserialize(input);
+    }
+
+
     /**
      * 将 legacy 格式的字符串转为现代的 {@link Component} 消息组件
      * @param text legacy 格式的字符串

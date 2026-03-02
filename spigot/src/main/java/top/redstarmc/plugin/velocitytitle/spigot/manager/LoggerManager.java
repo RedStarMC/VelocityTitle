@@ -26,6 +26,7 @@ public class LoggerManager extends AbstractLoggerManager {
 
     public LoggerManager(String INFO_PREFIX, boolean debugMode) {
         super(INFO_PREFIX, debugMode);
+        //
     }
 
     /**
@@ -33,10 +34,9 @@ public class LoggerManager extends AbstractLoggerManager {
      * @param msg 内容
      */
     @Override
-    public void sendMessage(String... msg) {
-        for (String s : msg) {
-            if (s == null) continue;
-            Bukkit.getConsoleSender().sendMessage(s);
-        }
+    public void sendMessage(String msg) {
+        Bukkit.getConsoleSender().sendMessage(msg);
+        //
     }
+
 }

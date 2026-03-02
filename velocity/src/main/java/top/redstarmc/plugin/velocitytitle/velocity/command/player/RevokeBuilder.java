@@ -36,7 +36,6 @@ public class RevokeBuilder implements VelocityTitleCommand {
 
     /**
      * 子命令树
-     *
      * @return 直接通过添加到 then() 添加的命令树
      */
     @Override
@@ -62,9 +61,9 @@ public class RevokeBuilder implements VelocityTitleCommand {
                                 })
                                 .executes(context -> {
                                     String name = context.getArgument("name", String.class);
-                                    String player = context.getArgument("player", String.class);
+                                    String player_name = context.getArgument("player", String.class);
 
-                                    execute(context.getSource(), name, player);
+                                    execute(context.getSource(), name, player_name);
 
                                     return 1;
                                 })
@@ -72,8 +71,23 @@ public class RevokeBuilder implements VelocityTitleCommand {
                 );
     }
 
-    private void execute(CommandSource source, String name, String player){
-        DataBaseOperate.retrieveTitleFromPlayer(source, name, player)
-                .thenRunAsync(() -> source.sendMessage(text("操作成功")));
+    private void execute(CommandSource source, String name, String player_name) {
+        DataBaseOperate.selectPlayerUUID(source, player_name)
+                .thenAcceptAsync(playerUUID -> {
+                    if ( playerUUID == null ) {
+                        source.sendMessage(text("撤销失败，玩家不存在"));
+                        return;
+                    }
+
+                    DataBaseOperate.revokeTitleFromPlayer(source, name, playerUUID)
+                            .thenAccept(success -> {
+                                if ( success ) {
+                                    source.sendMessage(text("称号撤销成功"));
+                                } else {
+                                    source.sendMessage(text("撤销失败，称号不存在"));
+                                }
+                            });
+                });
     }
+
 }

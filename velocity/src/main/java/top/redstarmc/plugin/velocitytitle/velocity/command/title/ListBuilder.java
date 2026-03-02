@@ -21,11 +21,12 @@ package top.redstarmc.plugin.velocitytitle.velocity.command.title;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.CommandSource;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.database.Title;
-
-import static net.kyori.adventure.text.Component.text;
 
 /**
  * 称号操作-列出称号
@@ -57,12 +58,19 @@ public class ListBuilder implements VelocityTitleCommand {
 
         DataBaseOperate.selectTitleList(source)
                 .thenAcceptAsync(titles -> {
+                    TextComponent.Builder builder = Component.text()
+                            .append(Component.text("§a全局称号列表\n"));
+
+                    VelocityTitleVelocity.getInstance().getLogger().info(titles.toString());
+
                     for ( Title title : titles ) {
-                        source.sendMessage(text("查询结果如下：\n"));
-                        source.sendMessage(
-                                text(title.name() + " " + title.display() + " " + title.description() + "\n")
-                        );
+                        builder.append(Component.text(
+                                String.format("§eName: §f%s §7| §eDisplay: §f%s §7| §eDescription: §f%s\n",
+                                        title.name(), title.display(), title.description())
+                        ));
                     }
+
+                    source.sendMessage(builder.build());
                 });
 
     }

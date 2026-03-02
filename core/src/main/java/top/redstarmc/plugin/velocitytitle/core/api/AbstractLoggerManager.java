@@ -23,7 +23,7 @@ import top.redstarmc.plugin.velocitytitle.core.util.toStrings;
 
 /**
  * <h1>日志管理器</h1>
- * 负责向控制台输出日志。所有日志通过 {@link #sendMessage(String...)} 输出，由子类实现来适配多平台。
+ * 负责向控制台输出日志。所有日志通过 {@link #sendMessage(String)} 输出，由子类实现来适配多平台。
  */
 public abstract class AbstractLoggerManager {
     public String INFO_PREFIX;
@@ -32,6 +32,7 @@ public abstract class AbstractLoggerManager {
 
     public AbstractLoggerManager(String INFO_PREFIX) {
         this(INFO_PREFIX, false);
+        //
     }
 
     public AbstractLoggerManager(String INFO_PREFIX, boolean debugMode) {
@@ -41,13 +42,14 @@ public abstract class AbstractLoggerManager {
 
     public boolean isDebugMode() {
         return debugMode;
+        //
     }
 
     /**
      * <h2>向控制台打印的方法</h2>
      * @param msg 内容
      */
-    public abstract void sendMessage(String... msg);
+    public abstract void sendMessage(String msg);
 
     /**
      * <h2>发送插件普通信息</h2>

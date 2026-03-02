@@ -17,33 +17,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.manager;
+package top.redstarmc.plugin.velocitytitle.velocity.database;
 
-import com.velocitypowered.api.command.CommandSource;
-import top.redstarmc.plugin.velocitytitle.core.api.AbstractLoggerManager;
-import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
+public enum TitleInfoType {
+    DISPLAY("display"), DESCRIPTION("description");
 
-/**
- * <h1>日志管理器</h1>
- * 提供了日志相关的操作代码，以免重复编写发送日志的操作。
- */
-public class LoggerManager extends AbstractLoggerManager {
+    private final String columnName;
 
-    private final CommandSource console;
-
-    public LoggerManager(String INFO_PREFIX, boolean debugMode, CommandSource console) {
-        super(INFO_PREFIX, debugMode);
-        this.console = console;
+    TitleInfoType(String columnName) {
+        this.columnName = columnName;
     }
 
-    /**
-     * <h2>向控制台打印的方法</h2>
-     * @param msg 内容
-     */
-    @Override
-    public void sendMessage(String msg) {
-        console.sendMessage(TextSer.parseSectionColorCode(msg));
-        //
+    public String getColumnName() {
+        return columnName;
     }
-
 }

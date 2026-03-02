@@ -25,11 +25,12 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.database.TitleInfoType;
 
 import static net.kyori.adventure.text.Component.text;
 
 /**
- * TODO
  * 称号操作-编辑称号
  */
 public class EditBuilder implements VelocityTitleCommand {
@@ -80,12 +81,12 @@ public class EditBuilder implements VelocityTitleCommand {
                 );
     }
 
-    private void executeDisplay(CommandSource source, String name, String display) {
-
+    private void executeDisplay(CommandSource source, String title_name, String display) {
+        DataBaseOperate.updateTitle(source, title_name, TitleInfoType.DISPLAY, display);
     }
 
-    private void executeDescription(CommandSource source, String name, String description) {
-
+    private void executeDescription(CommandSource source, String title_name, String description) {
+        DataBaseOperate.updateTitle(source, title_name, TitleInfoType.DESCRIPTION, description);
     }
 
 }
