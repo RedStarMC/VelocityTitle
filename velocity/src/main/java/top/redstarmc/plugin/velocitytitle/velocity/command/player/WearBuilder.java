@@ -29,6 +29,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -46,7 +47,7 @@ public class WearBuilder implements VelocityTitleCommand {
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("wear")
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.Player.wear());
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())

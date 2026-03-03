@@ -29,12 +29,13 @@ import java.io.InputStream;
 import java.util.Objects;
 
 /**
- * <h1>Toml 格式配置文件管理器</h1>
- * 作为一个抽象类，使用请让子类被继承后实例化。
- * 对于不需要使用的类，重写为空即可。
+ * <b>Toml 格式配置文件管理器</b><br>
+ * 作为一个抽象类，使用请让子类被继承后实例化。<br>
+ * 对于不需要使用的类，重写为空即可。<br>
  */
 public abstract class AbstractTomlManager {
 
+    /** 临时标记的版本号 */
     @Deprecated
     public static final String d_version = "0.1.2";
 
@@ -58,8 +59,8 @@ public abstract class AbstractTomlManager {
     }
 
     /**
-     * 尝试创建文件（包括父目录），失败则抛出异常。
-     * 若成功创建则尝试读取默认配置，若已存在则不进行操作。
+     * 尝试创建文件（包括父目录），失败则抛出异常。<br>
+     * 若成功创建则尝试读取默认配置，若已存在则不进行操作。<br>
      * 但是并不会读取配置文件 读取配置文件请使用 {@link #loadConfig()}
      */
     public void tryCreateFile(){
@@ -80,6 +81,9 @@ public abstract class AbstractTomlManager {
         }
     }
 
+    /**
+     * 从 Jar包 中的默认配置文件注入到本地配置
+     */
     public void injectConfigFromFile(){
 
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
@@ -94,7 +98,7 @@ public abstract class AbstractTomlManager {
     }
 
     /**
-     * <h2>更新配置文件</h2>
+     * <b>更新配置文件</b><br>
      * 当配置文件版本不一致时，更新配置文件并备份原配置文件。
      */
     public void updateFile(){
@@ -119,7 +123,7 @@ public abstract class AbstractTomlManager {
     }
 
     /**
-     * <h2>读取配置</h2>
+     * <b>读取配置</b><br>
      * 适用于启动、重载时加载配置文件，会从系统重新读取文件
      */
     public void loadConfig(){
@@ -131,8 +135,7 @@ public abstract class AbstractTomlManager {
     }
 
     /**
-     * <h2>初始化配置文件</h2>
-     * 子类重写即可
+     * 初始化配置文件
      */
     public void init(){
         tryCreateFile();
@@ -143,10 +146,16 @@ public abstract class AbstractTomlManager {
 
     }
 
+    /**
+     * @return {@link File} 格式的配置文件
+     */
     public final File getFile() {
         return file;
     }
 
+    /**
+     * @return {@link Toml} 格式的配置文件
+     */
     public final Toml getConfigToml() {
         return configToml;
     }

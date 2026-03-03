@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
- * <h1>数据库操作</h1>
+ * <b>数据库操作</b><br>
  * 各种数据库操作的方法，全部为静态方法<br>
  * 使用 {@link SQLManager} 进行各种操作<br>
  */

@@ -29,8 +29,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleInfoType;
-
-import static net.kyori.adventure.text.Component.text;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 /**
  * 称号操作-编辑称号
@@ -49,13 +48,19 @@ public class EditBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.title.edit")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.Title.edit());
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
-                        .executes(context -> 1)
+                        .executes(context -> {
+                            context.getSource().sendMessage(CommandInfo.argumentMiss());
+                            return 1;
+                        })
                         .then(LiteralArgumentBuilder.<CommandSource>literal("display")
-                                .executes(context -> 1)
+                                .executes(context -> {
+                                    context.getSource().sendMessage(CommandInfo.argumentMiss());
+                                    return 1;
+                                })
                                 .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
                                         .executes(context -> {
                                             String name = context.getArgument("name", String.class);
@@ -68,7 +73,10 @@ public class EditBuilder implements VelocityTitleCommand {
                                 )
                         )
                         .then(LiteralArgumentBuilder.<CommandSource>literal("description")
-                                .executes(context -> 1)
+                                .executes(context -> {
+                                    context.getSource().sendMessage(CommandInfo.argumentMiss());
+                                    return 1;
+                                })
                                 .then(BrigadierCommand.requiredArgumentBuilder("description", StringArgumentType.greedyString())
                                         .executes(context -> {
                                             String name = context.getArgument("name", String.class);

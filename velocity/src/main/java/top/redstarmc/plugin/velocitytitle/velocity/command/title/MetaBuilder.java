@@ -25,7 +25,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -44,9 +46,7 @@ public class MetaBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.meta")
                 )
                 .executes(context -> {
-
-                    context.getSource().sendMessage(text("请输入称号名称或id"));//TODO
-
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.Title.meta());
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())

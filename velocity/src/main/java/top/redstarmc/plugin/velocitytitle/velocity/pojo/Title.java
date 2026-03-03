@@ -23,5 +23,10 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * 称号实例
+ * @param id 称号ID，唯一标识
+ * @param name 称号名称，唯一标识
+ * @param display 展示内容
+ * @param description 描述
+ * @param isPrefix 是否是前缀
  */
 public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }

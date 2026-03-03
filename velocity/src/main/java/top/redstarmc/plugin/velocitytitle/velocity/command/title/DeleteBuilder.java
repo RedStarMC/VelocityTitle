@@ -28,8 +28,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
-
-import static net.kyori.adventure.text.Component.text;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 /**
  * 称号操作-删除称号
@@ -48,7 +47,7 @@ public class DeleteBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.title.delete")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));//TODO
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.Title.delete());
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())

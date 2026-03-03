@@ -32,6 +32,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleType;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -52,13 +53,7 @@ public class PickBuilder implements VelocityTitleCommand {
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("pick")
                 .executes(context -> {
-
-                    if (context.getSource() instanceof Player player) {
-                        execute(context.getSource(), player.getUniqueId().toString(), "all");
-                    } else {
-                        context.getSource().sendMessage(text("仅允许玩家摘除自己的称号"));
-                    }
-
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.Player.pick());
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("type", StringArgumentType.word())

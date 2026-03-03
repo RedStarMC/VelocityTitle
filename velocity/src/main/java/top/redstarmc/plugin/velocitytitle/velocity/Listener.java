@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 /**
- * <h1>插件监听器</h1>
+ * 插件监听器
  */
 public class Listener {
 

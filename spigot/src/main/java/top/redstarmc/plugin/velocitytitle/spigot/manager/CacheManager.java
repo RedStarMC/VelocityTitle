@@ -28,12 +28,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * <h2>缓存管理器</h2>
+ */
 public class CacheManager {
 
     private static final Map<String, PlayerTitleCache> CACHE = new ConcurrentHashMap<>();
 
     private final LoggerManager logger;
 
+    /** 插件实例 */
     private final VelocityTitleSpigot plugin;
 
     public CacheManager(@NotNull LoggerManager logger, @NotNull VelocityTitleSpigot plugin) {
@@ -41,6 +45,12 @@ public class CacheManager {
         this.plugin = plugin;
     }
 
+    /**
+     * 向缓存中保存指定的称号
+     *
+     * @param uuid        玩家 UUID
+     * @param playerTitle 称号
+     */
     public void CachePut(@NotNull String uuid, @NotNull PlayerTitleCache playerTitle){
         CACHE.put(uuid, playerTitle);
     }

@@ -30,15 +30,18 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.player.DivideBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.PickBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.RevokeBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.WearBuilder;
-import top.redstarmc.plugin.velocitytitle.velocity.command.title.*;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.CreateBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.DeleteBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.EditBuilder;
+import top.redstarmc.plugin.velocitytitle.velocity.command.title.MetaBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 /**
- * <h1>插件命令器</h1>
- * 作为接口规范其他命令实现
- * 合并、注册命令树
+ * <b>插件命令器</b><br>
+ * <p>作为接口规范其他命令实现<br>
+ * 合并、注册命令树</p>
  */
 public interface VelocityTitleCommand {
 
@@ -77,7 +80,7 @@ public interface VelocityTitleCommand {
                 .then(new CreateBuilder().build())
                 .then(new EditBuilder().build())
                 .then(new DeleteBuilder().build())
-                .then(new ListBuilder().build())
+                .then(new top.redstarmc.plugin.velocitytitle.velocity.command.title.ListBuilder().build())
                 .then(new MetaBuilder().build());
     }
 

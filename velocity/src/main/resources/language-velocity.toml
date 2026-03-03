@@ -37,12 +37,13 @@ prefix = "&f[&bVT&f]&r "
 
 help = "&9使用 &a/vt help &9来查看可用的命令&r"
 param = "&9参数： &r"
+argument-miss = "&c缺少必要的参数！"
 
 title = "&btitle 子命令：&f（/vt title ...）&r"
 player = "&bpalyer 子命令：&f（/vt player ...）&r"
 database = "&bdatabase 子命令：&f（/vt database ...）&r"
 
-[commands.titles]
+[commands.titlelist]
 create = "&btitle create &9- &b创建一个称号&r"
 create-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7<&fdisplay&7> &9-> &f称号对外展示的形式，可以使用中文和颜色代码 &r\n &b- &7[&fdescription&7] &9-> &f 称号的描述 &r"
 
@@ -52,30 +53,34 @@ edit-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &
 delete = "&btitle delete &9- &b删除一个称号&r"
 delete-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r"
 
-list = "&btitle list &9- &b列出已知的称号&r"
+list = "&btitle list &9- &b列出全部的称号&r"
 
 meta = "&btitle meta &9- &b列出指定称号的信息&r"
-meta-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r"
+meta-p = " &b- &7(&fname|id&7) &9-> &f称号的 名称/ID，具有唯一性 &r"
 
-[commands.players]
+[commands.playerlist]
 divide = "&btitle divide &9- &b向指定的玩家分配一个称号&r"
+divide-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7[&fplayer&7] &9-> &f玩家名 &r"
 
 revoke = "&btitle revoke &9- &b收回该玩家被分配的称号&r"
+revoke-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7[&fplayer&7] &9-> &f玩家名 &r"
 
 wear = "&btitle wear &9- &b穿戴称号&r"
+wear-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7[&fplayer&7] &9-> &f玩家名 &r"
 
 pick = "&btitle pick &9- &b摘除称号&r"
+pick-p = " &b- &7(&fprefix|suffix|all&7) &9-> &f称号的类型，ALL为同时摘除前缀和后缀 &r\n &b- &7[&fplayer&7] &9-> &f玩家名 &r"
 
 list = "&btitle list &9- &b列出玩家拥有的全部称号&r"
 
 [commands.response]
-error = "发生错误！请联系服务器管理员查阅控制台。"
+error = "&c发生错误！请联系服务器管理员查阅控制台。"
 
-cannot-find-title = "此称号不存在"
-cannot-find-player = "未找到这个玩家（可能是从未登录过服务器）"
-existed-title = "{} 称号已存在"
-owned-title = "玩家 {} 已拥有称号 {}"
-not-owned-title = "玩家 {} 未被分配称号 {}"
+cannot-find-title = "&c称号 {} 不存在"
+cannot-find-player = "&c未找到玩家 {} ，可能是从未登录过服务器"
+existed-title = "&c{} 称号已存在"
+owned-title = "&c玩家 {} 已拥有称号 {}"
+not-owned-title = "&c玩家 {} 未被分配称号 {}"
 
 title-create-success = "称号 {} 创建成功"
 title-delete-success = "称号 {} 删除成功"
@@ -84,6 +89,7 @@ divide-success = "称号 {} 已分配给玩家 {}"
 revoke-success = "称号 {} 不再分配给玩家 {}"
 wear-success = "已穿戴称号 {}"
 pick-success = "已移除 {} 称号"
+
 
 # 数据库类
 [database]

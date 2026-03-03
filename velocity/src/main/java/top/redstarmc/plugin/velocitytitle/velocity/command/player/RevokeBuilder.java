@@ -28,6 +28,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -48,11 +49,14 @@ public class RevokeBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.player.revoke")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.Player.revoke());
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
-                        .executes(context -> 1)
+                        .executes(context -> {
+                            context.getSource().sendMessage(CommandInfo.argumentMiss());
+                            return 1;
+                        })
                         .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.string())
                                 .suggests((context, builder) -> { // 提供所有的玩家名字
                                     proxyServer.getAllPlayers().forEach(player -> builder.suggest(

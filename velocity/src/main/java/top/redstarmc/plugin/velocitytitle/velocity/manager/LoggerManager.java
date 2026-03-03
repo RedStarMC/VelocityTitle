@@ -24,7 +24,7 @@ import top.redstarmc.plugin.velocitytitle.core.api.AbstractLoggerManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 /**
- * <h1>日志管理器</h1>
+ * <b>日志管理器</b><br>
  * 提供了日志相关的操作代码，以免重复编写发送日志的操作。
  */
 public class LoggerManager extends AbstractLoggerManager {

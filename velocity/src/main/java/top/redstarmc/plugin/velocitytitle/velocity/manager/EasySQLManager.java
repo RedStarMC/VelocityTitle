@@ -34,7 +34,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * <h1>数据库管理器</h1>
+ * <b>数据库管理器</b><br>
  * 使用 {@link cc.carm.lib.easysql.EasySQL} 数据库操作库。
  */
 public class EasySQLManager {

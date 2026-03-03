@@ -24,11 +24,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -50,13 +52,24 @@ public class CreateBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.title.create")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));//TODO
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.Title.create());
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("type", StringArgumentType.word())
-                        .executes(context -> 1)
+                        .suggests((context, builder) -> {
+                            builder.suggest("prefix", VelocityBrigadierMessage.tooltip(text("prefix")));
+                            builder.suggest("suffix", VelocityBrigadierMessage.tooltip(text("suffix")));
+                            return builder.buildFuture();
+                        })
+                        .executes(context -> {
+                            context.getSource().sendMessage(CommandInfo.argumentMiss());
+                            return 1;
+                        })
                         .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
-                                .executes(context -> 1)
+                                .executes(context -> {
+                                    context.getSource().sendMessage(CommandInfo.argumentMiss());
+                                    return 1;
+                                })
                                 .then(BrigadierCommand.requiredArgumentBuilder("display", StringArgumentType.string())
                                         .executes(context -> {
                                             String type = context.getArgument("type", String.class);

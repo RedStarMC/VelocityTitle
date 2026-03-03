@@ -22,19 +22,32 @@ package top.redstarmc.plugin.velocitytitle.core.api;
 import top.redstarmc.plugin.velocitytitle.core.util.toStrings;
 
 /**
- * <h1>日志管理器</h1>
+ * <b>日志管理器</b>
  * 负责向控制台输出日志。所有日志通过 {@link #sendMessage(String)} 输出，由子类实现来适配多平台。
  */
 public abstract class AbstractLoggerManager {
+
+    /** 日志前缀 */
     public String INFO_PREFIX;
 
+    /** 是否启用 debug 模式 */
     public boolean debugMode;
 
+    /**
+     * 构造器
+     *
+     * @param INFO_PREFIX 主类传入日志前缀
+     */
     public AbstractLoggerManager(String INFO_PREFIX) {
         this(INFO_PREFIX, false);
         //
     }
 
+    /**
+     * 构造器
+     * @param INFO_PREFIX 主类传入日志前缀
+     * @param debugMode 主类传入是否启用 debug 模式
+     */
     public AbstractLoggerManager(String INFO_PREFIX, boolean debugMode) {
         this.INFO_PREFIX = INFO_PREFIX;
         this.debugMode = debugMode;
@@ -46,13 +59,13 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>向控制台打印的方法</h2>
+     * 向控制台打印的方法
      * @param msg 内容
      */
     public abstract void sendMessage(String msg);
 
     /**
-     * <h2>发送插件普通信息</h2>
+     * 发送插件普通信息
      * @param messages 字符串
      */
     public void info(String... messages) {
@@ -64,7 +77,7 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>发送插件格式化信息</h2>
+     * 发送插件格式化信息
      * @param messages 字符串
      * @param objects 传入的格式化内容
      */
@@ -74,7 +87,7 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>发送插件警告信息</h2>
+     * 发送插件警告信息
      * @param messages 字符串
      */
     public void warn(String... messages) {
@@ -86,7 +99,7 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>发送插件错误信息</h2>
+     * 发送插件错误信息
      * @param messages 字符串
      */
     public void error(String... messages) {
@@ -98,7 +111,7 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>发送插件debug信息</h2>
+     * 发送插件debug信息
      * @param messages 字符串
      */
     public void debug(String... messages) {
@@ -112,7 +125,7 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>发送插件debug堆栈</h2>
+     * 发送插件debug堆栈
      * @param e 堆栈
      */
     public void debug(Throwable e) {
@@ -122,7 +135,7 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>同时发送插件debug信息和堆栈</h2>
+     * 同时发送插件debug信息和堆栈
      * @param e 堆栈
      * @param msg 字符串
      */
@@ -135,8 +148,9 @@ public abstract class AbstractLoggerManager {
     }
 
     /**
-     * <h2>发送插件 数据库 debug信息</h2>
+     * 发送插件 数据库 debug信息
      * @param messages 字符串
+     * @param objects 参数
      */
     public void debugDataBase(String messages, Object... objects) {
         if (messages == null) return;

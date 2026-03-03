@@ -35,9 +35,6 @@ public class CommandInfo {
 
     private static final String sharp = "&9>&r ";
 
-    @Deprecated
-    private static final String next = "\n";
-
     public static void init(){
         language = VelocityTitleVelocity.getInstance().getLanguage();
     }
@@ -70,32 +67,80 @@ public class CommandInfo {
     public static @NotNull List<Component> title(){
         return TextSer.toComponentList(
                 prefix() + language.getConfigToml().getString("commands.title"),
-                sharp + language.getConfigToml().getString("commands.titles.create"),
-                sharp + language.getConfigToml().getString("commands.titles.edit"),
-                sharp + language.getConfigToml().getString("commands.titles.delete"),
-                sharp + language.getConfigToml().getString("commands.titles.list"),
-                sharp + language.getConfigToml().getString("commands.titles.meta")
+                sharp + language.getConfigToml().getString("commands.titlelist.create"),
+                sharp + language.getConfigToml().getString("commands.titlelist.edit"),
+                sharp + language.getConfigToml().getString("commands.titlelist.delete"),
+                sharp + language.getConfigToml().getString("commands.titlelist.list"),
+                sharp + language.getConfigToml().getString("commands.titlelist.meta")
         );
     }
 
     public static @NotNull List<Component> player() {
         return TextSer.toComponentList(
                 prefix() + language.getConfigToml().getString("commands.player"),
-                sharp + language.getConfigToml().getString("commands.players.divide"),
-                sharp + language.getConfigToml().getString("commands.players.revoke"),
-                sharp + language.getConfigToml().getString("commands.player.wear"),
-                sharp + language.getConfigToml().getString("commands.players.pick"),
-                sharp + language.getConfigToml().getString("commands.players.list")
+                sharp + language.getConfigToml().getString("commands.playerlist.divide"),
+                sharp + language.getConfigToml().getString("commands.playerlist.revoke"),
+                sharp + language.getConfigToml().getString("commands.playerlist.wear"),
+                sharp + language.getConfigToml().getString("commands.playerlist.pick"),
+                sharp + language.getConfigToml().getString("commands.playerlist.list")
         );
     }
 
+    public static @NotNull Component argumentMiss() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.argument-miss"));
+    }
 
+    public static class Title {
 
+        public static @NotNull List<Component> create() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.titlelist.create"),
+                    language.getConfigToml().getString("commands.titlelist.create-p"));
+        }
 
+        public static @NotNull List<Component> edit() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.titlelist.edit"),
+                    language.getConfigToml().getString("commands.titlelist.edit-p"));
+        }
+
+        public static @NotNull List<Component> delete() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.titlelist.delete"),
+                    language.getConfigToml().getString("commands.titlelist.delete-p"));
+        }
+
+        public static @NotNull List<Component> meta() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.titlelist.meta"),
+                    language.getConfigToml().getString("commands.titlelist.meta-p"));
+        }
+
+    }
 
     /*
     错误区
      */
+
+    public static class Player {
+
+        public static @NotNull List<Component> divide() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.divide"),
+                    language.getConfigToml().getString("commands.playerlist.divide-p"));
+        }
+
+        public static @NotNull List<Component> revoke() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.revoke"),
+                    language.getConfigToml().getString("commands.playerlist.revoke-p"));
+        }
+
+        public static @NotNull List<Component> pick() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.pick"),
+                    language.getConfigToml().getString("commands.playerlist.pick-p"));
+        }
+
+        public static @NotNull List<Component> wear() {
+            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.wear"),
+                    language.getConfigToml().getString("commands.playerlist.wear-p"));
+        }
+
+    }
 
     public static @NotNull Component error() {
         return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.error"));

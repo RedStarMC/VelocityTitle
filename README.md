@@ -1,10 +1,76 @@
+***如果你有任何疑问，或提交bug: 请发送[Issues](https://github.com/redstarmc/velocitytitle/issues)***
+
+![License](https://img.shields.io/github/license/redstarmc/velocitytitle)
+![Commit activity](https://img.shields.io/github/commit-activity/m/redstarmc/VelocityTitle)
+![Repo size](https://img.shields.io/github/repo-size/redstarmc/velocitytitle)
+
 # VelocityTitle
 
-服务器使用的 Velocity 称号插件。
+**VelocityTitle** 是一个适用于 Minecraft Velocity 群组服的称号插件。
 
-在 Velocity 服务端创建数据库存储玩家称号（分为前缀和后缀），并通过 Velocity 和子服的消息通道来发送数据。最终通过 PAPI 和 GUI 进行显示和操作。
+它在 Velocity 服务端创建数据库存储玩家称号，并通过 Velocity 和子服的消息通道来发送数据。最终通过 PAPI 和 GUI(计划中)
+在子服进行显示和操作。  
+主要用于填补没有开源免费的跨服端插件的问题。
 
-计划:
+## 下载
+
+在其他平台发布之前，请到 [Releases](https://github.com/redstarmc/velocitytitle/releases) 处下载最新版本。
+
+## 命令 & 权限
+
+### Velocity 端命令
+
+根命令 `/velocitytitle` & `/vt`
+
+* `player`
+    - `divide`
+    - `list`
+    - `pick`
+    - `revoke`
+    - `wear`
+* `title`
+    - `create`
+    - `delete`
+    - `edit`
+    - `list`
+    - `meta`
+* `reload` 不稳定，暂时不要使用
+
+> [!important]
+> 称号的 `name` 务必使用英文字母和下划线
+> 称号的 `display` 使用英文双引号即可输入中文
+
+## 配置
+
+配置文件均有详细注释，此处不再赘述
+
+## 开发计划
+
+第一阶段目标：(进行中)
+
+* [ ] 修复已知 bug
+* [ ] 完善命令反馈和命令帮助
+* [ ] 将前后缀改为枚举管理
+* [ ] 完善权限管理
+* [ ] 增加命令确认系统
+* [ ] 列表查询优化
+
+第二阶段目标：
+
+* 配置文件热重载
+* 支持 MySQL
+* 添加 GUI
+
+第三阶段目标：
+
+* Redis 内存数据库
+* 支持模组服务端
+* 数据库操作命令
+
+<details>
+
+<summary>折叠文本</summary>
+
 * [x] Core 部分
     - [x] 文件操作
     - [x] 日志操作
@@ -12,12 +78,12 @@
     - [ ] 命令模块
         * [x] 根命令
         * [x] 重载配置(第二阶段计划)
-        * [ ] 命令帮助
+      * [x] 命令帮助
         * [x] 称号操作
             - [x] 命令帮助
             - [x] 创建
             - [x] 删除
-            - [ ] 编辑
+          - [x] 编辑
             - [ ] 查看称号库
             - [x] 查看一个称号的信息
         * [ ] 数据库操作(可选，只能由控制台执行 3)
@@ -54,5 +120,7 @@
     - [ ] 其他
 * [ ] Fabric 同 Spigot(3)
 * [ ] NeoForge 同 Spigot(3)
+
+</details>
 
 

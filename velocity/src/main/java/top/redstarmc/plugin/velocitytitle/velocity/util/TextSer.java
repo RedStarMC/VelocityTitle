@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h1>文本序列号器</h1>
+ * <h2>文本序列号器</h2>
  */
 public final class TextSer {
 
