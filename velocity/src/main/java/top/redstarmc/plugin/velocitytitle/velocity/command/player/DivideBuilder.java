@@ -24,9 +24,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
-import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
+import com.velocitypowered.api.proxy.Player;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -48,11 +50,22 @@ public class DivideBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.player.divide")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    context.getSource().sendMessage(text("帮助")); //TODO
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
-                        .executes(context -> 1)
+                        .executes(context -> {
+                            String title_name = context.getArgument("name", String.class);
+                            CommandSource source = context.getSource();
+
+                            if ( source instanceof Player player ) {
+                                execute(source, title_name, player.getUsername());
+                            } else {
+                                source.sendMessage(text("只有玩家才能向自己分配称号"));
+                            }
+
+                            return 1;
+                        })
                         .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.string())
                                 .suggests((context, builder) -> { // 提供所有的玩家名字
                                     proxyServer.getAllPlayers().forEach(player -> builder.suggest(
@@ -62,10 +75,10 @@ public class DivideBuilder implements VelocityTitleCommand {
                                     return builder.buildFuture();
                                 })
                                 .executes(context -> {
-                                    String name = context.getArgument("name", String.class);
+                                    String title_name = context.getArgument("name", String.class);
                                     String player_name = context.getArgument("player", String.class);
 
-                                    execute(context.getSource(), name, player_name);
+                                    execute(context.getSource(), title_name, player_name);
 
                                     return 1;
                                 })
@@ -73,14 +86,15 @@ public class DivideBuilder implements VelocityTitleCommand {
                 );
     }
 
-    private void execute(CommandSource source, String name, String player_name){
-        VelocityTitleVelocity.getInstance().getServer().getPlayer(player_name).ifPresentOrElse(
-                player -> {
-                    DataBaseOperate.divideTitleToPlayer(source, name, player.getUniqueId().toString())
-                            .thenRunAsync(() -> source.sendMessage(text("创建成功")));
-                },
-                () -> source.sendMessage(text("玩家不在线或不存在"))
-        );
+    private void execute(CommandSource source, String title_name, String player_name) {
+        DataBaseOperate.divideTitleToPlayer(title_name, player_name)
+                .thenAcceptAsync(response -> {
+                    if ( response.equals(CommandResp.SUCCESS) ) {
+                        source.sendMessage(CommandInfo.divideSuccess());
+                    } else {
+                        source.sendMessage(response.get());
+                    }
+                });
     }
 
 }

@@ -42,14 +42,14 @@ public class Listener {
 
     /**
      * 进服时保存UUID，以便离线时查验。<br>
-     * 其实是为了适配离线服务器<br>
      * 保存在 PlayerWear 中，以便后端服务器查询称号时找不到人
      * @param event 连接子服事件
      */
     @Subscribe
     public void onServerPostConnectEvent(@NotNull ServerPostConnectEvent event){
         Player player = event.getPlayer();
-        DataBaseOperate.savePlayer(player.getUniqueId().toString(), player.getUsername());
+        DataBaseOperate.savePlayer(player.getUniqueId().toString(), player.getUsername())
+                .thenRunAsync(() -> logger.warn("测试发送成功"));
     }
 
     @Subscribe
@@ -106,7 +106,7 @@ public class Listener {
             VelocityTitleVelocity.getInstance().getServer().getPlayer(UUID.fromString(player_uuid))
                     .ifPresentOrElse(
                             player -> {
-                                DataBaseOperate.playerWoreTitle(player, player_uuid, type.equals("prefix"))
+                                DataBaseOperate.playerWoreTitle(player_uuid, type.equals("prefix"))
                                         .thenAcceptAsync(title -> {
                                             String[] temp;
                                             if(title == null){
@@ -116,6 +116,10 @@ public class Listener {
                                             }
                                             logger.debug(Arrays.toString(temp));
                                             VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                        })
+                                        .exceptionally(throwable -> {
+                                            logger.error("试图发送插件消息时出现错误！");
+                                            return null;
                                         });
                             },
                             () -> logger.warn("服务器连接为空！")

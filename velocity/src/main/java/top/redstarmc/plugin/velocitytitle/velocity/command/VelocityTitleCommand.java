@@ -31,7 +31,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.player.PickBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.RevokeBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.WearBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.*;
-import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandHelp;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
@@ -63,28 +63,6 @@ public interface VelocityTitleCommand {
      */
     LiteralArgumentBuilder<CommandSource> build();
 
-    /**
-     * 初始化命令方法
-     * @return 整个命令树
-     */
-    static LiteralCommandNode<CommandSource> init(){
-        return LiteralArgumentBuilder.<CommandSource>literal("VelocityTitle")
-                .executes(context -> {
-                    TextSer.sendComponentList(context.getSource(), CommandHelp.root());
-                    return Command.SINGLE_SUCCESS;
-                })
-                .then(title())
-                .then(player())
-                .then(new ReloadBuilder().build())
-                .then(LiteralArgumentBuilder.<CommandSource>literal("help")
-                        .executes(context -> {
-                            TextSer.sendComponentList(context.getSource(), CommandHelp.help());
-                            return 1;
-                        })
-                )
-                .build();
-    }
-
     private static LiteralArgumentBuilder<CommandSource> title() {
         return LiteralArgumentBuilder.<CommandSource>literal("title")
                 .requires(source
@@ -93,7 +71,7 @@ public interface VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.admin")
                 )
                 .executes(context -> {
-                    TextSer.sendComponentList(context.getSource(), CommandHelp.title());
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.title());
                     return 1;
                 })
                 .then(new CreateBuilder().build())
@@ -103,14 +81,10 @@ public interface VelocityTitleCommand {
                 .then(new MetaBuilder().build());
     }
 
-    private static LiteralArgumentBuilder<CommandSource> database(){
-        return null;
-    }
-
     private static LiteralArgumentBuilder<CommandSource> player(){
         return LiteralArgumentBuilder.<CommandSource>literal("player")
                 .executes(context -> {
-                    TextSer.sendComponentList(context.getSource(), CommandHelp.player());
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.player());
                     return 1;
                 })
                 .then(new DivideBuilder().build())
@@ -118,6 +92,32 @@ public interface VelocityTitleCommand {
                 .then(new top.redstarmc.plugin.velocitytitle.velocity.command.player.ListBuilder().build())
                 .then(new PickBuilder().build())
                 .then(new WearBuilder().build());
+    }
+
+    private static LiteralArgumentBuilder<CommandSource> database(){
+        return null;
+    }
+
+    /**
+     * 初始化命令方法
+     * @return 整个命令树
+     */
+    static LiteralCommandNode<CommandSource> init(){
+        return LiteralArgumentBuilder.<CommandSource>literal("VelocityTitle")
+                .executes(context -> {
+                    TextSer.sendComponentList(context.getSource(), CommandInfo.root());
+                    return Command.SINGLE_SUCCESS;
+                })
+                .then(title())
+                .then(player())
+                .then(new ReloadBuilder().build())
+                .then(LiteralArgumentBuilder.<CommandSource>literal("help")
+                        .executes(context -> {
+                            TextSer.sendComponentList(context.getSource(), CommandInfo.help());
+                            return 1;
+                        })
+                )
+                .build();
     }
 
 }

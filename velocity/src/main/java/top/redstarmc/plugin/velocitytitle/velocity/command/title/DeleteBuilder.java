@@ -25,7 +25,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -46,7 +48,7 @@ public class DeleteBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.title.delete")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    context.getSource().sendMessage(text("帮助"));//TODO
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
@@ -59,8 +61,15 @@ public class DeleteBuilder implements VelocityTitleCommand {
                 );
     }
 
-    void execute(CommandSource source, String name){
-        DataBaseOperate.deleteTitle(source, name).thenRunAsync(() -> source.sendMessage(text("删除成功")));
+    private void execute(CommandSource source, String title_name) {
+        DataBaseOperate.deleteTitle(title_name)
+                .thenAcceptAsync(result -> {
+                    if ( result.equals(CommandResp.SUCCESS) ) {
+                        source.sendMessage(CommandInfo.titleDeleteSuccess());
+                    } else {
+                        source.sendMessage(result.get());
+                    }
+                });
     }
 
 }

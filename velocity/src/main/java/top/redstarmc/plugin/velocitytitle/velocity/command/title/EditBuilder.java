@@ -25,8 +25,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.database.TitleInfoType;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleInfoType;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -82,11 +84,25 @@ public class EditBuilder implements VelocityTitleCommand {
     }
 
     private void executeDisplay(CommandSource source, String title_name, String display) {
-        DataBaseOperate.updateTitle(source, title_name, TitleInfoType.DISPLAY, display);
+        DataBaseOperate.updateTitle(title_name, TitleInfoType.DISPLAY, display)
+                .thenAcceptAsync(result -> {
+                    if ( result.equals(CommandResp.SUCCESS) ) {
+                        source.sendMessage(CommandInfo.titleUpdateSuccess());
+                    } else {
+                        source.sendMessage(result.get());
+                    }
+                });
     }
 
     private void executeDescription(CommandSource source, String title_name, String description) {
-        DataBaseOperate.updateTitle(source, title_name, TitleInfoType.DESCRIPTION, description);
+        DataBaseOperate.updateTitle(title_name, TitleInfoType.DESCRIPTION, description)
+                .thenAcceptAsync(result -> {
+                    if ( result.equals(CommandResp.SUCCESS) ) {
+                        source.sendMessage(CommandInfo.titleUpdateSuccess());
+                    } else {
+                        source.sendMessage(result.get());
+                    }
+                });
     }
 
 }

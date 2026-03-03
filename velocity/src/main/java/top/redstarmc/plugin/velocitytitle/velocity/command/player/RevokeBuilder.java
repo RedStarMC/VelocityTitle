@@ -25,7 +25,9 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -60,10 +62,10 @@ public class RevokeBuilder implements VelocityTitleCommand {
                                     return builder.buildFuture();
                                 })
                                 .executes(context -> {
-                                    String name = context.getArgument("name", String.class);
+                                    String title_name = context.getArgument("name", String.class);
                                     String player_name = context.getArgument("player", String.class);
 
-                                    execute(context.getSource(), name, player_name);
+                                    execute(context.getSource(), title_name, player_name);
 
                                     return 1;
                                 })
@@ -71,22 +73,14 @@ public class RevokeBuilder implements VelocityTitleCommand {
                 );
     }
 
-    private void execute(CommandSource source, String name, String player_name) {
-        DataBaseOperate.selectPlayerUUID(source, player_name)
-                .thenAcceptAsync(playerUUID -> {
-                    if ( playerUUID == null ) {
-                        source.sendMessage(text("撤销失败，玩家不存在"));
-                        return;
+    private void execute(CommandSource source, String title_name, String player_name) {
+        DataBaseOperate.revokeTitleFromPlayer(title_name, player_name)
+                .thenAcceptAsync(response -> {
+                    if ( response.equals(CommandResp.SUCCESS) ) {
+                        source.sendMessage(CommandInfo.revokeSuccess());
+                    } else {
+                        source.sendMessage(response.get());
                     }
-
-                    DataBaseOperate.revokeTitleFromPlayer(source, name, playerUUID)
-                            .thenAccept(success -> {
-                                if ( success ) {
-                                    source.sendMessage(text("称号撤销成功"));
-                                } else {
-                                    source.sendMessage(text("撤销失败，称号不存在"));
-                                }
-                            });
                 });
     }
 

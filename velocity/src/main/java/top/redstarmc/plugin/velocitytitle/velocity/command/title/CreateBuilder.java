@@ -26,7 +26,9 @@ import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -48,7 +50,7 @@ public class CreateBuilder implements VelocityTitleCommand {
                         || source.hasPermission("velocitytitle.title.create")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
-                    context.getSource().sendMessage(text("帮助"));
+                    context.getSource().sendMessage(text("帮助"));//TODO
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("type", StringArgumentType.word())
@@ -90,14 +92,17 @@ public class CreateBuilder implements VelocityTitleCommand {
         } else if (type.equals("suffix") || type.equals("suf") || type.equals("s")) {
             isPrefix = false;
         }else {
-            source.sendMessage(text("错误信息")); //TODO
+            source.sendMessage(CommandInfo.cannotFindTitle());
             return;
         }
 
-        DataBaseOperate.insertTitle(source, name, display, description, isPrefix)
-                .thenAcceptAsync( action -> source.sendMessage(text("创建成功"))).exceptionally(ex -> {
-                    source.sendMessage(text("创建失败"));
-                    return null;
+        DataBaseOperate.insertTitle(name, display, description, isPrefix)
+                .thenAcceptAsync(action -> {
+                    if ( action.equals(CommandResp.SUCCESS) ) {
+                        source.sendMessage(CommandInfo.titleCreateSuccess());
+                    } else {
+                        source.sendMessage(action.get());
+                    }
                 });
 
     }

@@ -23,10 +23,9 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.CommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.database.Title;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.Title;
 
 /**
  * 称号操作-列出称号
@@ -61,12 +60,10 @@ public class ListBuilder implements VelocityTitleCommand {
                     TextComponent.Builder builder = Component.text()
                             .append(Component.text("§a全局称号列表\n"));
 
-                    VelocityTitleVelocity.getInstance().getLogger().info(titles.toString());
-
                     for ( Title title : titles ) {
                         builder.append(Component.text(
-                                String.format("§eName: §f%s §7| §eDisplay: §f%s §7| §eDescription: §f%s\n",
-                                        title.name(), title.display(), title.description())
+                                String.format("§7[§f%s§7] §eName: §f%s §7| §eDisplay: §f%s §7| §eDescription: §f%s\n",
+                                        title.isPrefix(), title.name(), title.display(), title.description())
                         ));
                     }
 

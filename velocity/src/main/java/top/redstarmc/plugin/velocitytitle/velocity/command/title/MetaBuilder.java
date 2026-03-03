@@ -45,7 +45,7 @@ public class MetaBuilder implements VelocityTitleCommand {
                 )
                 .executes(context -> {
 
-                    context.getSource().sendMessage(text("请输入称号名称或id"));
+                    context.getSource().sendMessage(text("请输入称号名称或id"));//TODO
 
                     return 1;
                 })
@@ -54,7 +54,7 @@ public class MetaBuilder implements VelocityTitleCommand {
                             String title_name = context.getArgument("name", String.class);
                             CommandSource source = context.getSource();
 
-                            DataBaseOperate.selectTitleWithName(source, title_name)
+                            DataBaseOperate.selectTitleWithName(title_name)
                                     .thenAcceptAsync(title -> {
                                         source.sendMessage(text("Name: " + title.name() + "\n" + "Display: " + title.display() + "\n" + "Description: " + title.description()));
                                     });
@@ -67,7 +67,7 @@ public class MetaBuilder implements VelocityTitleCommand {
                             Integer title_id = context.getArgument("id", Integer.class);
                             CommandSource source = context.getSource();
 
-                            DataBaseOperate.selectTitleWithID(source, title_id)
+                            DataBaseOperate.selectTitleWithID(title_id)
                                     .thenAcceptAsync(title -> {
                                         source.sendMessage(text("Name: " + title.name() + "\n" + "Display: " + title.display() + "\n" + "Description: " + title.description()));
                                     });

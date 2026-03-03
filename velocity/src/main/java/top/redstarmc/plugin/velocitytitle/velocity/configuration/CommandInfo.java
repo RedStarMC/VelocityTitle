@@ -29,7 +29,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import java.util.List;
 
-public class CommandHelp {
+public class CommandInfo {
 
     private static ConfigManager language;
 
@@ -87,6 +87,84 @@ public class CommandHelp {
                 sharp + language.getConfigToml().getString("commands.players.pick"),
                 sharp + language.getConfigToml().getString("commands.players.list")
         );
+    }
+
+
+
+
+
+    /*
+    错误区
+     */
+
+    public static @NotNull Component error() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.error"));
+        //
+    }
+
+    public static @NotNull Component cannotFindTitle() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.cannot-find-title"));
+        //
+    }
+
+    public static @NotNull Component cannotFindPlayer() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.cannot-find-player"));
+        //
+    }
+
+    public static @NotNull Component existedTitle() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.existed-title"));
+        //
+    }
+
+    public static @NotNull Component ownedTitle() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.owned-title"));
+        //
+    }
+
+    public static @NotNull Component notOwnedTitle() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.not-owned-title"));
+        //
+    }
+
+
+    /*
+    成功区
+     */
+
+    public static @NotNull Component titleCreateSuccess() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-create-success"));
+        //
+    }
+
+    public static @NotNull Component titleDeleteSuccess() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-delete-success"));
+        //
+    }
+
+    public static @NotNull Component titleUpdateSuccess() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-update-success"));
+        //
+    }
+
+    public static @NotNull Component divideSuccess() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.divide-success"));
+        //
+    }
+
+    public static @NotNull Component revokeSuccess() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.revoke-success"));
+        //
+    }
+
+    public static @NotNull Component wearSuccess() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.wear-success"));
+        //
+    }
+
+    public static @NotNull Component pickSuccess() {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.pick-success"));
+        //
     }
 
 }

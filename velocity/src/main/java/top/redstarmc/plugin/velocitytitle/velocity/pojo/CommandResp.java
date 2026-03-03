@@ -17,18 +17,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.database;
+package top.redstarmc.plugin.velocitytitle.velocity.pojo;
 
-public enum TitleInfoType {
-    DISPLAY("display"), DESCRIPTION("description");
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 
-    private final String columnName;
+import java.util.function.Supplier;
 
-    TitleInfoType(String columnName) {
-        this.columnName = columnName;
+public enum CommandResp {
+    SUCCESS(null),
+    ERROR(CommandInfo :: error),
+    TitleExists(CommandInfo :: existedTitle),
+    TitleNotFound(CommandInfo :: cannotFindTitle),
+    PlayerOwned(CommandInfo :: ownedTitle),
+    PlayerNotOwned(CommandInfo :: notOwnedTitle),
+    PlayerNotFound(CommandInfo :: cannotFindPlayer);
+
+
+    private final Supplier<Component> text;
+
+    CommandResp(Supplier<Component> text) {
+        this.text = text;
+        //
     }
 
-    public String getColumnName() {
-        return columnName;
+    public @NotNull Component get() {
+        if ( text == null ) {
+            return Component.empty();
+        }
+        return text.get();
     }
 }

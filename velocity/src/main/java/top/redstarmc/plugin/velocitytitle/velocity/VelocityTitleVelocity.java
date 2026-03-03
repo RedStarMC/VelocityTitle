@@ -31,7 +31,7 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
-import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandHelp;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Config;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
@@ -93,7 +93,7 @@ public class VelocityTitleVelocity {
 
         logger.info(language.getConfigToml().getString("logs.command-loading"));
         registerCommand();
-        CommandHelp.init();
+        CommandInfo.init();
 
         logger.info(language.getConfigToml().getString("logs.listener-loading"));
         server.getEventManager().register(this, new Listener());
@@ -111,7 +111,7 @@ public class VelocityTitleVelocity {
         server.getCommandManager().unregister("VelocityTitle");
         registerCommand();
         DBManager.init();
-        CommandHelp.init();
+        CommandInfo.init();
         logger.info(language.getConfigToml().getString("logs.reload"));
     }
 

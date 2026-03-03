@@ -30,10 +30,9 @@ import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.database.Title;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.Title;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -76,7 +75,7 @@ public class ListBuilder implements VelocityTitleCommand {
                         .executes(context -> {
                             String player_name = context.getArgument("player", String.class);
 
-                            DataBaseOperate.selectPlayerUUID(context.getSource(), player_name)
+                            DataBaseOperate.selectPlayerUUID(player_name)
                                     .thenCompose(uuid -> {
                                         execute(context.getSource(), uuid);
                                         return CompletableFuture.completedFuture(true);
@@ -93,12 +92,10 @@ public class ListBuilder implements VelocityTitleCommand {
                     TextComponent.Builder builder = Component.text()
                             .append(Component.text("§a你所拥有的称号列表\n"));
 
-                    VelocityTitleVelocity.getInstance().getLogger().info(titleList.toString());
-
                     for (Title title : titleList) {
                         builder.append(Component.text(
-                                String.format("§eName: §f%s §7| §eDisplay: §f%s §7| §eDescription: §f%s\n",
-                                        title.name(), title.display(), title.description())
+                                String.format("§7[§f%s§7] §eName: §f%s §7| §eDisplay: §f%s §7| §eDescription: §f%s\n",
+                                        title.display(), title.name(), title.display(), title.description())
                         ));
                     }
 

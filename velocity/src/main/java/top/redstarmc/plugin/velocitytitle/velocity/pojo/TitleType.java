@@ -17,11 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.database;
+package top.redstarmc.plugin.velocitytitle.velocity.pojo;
 
-import org.jetbrains.annotations.NotNull;
-
-/**
- * 称号实例
- */
-public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }
+public enum TitleType {
+    PREFIX, SUFFIX, ALL
+}

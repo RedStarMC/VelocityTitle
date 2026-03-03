@@ -26,7 +26,9 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import com.velocitypowered.api.proxy.Player;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -49,9 +51,15 @@ public class WearBuilder implements VelocityTitleCommand {
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("name", StringArgumentType.word())
                         .executes(context -> { // 给自己改
-                            String name = context.getArgument("name", String.class);
+                            String title_name = context.getArgument("name", String.class);
+                            CommandSource source = context.getSource();
 
-                            execute(context.getSource(), name);
+                            if ( source instanceof Player player ) {
+                                String player_name = player.getUsername();
+                                execute(context.getSource(), title_name, player_name);
+                            } else {
+                                source.sendMessage(text("仅允许玩家操作自己的称号穿戴情况"));
+                            }
 
                             return 1;
                         })
@@ -69,9 +77,9 @@ public class WearBuilder implements VelocityTitleCommand {
                                 })
                                 .executes(context -> {
                                     String title_name = context.getArgument("name", String.class);
-                                    String player = context.getArgument("player", String.class);
+                                    String player_name = context.getArgument("player", String.class);
 
-                                    execute(context.getSource(), title_name, player);
+                                    execute(context.getSource(), title_name, player_name);
 
                                     return 1;
                                 })
@@ -80,21 +88,13 @@ public class WearBuilder implements VelocityTitleCommand {
     }
 
     private void execute(CommandSource source, String title_name, String player_name) {
-        Player player = proxyServer.getPlayer(player_name).orElse(null);
-        if (player == null) {
-            DataBaseOperate.selectPlayerUUID(source, player_name)
-                    .thenAccept(uuid -> DataBaseOperate.wearTitle(source, title_name, uuid));
-        } else {
-            DataBaseOperate.wearTitle(source, title_name, player.getUniqueId().toString());
-        }
-    }
-
-    private void execute(CommandSource source, String title_name) {
-        if (source instanceof Player player) {
-            String player_uuid = player.getUniqueId().toString();
-            DataBaseOperate.wearTitle(source, title_name, player_uuid);
-        } else {
-            source.sendMessage(text("仅允许玩家操作自己的称号穿戴情况"));
-        }
+        DataBaseOperate.wearTitle(title_name, player_name)
+                .thenAcceptAsync(response -> {
+                    if ( response.equals(CommandResp.SUCCESS) ) {
+                        source.sendMessage(CommandInfo.wearSuccess());
+                    } else {
+                        source.sendMessage(response.get());
+                    }
+                });
     }
 }

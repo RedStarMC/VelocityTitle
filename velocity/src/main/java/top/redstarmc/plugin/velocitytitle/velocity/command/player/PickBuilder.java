@@ -28,8 +28,10 @@ import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.database.TitleType;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleType;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -93,7 +95,7 @@ public class PickBuilder implements VelocityTitleCommand {
                                     String player_name = context.getArgument("player", String.class);
                                     String type = context.getArgument("type", String.class);
 
-                                    DataBaseOperate.selectPlayerUUID(context.getSource(), player_name)
+                                    DataBaseOperate.selectPlayerUUID(player_name)
                                             .thenCompose(uuid -> {
                                                 execute(context.getSource(), uuid, type);
                                                 return CompletableFuture.completedFuture(true);
@@ -109,21 +111,36 @@ public class PickBuilder implements VelocityTitleCommand {
 
         switch (type) {
             case "all":
-                DataBaseOperate.playerPickTitle(source, player_uuid, TitleType.ALL)
-                        .thenRunAsync(() -> {
-                            sendMessage(player_uuid, new String[] {"DeleteTitle", player_uuid});
+                DataBaseOperate.playerPickTitle(player_uuid, TitleType.ALL)
+                        .thenAcceptAsync(response -> {
+                            if ( response.equals(CommandResp.SUCCESS) ) {
+                                sendMessage(player_uuid, new String[] {"DeleteTitle", player_uuid});
+                                source.sendMessage(CommandInfo.pickSuccess());
+                            } else {
+                                source.sendMessage(response.get());
+                            }
                         });
                 break;
             case "prefix":
-                DataBaseOperate.playerPickTitle(source, player_uuid, TitleType.PREFIX)
-                        .thenRunAsync(() -> {
-                            sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                DataBaseOperate.playerPickTitle(player_uuid, TitleType.PREFIX)
+                        .thenAcceptAsync(response -> {
+                            if ( response.equals(CommandResp.SUCCESS) ) {
+                                sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                                source.sendMessage(CommandInfo.pickSuccess());
+                            } else {
+                                source.sendMessage(response.get());
+                            }
                         });
                 break;
             case "suffix":
-                DataBaseOperate.playerPickTitle(source, player_uuid, TitleType.SUFFIX)
-                        .thenRunAsync(() -> {
-                            sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                DataBaseOperate.playerPickTitle(player_uuid, TitleType.SUFFIX)
+                        .thenAcceptAsync(response -> {
+                            if ( response.equals(CommandResp.SUCCESS) ) {
+                                sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                                source.sendMessage(CommandInfo.pickSuccess());
+                            } else {
+                                source.sendMessage(response.get());
+                            }
                         });
                 break;
             default:

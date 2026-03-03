@@ -1,7 +1,7 @@
 # 运行在 Velocity 上时的语言配置
 
 # 不要更改本设置，否则会造成配置重置，后果自负。
-# 更新新的插件版本也会导致配置重置。请务必提前备份配置文件
+# 更新插件版本也会导致配置重置。请务必提前备份配置文件
 version = "@VERSION@"
 
 # 语言名称
@@ -68,8 +68,22 @@ pick = "&btitle pick &9- &b摘除称号&r"
 
 list = "&btitle list &9- &b列出玩家拥有的全部称号&r"
 
-[commands.tips]
+[commands.response]
+error = "发生错误！请联系服务器管理员查阅控制台。"
 
+cannot-find-title = "此称号不存在"
+cannot-find-player = "未找到这个玩家（可能是从未登录过服务器）"
+existed-title = "{} 称号已存在"
+owned-title = "玩家 {} 已拥有称号 {}"
+not-owned-title = "玩家 {} 未被分配称号 {}"
+
+title-create-success = "称号 {} 创建成功"
+title-delete-success = "称号 {} 删除成功"
+title-update-success = "称号 {} 更新成功"
+divide-success = "称号 {} 已分配给玩家 {}"
+revoke-success = "称号 {} 不再分配给玩家 {}"
+wear-success = "已穿戴称号 {}"
+pick-success = "已移除 {} 称号"
 
 # 数据库类
 [database]
