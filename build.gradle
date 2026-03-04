@@ -23,7 +23,7 @@ plugins{
     id 'java-library'
 }
 
-def now_version = "0.1.2"
+def now_version = "0.2.0"
 
 allprojects {
     apply {

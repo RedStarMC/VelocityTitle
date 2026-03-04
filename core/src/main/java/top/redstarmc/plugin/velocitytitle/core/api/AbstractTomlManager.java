@@ -37,7 +37,7 @@ public abstract class AbstractTomlManager {
 
     /** 临时标记的版本号 */
     @Deprecated
-    public static final String d_version = "0.1.2";
+    public static final String d_version = "0.2.0";
 
     private final File file;
 
