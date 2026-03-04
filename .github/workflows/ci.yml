@@ -34,22 +34,26 @@ jobs:
         id: vars
         run: echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Locate and rename JAR
+      - name: Rename JAR files with commit hash
         run: |
-          # 排除包含 'original'
-          JAR_FILE=$(find build/jars -type f -name "VelocityTitle-*.jar" ! -name "*-original.jar" | head -n 1)
-          if [ -z "$JAR_FILE" ]; then
-            echo "Error: No VelocityTitle JAR found in build/jars/"
-            exit 1
-          fi
-          echo "Found JAR: $JAR_FILE"
-          # 重命名
-          mv "$JAR_FILE" "build/jars/VelocityTitle-${{ steps.vars.outputs.short_sha }}.jar"
-          echo "JAR renamed to VelocityTitle-${{ steps.vars.outputs.short_sha }}.jar"
+          cd build/jars
+          SHORT_SHA="${{ steps.vars.outputs.short_sha }}"
+          # 包含 VelocityTitle-*.jar 文件，排除 -original.jar
+          for file in VelocityTitle-*.jar; do
+            if [[ "$file" == *-original.jar ]]; then
+              echo "Skipping original file: $file"
+              continue
+            fi
+            # 将版本号替换为提交哈希
+            new_name=$(echo "$file" | sed "s/[0-9]\+\.[0-9]\+\.[0-9]\+/$SHORT_SHA/")
+            echo "Renaming $file to $new_name"
+            mv "$file" "$new_name"
+          done
+          ls -l
 
-      - name: Upload JAR as artifact
+      - name: Upload JARs as artifact
         uses: actions/upload-artifact@v4
         with:
           name: VelocityTitle-${{ steps.vars.outputs.short_sha }}
-          path: build/jars/VelocityTitle-${{ steps.vars.outputs.short_sha }}.jar
+          path: build/jars/VelocityTitle-*.jar
           if-no-files-found: error
