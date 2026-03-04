@@ -45,7 +45,7 @@ database = "&bdatabase 子命令：&f（/vt database ...）&r"
 
 [commands.titlelist]
 create = "&btitle create &9- &b创建一个称号&r"
-create-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7<&fdisplay&7> &9-> &f称号对外展示的形式，可以使用中文和颜色代码 &r\n &b- &7[&fdescription&7] &9-> &f 称号的描述 &r"
+create-p = " &b- &7(&fprefix|suffix&7) &9-> &f称号的类型 &r\n &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7<&fdisplay&7> &9-> &f称号对外展示的形式，可以使用中文和颜色代码 &r\n &b- &7[&fdescription&7] &9-> &f 称号的描述 &r"
 
 edit = "&btitle edit &9- &b编辑一个称号&r"
 edit-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7(&fdisplay|description&7) &9-> &f任意选择一个进行编辑 &r\n &b- &7<&fdisplay/description&7> &9-> &f 将前面选定的项设为此值 &r"
@@ -63,7 +63,7 @@ divide = "&btitle divide &9- &b向指定的玩家分配一个称号&r"
 divide-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7[&fplayer&7] &9-> &f玩家名 &r"
 
 revoke = "&btitle revoke &9- &b收回该玩家被分配的称号&r"
-revoke-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7[&fplayer&7] &9-> &f玩家名 &r"
+revoke-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7<&fplayer&7> &9-> &f玩家名 &r"
 
 wear = "&btitle wear &9- &b穿戴称号&r"
 wear-p = " &b- &7<&fname&7> &9-> &f称号的 名称，具有唯一性 &r\n &b- &7[&fplayer&7] &9-> &f玩家名 &r"

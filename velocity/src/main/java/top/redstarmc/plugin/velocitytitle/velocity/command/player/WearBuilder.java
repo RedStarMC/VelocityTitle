@@ -92,9 +92,9 @@ public class WearBuilder implements VelocityTitleCommand {
         DataBaseOperate.wearTitle(title_name, player_name)
                 .thenAcceptAsync(response -> {
                     if ( response.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.wearSuccess());
+                        source.sendMessage(CommandInfo.wearSuccess(title_name));
                     } else {
-                        source.sendMessage(response.get());
+                        source.sendMessage(response.get(title_name, player_name));
                     }
                 });
     }

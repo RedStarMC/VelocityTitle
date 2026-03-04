@@ -63,7 +63,7 @@ public class ListBuilder implements VelocityTitleCommand {
                     for ( Title title : titles ) {
                         builder.append(Component.text(
                                 String.format("§7[§f%s§7] §eName: §f%s §7| §eDisplay: §f%s §7| §eDescription: §f%s\n",
-                                        title.isPrefix(), title.name(), title.display(), title.description())
+                                        title.type().get(), title.name(), title.display(), title.description())
                         ));
                     }
 

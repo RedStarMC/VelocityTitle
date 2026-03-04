@@ -23,29 +23,29 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
+/**
+ * 第一个参数永远是 称号
+ * 第二个参数永远是 玩家名
+ */
 public enum CommandResp {
-    SUCCESS(null),
-    ERROR(CommandInfo :: error),
-    TitleExists(CommandInfo :: existedTitle),
-    TitleNotFound(CommandInfo :: cannotFindTitle),
-    PlayerOwned(CommandInfo :: ownedTitle),
-    PlayerNotOwned(CommandInfo :: notOwnedTitle),
-    PlayerNotFound(CommandInfo :: cannotFindPlayer);
+    SUCCESS(args -> Component.empty()), // 成功无消息
+    ERROR(args -> CommandInfo.error()),
+    TitleExists(args -> CommandInfo.existedTitle((String) args[0])),
+    TitleNotFound(args -> CommandInfo.cannotFindTitle((String) args[0])),
+    PlayerOwned(args -> CommandInfo.ownedTitle((String) args[1], (String) args[0])),
+    PlayerNotOwned(args -> CommandInfo.notOwnedTitle((String) args[1], (String) args[0])),
+    PlayerNotFound(args -> CommandInfo.cannotFindPlayer((String) args[1]));
 
+    private final Function<Object[], Component> messageFunc;
 
-    private final Supplier<Component> text;
-
-    CommandResp(Supplier<Component> text) {
-        this.text = text;
+    CommandResp(Function<Object[], Component> messageFunc) {
+        this.messageFunc = messageFunc;
         //
     }
 
-    public @NotNull Component get() {
-        if ( text == null ) {
-            return Component.empty();
-        }
-        return text.get();
+    public @NotNull Component get(Object... args) {
+        return messageFunc.apply(args);
     }
 }

@@ -110,9 +110,9 @@ public class PickBuilder implements VelocityTitleCommand {
                         .thenAcceptAsync(response -> {
                             if ( response.equals(CommandResp.SUCCESS) ) {
                                 sendMessage(player_uuid, new String[] {"DeleteTitle", player_uuid});
-                                source.sendMessage(CommandInfo.pickSuccess());
+                                source.sendMessage(CommandInfo.pickSuccess("All"));
                             } else {
-                                source.sendMessage(response.get());
+                                source.sendMessage(response.get("", player_uuid));
                             }
                         });
                 break;
@@ -121,9 +121,9 @@ public class PickBuilder implements VelocityTitleCommand {
                         .thenAcceptAsync(response -> {
                             if ( response.equals(CommandResp.SUCCESS) ) {
                                 sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
-                                source.sendMessage(CommandInfo.pickSuccess());
+                                source.sendMessage(CommandInfo.pickSuccess("Prefix"));
                             } else {
-                                source.sendMessage(response.get());
+                                source.sendMessage(response.get("", player_uuid));
                             }
                         });
                 break;
@@ -132,9 +132,9 @@ public class PickBuilder implements VelocityTitleCommand {
                         .thenAcceptAsync(response -> {
                             if ( response.equals(CommandResp.SUCCESS) ) {
                                 sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
-                                source.sendMessage(CommandInfo.pickSuccess());
+                                source.sendMessage(CommandInfo.pickSuccess("suffix"));
                             } else {
-                                source.sendMessage(response.get());
+                                source.sendMessage(response.get("", player_uuid));
                             }
                         });
                 break;
@@ -150,9 +150,7 @@ public class PickBuilder implements VelocityTitleCommand {
         Optional<Player> optionalPlayer = VelocityTitleVelocity.getInstance()
                 .getServer().getPlayer(UUID.fromString(player_uuid));
 
-        optionalPlayer.ifPresent(player -> {
-            VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, d);
-        });
+        optionalPlayer.ifPresent(player -> VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, d));
         //不在线则无需发送，因为上线时会自动发送
     }
 

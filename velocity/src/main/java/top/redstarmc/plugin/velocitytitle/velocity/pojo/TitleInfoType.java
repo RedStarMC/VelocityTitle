@@ -26,9 +26,11 @@ public enum TitleInfoType {
 
     TitleInfoType(String columnName) {
         this.columnName = columnName;
+        //
     }
 
     public String getColumnName() {
         return columnName;
+        //
     }
 }

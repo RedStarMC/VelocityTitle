@@ -91,8 +91,8 @@ public class DataBaseOperate {
                                 String display = result.getString("display");
                                 String description = result.getString("description");
                                 int id = result.getInt("id");
-                                boolean isPrefix = result.getString("type").equals("prefix");
-                                Title title = new Title(id, title_name, display, description, isPrefix);
+                                TitleType type = result.getString("type").equals("prefix") ? TitleType.PREFIX : TitleType.SUFFIX;
+                                Title title = new Title(id, title_name, display, description, type);
                                 future.complete(title);
                             } else {
                                 future.complete(null);
@@ -127,7 +127,7 @@ public class DataBaseOperate {
                                 String description = result.getString("description");
                                 String name = result.getString("name");
                                 String type = result.getString("type");
-                                Title title = new Title(title_id, name, display, description, type.equals("prefix"));
+                                Title title = new Title(title_id, name, display, description, type.equals("prefix") ? TitleType.PREFIX : TitleType.SUFFIX);
                                 future.complete(title);
                             } else {
                                 future.complete(null);
@@ -541,7 +541,7 @@ public class DataBaseOperate {
 
                                             getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
                                                     .addCondition("player_uuid", player_uuid)
-                                                    .addColumnValue(title.isPrefix() ? "prefix" : "suffix", title.id())
+                                                    .addColumnValue(title.type().get(), title.id())
                                                     .build().executeAsync(
                                                             (query) -> {
                                                                 Optional<Player> optionalPlayer = Optional.empty();
@@ -551,7 +551,7 @@ public class DataBaseOperate {
                                                                 }
                                                                 if ( optionalPlayer != null && optionalPlayer.isPresent() ) {
                                                                     Player player = optionalPlayer.get();
-                                                                    String[] temp = {"UpdateTitle", player_uuid, title.name(), title.isPrefix() ? "prefix" : "suffix", title.display()};
+                                                                    String[] temp = {"UpdateTitle", player_uuid, title.name(), title.type().get(), title.display()};
                                                                     VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
                                                                 }
                                                                 // 不在线则无需发送，当玩家上线时会自动佩戴。
@@ -695,7 +695,7 @@ public class DataBaseOperate {
                                 String type = resultSet.getString("type");
 
                                 titleList.add(
-                                        new Title(id, name, display, description, type.equals("prefix"))
+                                        new Title(id, name, display, description, type.equals("prefix") ? TitleType.PREFIX : TitleType.SUFFIX)
                                 );
                             }
 

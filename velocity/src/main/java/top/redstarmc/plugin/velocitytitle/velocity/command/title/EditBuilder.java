@@ -95,9 +95,9 @@ public class EditBuilder implements VelocityTitleCommand {
         DataBaseOperate.updateTitle(title_name, TitleInfoType.DISPLAY, display)
                 .thenAcceptAsync(result -> {
                     if ( result.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.titleUpdateSuccess());
+                        source.sendMessage(CommandInfo.titleUpdateSuccess(title_name));
                     } else {
-                        source.sendMessage(result.get());
+                        source.sendMessage(result.get(title_name));
                     }
                 });
     }
@@ -106,9 +106,9 @@ public class EditBuilder implements VelocityTitleCommand {
         DataBaseOperate.updateTitle(title_name, TitleInfoType.DESCRIPTION, description)
                 .thenAcceptAsync(result -> {
                     if ( result.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.titleUpdateSuccess());
+                        source.sendMessage(CommandInfo.titleUpdateSuccess(title_name));
                     } else {
-                        source.sendMessage(result.get());
+                        source.sendMessage(result.get(title_name));
                     }
                 });
     }

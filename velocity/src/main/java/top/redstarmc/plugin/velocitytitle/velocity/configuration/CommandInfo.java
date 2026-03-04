@@ -114,10 +114,6 @@ public class CommandInfo {
 
     }
 
-    /*
-    错误区
-     */
-
     public static class Player {
 
         public static @NotNull List<Component> divide() {
@@ -142,33 +138,37 @@ public class CommandInfo {
 
     }
 
+    /*
+    错误区
+     */
+
     public static @NotNull Component error() {
         return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.error"));
         //
     }
 
-    public static @NotNull Component cannotFindTitle() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.cannot-find-title"));
+    public static @NotNull Component cannotFindTitle(String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.cannot-find-title"), titleName);
         //
     }
 
-    public static @NotNull Component cannotFindPlayer() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.cannot-find-player"));
+    public static @NotNull Component existedTitle(String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.existed-title"), titleName);
         //
     }
 
-    public static @NotNull Component existedTitle() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.existed-title"));
+    public static @NotNull Component ownedTitle(String playerName, String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.owned-title"), playerName, titleName);
         //
     }
 
-    public static @NotNull Component ownedTitle() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.owned-title"));
+    public static @NotNull Component notOwnedTitle(String playerName, String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.not-owned-title"), playerName, titleName);
         //
     }
 
-    public static @NotNull Component notOwnedTitle() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.not-owned-title"));
+    public static @NotNull Component cannotFindPlayer(String playerName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.cannot-find-player"), playerName);
         //
     }
 
@@ -177,38 +177,38 @@ public class CommandInfo {
     成功区
      */
 
-    public static @NotNull Component titleCreateSuccess() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-create-success"));
+    public static @NotNull Component titleCreateSuccess(String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-create-success"), titleName);
         //
     }
 
-    public static @NotNull Component titleDeleteSuccess() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-delete-success"));
+    public static @NotNull Component titleDeleteSuccess(String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-delete-success"), titleName);
         //
     }
 
-    public static @NotNull Component titleUpdateSuccess() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-update-success"));
+    public static @NotNull Component titleUpdateSuccess(String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.title-update-success"), titleName);
         //
     }
 
-    public static @NotNull Component divideSuccess() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.divide-success"));
+    public static @NotNull Component divideSuccess(String titleName, String playerName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.divide-success"), titleName, playerName);
         //
     }
 
-    public static @NotNull Component revokeSuccess() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.revoke-success"));
+    public static @NotNull Component revokeSuccess(String titleName, String playerName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.revoke-success"), titleName, playerName);
         //
     }
 
-    public static @NotNull Component wearSuccess() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.wear-success"));
+    public static @NotNull Component wearSuccess(String titleName) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.wear-success"), titleName);
         //
     }
 
-    public static @NotNull Component pickSuccess() {
-        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.pick-success"));
+    public static @NotNull Component pickSuccess(String type) {
+        return TextSer.legToCom(prefix() + language.getConfigToml().getString("commands.response.pick-success"), type);
         //
     }
 

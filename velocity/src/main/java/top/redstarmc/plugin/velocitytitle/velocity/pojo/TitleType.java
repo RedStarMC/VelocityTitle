@@ -20,5 +20,17 @@
 package top.redstarmc.plugin.velocitytitle.velocity.pojo;
 
 public enum TitleType {
-    PREFIX, SUFFIX, ALL
+    PREFIX("prefix"), SUFFIX("suffix"), ALL("null");
+
+    private final String columnName;
+
+    TitleType(String columnName) {
+        this.columnName = columnName;
+        //
+    }
+
+    public String get() {
+        return columnName;
+        //
+    }
 }

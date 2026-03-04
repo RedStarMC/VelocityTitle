@@ -97,7 +97,7 @@ public class CreateBuilder implements VelocityTitleCommand {
                 );
     }
 
-    private void execute(CommandSource source, @NotNull String type, String name, String display, String description){
+    private void execute(CommandSource source, @NotNull String type, String title_name, String display, String description) {
 
         boolean isPrefix;
         if  (type.equals("prefix") || type.equals("pre") || type.equals("p")){
@@ -105,16 +105,16 @@ public class CreateBuilder implements VelocityTitleCommand {
         } else if (type.equals("suffix") || type.equals("suf") || type.equals("s")) {
             isPrefix = false;
         }else {
-            source.sendMessage(CommandInfo.cannotFindTitle());
+            source.sendMessage(text("类型错误！"));
             return;
         }
 
-        DataBaseOperate.insertTitle(name, display, description, isPrefix)
+        DataBaseOperate.insertTitle(title_name, display, description, isPrefix)
                 .thenAcceptAsync(action -> {
                     if ( action.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.titleCreateSuccess());
+                        source.sendMessage(CommandInfo.titleCreateSuccess(title_name));
                     } else {
-                        source.sendMessage(action.get());
+                        source.sendMessage(action.get(title_name));
                     }
                 });
 

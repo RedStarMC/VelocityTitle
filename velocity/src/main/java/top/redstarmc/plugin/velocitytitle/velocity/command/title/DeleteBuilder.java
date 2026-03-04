@@ -64,9 +64,9 @@ public class DeleteBuilder implements VelocityTitleCommand {
         DataBaseOperate.deleteTitle(title_name)
                 .thenAcceptAsync(result -> {
                     if ( result.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.titleDeleteSuccess());
+                        source.sendMessage(CommandInfo.titleDeleteSuccess(title_name));
                     } else {
-                        source.sendMessage(result.get());
+                        source.sendMessage(result.get(title_name));
                     }
                 });
     }

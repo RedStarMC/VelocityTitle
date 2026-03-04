@@ -24,9 +24,11 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.velocitypowered.api.command.BrigadierCommand;
 import com.velocitypowered.api.command.CommandSource;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import static net.kyori.adventure.text.Component.text;
@@ -56,7 +58,15 @@ public class MetaBuilder implements VelocityTitleCommand {
 
                             DataBaseOperate.selectTitleWithName(title_name)
                                     .thenAcceptAsync(title -> {
+                                        if ( title == null ) {
+                                            source.sendMessage(CommandResp.TitleNotFound.get(title_name));
+                                            return;
+                                        }
                                         source.sendMessage(text("Name: " + title.name() + "\n" + "Display: " + title.display() + "\n" + "Description: " + title.description()));
+                                    })
+                                    .exceptionally(throwable -> {
+                                        VelocityTitleVelocity.getInstance().getLogger().crash(throwable, VelocityTitleVelocity.getInstance().getLanguage().getConfigToml().getString("database.failed-operate"));
+                                        return null;
                                     });
 
                             return 1;
@@ -69,7 +79,14 @@ public class MetaBuilder implements VelocityTitleCommand {
 
                             DataBaseOperate.selectTitleWithID(title_id)
                                     .thenAcceptAsync(title -> {
+                                        if ( title == null ) {
+                                            return;
+                                        }
                                         source.sendMessage(text("Name: " + title.name() + "\n" + "Display: " + title.display() + "\n" + "Description: " + title.description()));
+                                    })
+                                    .exceptionally(throwable -> {
+                                        VelocityTitleVelocity.getInstance().getLogger().crash(throwable, VelocityTitleVelocity.getInstance().getLanguage().getConfigToml().getString("database.failed-operate"));
+                                        return null;
                                     });
 
                             return 1;

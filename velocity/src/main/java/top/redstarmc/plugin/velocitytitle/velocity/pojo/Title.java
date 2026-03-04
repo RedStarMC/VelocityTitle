@@ -27,6 +27,9 @@ import org.jetbrains.annotations.NotNull;
  * @param name 称号名称，唯一标识
  * @param display 展示内容
  * @param description 描述
- * @param isPrefix 是否是前缀
+ * @param type 称号类型
  */
-public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description, boolean isPrefix) { }
+public record Title(int id, @NotNull String name, @NotNull String display, @NotNull String description,
+                    TitleType type) {
+
+}

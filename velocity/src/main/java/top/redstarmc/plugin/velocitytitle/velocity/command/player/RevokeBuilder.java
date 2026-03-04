@@ -81,9 +81,9 @@ public class RevokeBuilder implements VelocityTitleCommand {
         DataBaseOperate.revokeTitleFromPlayer(title_name, player_name)
                 .thenAcceptAsync(response -> {
                     if ( response.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.revokeSuccess());
+                        source.sendMessage(CommandInfo.revokeSuccess(title_name, player_name));
                     } else {
-                        source.sendMessage(response.get());
+                        source.sendMessage(response.get(title_name, player_name));
                     }
                 });
     }

@@ -91,9 +91,9 @@ public class DivideBuilder implements VelocityTitleCommand {
         DataBaseOperate.divideTitleToPlayer(title_name, player_name)
                 .thenAcceptAsync(response -> {
                     if ( response.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.divideSuccess());
+                        source.sendMessage(CommandInfo.divideSuccess(title_name, player_name));
                     } else {
-                        source.sendMessage(response.get());
+                        source.sendMessage(response.get(title_name, player_name));
                     }
                 });
     }
