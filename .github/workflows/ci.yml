@@ -34,18 +34,18 @@ jobs:
         id: vars
         run: echo "short_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Rename and upload JAR
+      - name: Locate and rename JAR
         run: |
-          # 原始 jar 路径
-          ORIGINAL_JAR="build/jars/VelocityTitle-0.1.2.jar"
-          NEW_JAR="build/jars/VelocityTitle-${{ steps.vars.outputs.short_sha }}.jar"
-          if [ -f "$ORIGINAL_JAR" ]; then
-            mv "$ORIGINAL_JAR" "$NEW_JAR"
-            echo "JAR renamed to $NEW_JAR"
-          else
-            echo "Error: JAR file not found at $ORIGINAL_JAR"
+          # 排除包含 'original'
+          JAR_FILE=$(find build/jars -type f -name "VelocityTitle-*.jar" ! -name "*-original.jar" | head -n 1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "Error: No VelocityTitle JAR found in build/jars/"
             exit 1
           fi
+          echo "Found JAR: $JAR_FILE"
+          # 重命名
+          mv "$JAR_FILE" "build/jars/VelocityTitle-${{ steps.vars.outputs.short_sha }}.jar"
+          echo "JAR renamed to VelocityTitle-${{ steps.vars.outputs.short_sha }}.jar"
 
       - name: Upload JAR as artifact
         uses: actions/upload-artifact@v4
