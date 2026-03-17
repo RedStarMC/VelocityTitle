@@ -45,7 +45,8 @@ public class MetaBuilder implements VelocityTitleCommand {
         return LiteralArgumentBuilder.<CommandSource>literal("meta")
                 .requires(source
                         -> source.hasPermission("velocitytitle.admin")
-                        || source.hasPermission("velocitytitle.meta")
+                        || source.hasPermission("velocitytitle.title.meta")
+                        || source.hasPermission("velocitytitle.title.*")
                 )
                 .executes(context -> {
                     TextSer.sendComponentList(context.getSource(), CommandInfo.Title.meta());

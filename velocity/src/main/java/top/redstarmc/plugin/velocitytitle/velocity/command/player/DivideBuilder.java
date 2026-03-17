@@ -47,7 +47,7 @@ public class DivideBuilder implements VelocityTitleCommand {
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("divide")
                 .requires(source
-                        -> source.hasPermission("velocitytitle.player*")
+                        -> source.hasPermission("velocitytitle.player.*")
                         || source.hasPermission("velocitytitle.player.divide")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {

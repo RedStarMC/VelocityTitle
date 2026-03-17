@@ -41,7 +41,7 @@ public class ListBuilder implements VelocityTitleCommand {
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("list")
                 .requires(source
-                        -> source.hasPermission("velocitytitle.title*")
+                        -> source.hasPermission("velocitytitle.title.*")
                         || source.hasPermission("velocitytitle.title.list")
                         || source.hasPermission("velocitytitle.admin")
                 )

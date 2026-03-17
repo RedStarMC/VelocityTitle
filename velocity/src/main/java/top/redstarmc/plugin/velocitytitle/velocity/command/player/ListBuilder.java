@@ -65,6 +65,10 @@ public class ListBuilder implements VelocityTitleCommand {
                     return 1;
                 })
                 .then(BrigadierCommand.requiredArgumentBuilder("player", StringArgumentType.word())
+                        .requires(source
+                                -> source.hasPermission("velocitytitle.list.other")
+                                || source.hasPermission("velocitytitle.admin")
+                        )
                         .suggests((context, builder) -> { // 提供所有的玩家名字
                             proxyServer.getAllPlayers().forEach(player -> builder.suggest(
                                     player.getUsername(),

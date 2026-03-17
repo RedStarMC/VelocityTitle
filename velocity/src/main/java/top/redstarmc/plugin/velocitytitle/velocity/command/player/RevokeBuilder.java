@@ -45,7 +45,7 @@ public class RevokeBuilder implements VelocityTitleCommand {
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("revoke")
                 .requires(source
-                        -> source.hasPermission("velocitytitle.player*")
+                        -> source.hasPermission("velocitytitle.player.*")
                         || source.hasPermission("velocitytitle.player.revoke")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {

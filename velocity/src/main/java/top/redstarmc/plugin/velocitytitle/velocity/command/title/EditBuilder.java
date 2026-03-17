@@ -44,7 +44,7 @@ public class EditBuilder implements VelocityTitleCommand {
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("edit")
                 .requires(source
-                        -> source.hasPermission("velocitytitle.title*")
+                        -> source.hasPermission("velocitytitle.title.*")
                         || source.hasPermission("velocitytitle.title.edit")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {

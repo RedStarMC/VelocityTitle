@@ -48,7 +48,7 @@ public class CreateBuilder implements VelocityTitleCommand {
     public LiteralArgumentBuilder<CommandSource> build() {
         return LiteralArgumentBuilder.<CommandSource>literal("create")
                 .requires(source
-                        -> source.hasPermission("velocitytitle.title*")
+                        -> source.hasPermission("velocitytitle.title.*")
                         || source.hasPermission("velocitytitle.title.create")
                         || source.hasPermission("velocitytitle.admin"))
                 .executes(context -> {
