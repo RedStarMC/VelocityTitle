@@ -17,7 +17,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.core.util;
+package top.redstarmc.plugin.velocitytitle.core.api;
 
 import org.jetbrains.annotations.NotNull;
 

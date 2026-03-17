@@ -33,11 +33,7 @@ import java.util.Objects;
  * 作为一个抽象类，使用请让子类被继承后实例化。<br>
  * 对于不需要使用的类，重写为空即可。<br>
  */
-public abstract class AbstractTomlManager {
-
-    /** 临时标记的版本号 */
-    @Deprecated
-    public static final String d_version = "0.2.0";
+public abstract class AbstractConfigurationManager implements Manager {
 
     private final File file;
 
@@ -52,7 +48,7 @@ public abstract class AbstractTomlManager {
      * @param dataFolder 插件的工作文件夹
      * @param fileName 要操作的配置文件名称
      */
-    public AbstractTomlManager(File dataFolder, String fileName){
+    public AbstractConfigurationManager(File dataFolder, String fileName) {
         this.file = new File(dataFolder,fileName);
         this.dataFolder = dataFolder;
         this.fileName = fileName;

@@ -76,8 +76,7 @@ public class VelocityTitleVelocity {
         System.out.println("[VelocityTitle] Configurations Loading...");
         loadConfiguration();
 
-        logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"),
-                config.getConfigToml().getBoolean("debug-mode"),
+        logger = new LoggerManager(config.pluginPrefix, config.debugMode,
                 server.getConsoleCommandSource());
 
         logger.info("Language: "+language.getConfigToml().getString("name"));
@@ -117,6 +116,7 @@ public class VelocityTitleVelocity {
 
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event){
+        language.close();
         //
     }
 
@@ -137,7 +137,7 @@ public class VelocityTitleVelocity {
         config.init();
 
         language = new Language(this.getDataFolder());
-        language.init();
+        language.init(config.language);
     }
 
 

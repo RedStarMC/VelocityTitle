@@ -24,9 +24,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
 import top.redstarmc.plugin.velocitytitle.core.impl.TitleCache;
-import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 

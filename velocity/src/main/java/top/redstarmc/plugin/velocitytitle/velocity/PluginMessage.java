@@ -21,7 +21,7 @@ package top.redstarmc.plugin.velocitytitle.velocity;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
-import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
+import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
 import java.util.Arrays;

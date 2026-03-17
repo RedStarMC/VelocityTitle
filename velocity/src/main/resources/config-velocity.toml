@@ -10,6 +10,10 @@ plugin-prefix = "[VelocityTitle] "
 # 是否开启 Debug 模式
 debug-mode = true
 
+# 选择的语言
+# ./lang 目录下列出了全部的语言文件
+language = "zh_CN"
+
 # 数据库设置
 [database]
 mode = "Embedded" # 数据库工作方式

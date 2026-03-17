@@ -19,16 +19,30 @@
 
 package top.redstarmc.plugin.velocitytitle.velocity.configuration;
 
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.VelocityConfigManager;
 
 import java.io.File;
 
-public class Config extends ConfigManager {
+public class Config extends VelocityConfigManager {
 
     static final String fileName = "config-velocity.toml";
 
+    public String pluginPrefix;
+
+    public boolean debugMode;
+
+    public String language;
+
     public Config(File dataFolder) {
         super(dataFolder, fileName);
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        this.pluginPrefix = getConfigToml().getString("plugin-prefix", "[VelocityTitle]");
+        this.debugMode = getConfigToml().getBoolean("debugMode", false);
+        this.language = getConfigToml().getString("language", "zh_CN");
     }
 
 }

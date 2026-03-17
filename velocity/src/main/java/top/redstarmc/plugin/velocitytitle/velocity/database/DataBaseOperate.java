@@ -25,10 +25,10 @@ import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.TitleDictionary;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.Title;
@@ -49,9 +49,9 @@ import java.util.stream.Collectors;
  */
 public class DataBaseOperate {
 
-    static LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
+    static final LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
 
-    private static ConfigManager getLanguage() {
+    private static Language getLanguage() {
         return VelocityTitleVelocity.getInstance().getLanguage();
         //
     }

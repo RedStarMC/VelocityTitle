@@ -29,9 +29,9 @@ import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
 public class HookPlaceholderAPI extends PlaceholderExpansion {
 
-    CacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
+    final CacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
 
-    LoggerManager log = VelocityTitleSpigot.getInstance().getLoggerManager();
+    final LoggerManager log = VelocityTitleSpigot.getInstance().getLoggerManager();
 
     /**
      * 此扩展的占位符标识符。可能不包含 {@literal %},

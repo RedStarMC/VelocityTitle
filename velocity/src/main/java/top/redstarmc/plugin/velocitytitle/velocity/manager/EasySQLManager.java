@@ -24,6 +24,7 @@ import cc.carm.lib.easysql.hikari.HikariConfig;
 import cc.carm.lib.easysql.hikari.HikariDataSource;
 import cc.carm.lib.easysql.manager.SQLManagerImpl;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DebugHandler;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
@@ -43,11 +44,11 @@ public class EasySQLManager {
 
     private final LoggerManager logger;
 
-    private final ConfigManager config;
+    private final VelocityConfigManager config;
 
-    private final ConfigManager language;
+    private final Language language;
 
-    public EasySQLManager(LoggerManager logger, ConfigManager config, ConfigManager language) {
+    public EasySQLManager(LoggerManager logger, VelocityConfigManager config, Language language) {
         this.logger = logger;
         this.config = config;
         this.language = language;

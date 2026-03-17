@@ -25,7 +25,7 @@ import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ServerConnection;
 import org.jetbrains.annotations.NotNull;
-import top.redstarmc.plugin.velocitytitle.core.util.NetWorkReader;
+import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 

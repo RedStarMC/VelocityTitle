@@ -17,22 +17,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.manager;
+package top.redstarmc.plugin.velocitytitle.core.api;
 
-import top.redstarmc.plugin.velocitytitle.core.api.AbstractTomlManager;
+public interface Manager {
 
-import java.io.File;
-
-public class ConfigManager extends AbstractTomlManager {
-
-    /**
-     * 构造器
-     * @param dataFolder 插件的工作文件夹
-     * @param fileName   要操作的配置文件名称
-     */
-    public ConfigManager(File dataFolder, String fileName) {
-        super(dataFolder, fileName);
-    }
-
+    /** 临时标记的版本号 */
+    @Deprecated
+    public static final String d_version = "0.2.0";
 
 }

@@ -35,7 +35,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.title.DeleteBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.EditBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.MetaBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
+import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 /**
@@ -48,7 +48,7 @@ public interface VelocityTitleCommand {
     /**
      * 语言文件
      */
-    static ConfigManager language = VelocityTitleVelocity.getInstance().getLanguage();
+    static Language language = VelocityTitleVelocity.getInstance().getLanguage();
 
     /**
      * 服务器实例

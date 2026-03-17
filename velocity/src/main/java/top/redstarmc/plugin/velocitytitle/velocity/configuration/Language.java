@@ -19,14 +19,23 @@
 
 package top.redstarmc.plugin.velocitytitle.velocity.configuration;
 
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
+import top.redstarmc.plugin.velocitytitle.core.api.AbstractLanguageManager;
 
 import java.io.File;
 
-public class Language extends ConfigManager {
-    static final String fileName = "language-velocity.toml";
+public class Language extends AbstractLanguageManager {
+
+    private static final String[] BUILT_IN = {"zh_CN.toml", "en_US.toml"};
+
     public Language(File dataFolder) {
-        super(dataFolder, fileName);
+        super(dataFolder);
+        //
+    }
+
+    @Override
+    protected String[] builtInLangFiles() {
+        return BUILT_IN;
+        //
     }
 
 }

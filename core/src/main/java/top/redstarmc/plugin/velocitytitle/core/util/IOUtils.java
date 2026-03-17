@@ -76,6 +76,9 @@ public class IOUtils {
      */
     public static void backupFile(File sourceFile) throws IOException {
         File backupFile = new File(sourceFile.getParent(), sourceFile.getName() + ".old");
+        if ( backupFile.exists() ) {
+            backupFile.delete();
+        }
         if (!sourceFile.renameTo(backupFile)) {
             throw new IOException("[VelocityTitle Config Loading...] 文件备份失败: " + backupFile.getName());
         }
@@ -96,10 +99,10 @@ public class IOUtils {
 
     /**
      * 删除文件
+     *
      * @param file 文件
-     * @return 是否成功
      */
-    public static boolean delFile(File file){
-        return file.delete();
+    public static void delFile(File file) {
+        file.delete();
     }
 }

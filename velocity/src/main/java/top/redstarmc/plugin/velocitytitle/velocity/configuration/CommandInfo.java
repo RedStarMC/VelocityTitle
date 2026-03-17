@@ -21,30 +21,32 @@ package top.redstarmc.plugin.velocitytitle.velocity.configuration;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import top.redstarmc.plugin.velocitytitle.core.api.AbstractTomlManager;
+import top.redstarmc.plugin.velocitytitle.core.api.AbstractConfigurationManager;
 import top.redstarmc.plugin.velocitytitle.core.util.toStrings;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfigManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 import java.util.List;
 
 public class CommandInfo {
 
-    private static ConfigManager language;
+    private static Language language;
 
     private static final String sharp = "&9>&r ";
 
-    public static void init(){
-        language = VelocityTitleVelocity.getInstance().getLanguage();
-    }
-
     private static String prefix(){
         return language.getConfigToml().getString("commands.prefix");
+        //
     }
 
     private static String head(){
-        return toStrings.format(language.getConfigToml().getString("commands.head"), AbstractTomlManager.d_version);
+        return toStrings.format(language.getConfigToml().getString("commands.head"), AbstractConfigurationManager.d_version);
+        //
+    }
+
+    public static void init(){
+        language = VelocityTitleVelocity.getInstance().getLanguage();
+        //
     }
 
 

@@ -17,22 +17,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.spigot.manager;
+package top.redstarmc.plugin.velocitytitle.velocity.manager;
 
 import top.redstarmc.plugin.velocitytitle.core.api.AbstractConfigurationManager;
 
 import java.io.File;
 
-public class ConfigManager extends AbstractConfigurationManager {
+public class VelocityConfigManager extends AbstractConfigurationManager {
 
     /**
      * 构造器
-     *
      * @param dataFolder 插件的工作文件夹
      * @param fileName   要操作的配置文件名称
      */
-    public ConfigManager(File dataFolder, String fileName) {
+    public VelocityConfigManager(File dataFolder, String fileName) {
         super(dataFolder, fileName);
+        //
     }
 
 
