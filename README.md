@@ -3,7 +3,6 @@
 ![License](https://img.shields.io/github/license/redstarmc/velocitytitle)
 ![Commit activity](https://img.shields.io/github/commit-activity/m/redstarmc/VelocityTitle)
 ![Repo size](https://img.shields.io/github/repo-size/redstarmc/velocitytitle)
-
 # VelocityTitle
 
 **VelocityTitle** 是一个适用于 Minecraft Velocity 群组服的称号插件。
@@ -22,7 +21,7 @@
 
 根命令 `/velocitytitle` & `/vt`
 
-> [!tips]
+> [!tip]
 > `<>` 为必填， `[]` 为选填， `()` 表示选择
 
 * `player` 操作玩家
@@ -41,7 +40,7 @@
 * `help` 展示帮助列表
 
 > [!important]
-> 称号的 `name` 务必使用英文字母和下划线
+> 称号的 `name` 务必使用英文字母和下划线  
 > 称号的 `display` 使用英文双引号即可输入中文
 
 ## 配置
@@ -56,6 +55,7 @@
 * [ ] 完善权限管理
 * [ ] 增加命令确认系统
 * [ ] 列表查询优化
+
 第二阶段目标：
 
 * 配置文件热重载
