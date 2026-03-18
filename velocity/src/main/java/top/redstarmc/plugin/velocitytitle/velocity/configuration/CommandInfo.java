@@ -34,7 +34,7 @@ public class CommandInfo {
 
     private static final String sharp = "&9>&r ";
 
-    private static String prefix(){
+    public static String prefix() {
         return language.getConfigToml().getString("commands.prefix");
         //
     }
@@ -62,7 +62,9 @@ public class CommandInfo {
                 prefix() + head(),
                 sharp + "&a/vt title < create | edit | delete | list | meta >&r",
                 sharp + "&a/vt player < divide | revoke | wear | pick | list >&r",
-                sharp + "&a/vt reload"
+                sharp + "&a/vt reload",
+                sharp + "&a/vt confirm",
+                sharp + "&a/vt cancel"
         );
     }
 

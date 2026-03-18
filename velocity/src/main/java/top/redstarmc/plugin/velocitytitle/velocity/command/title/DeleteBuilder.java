@@ -61,14 +61,17 @@ public class DeleteBuilder implements VelocityTitleCommand {
     }
 
     private void execute(CommandSource source, String title_name) {
-        DataBaseOperate.deleteTitle(title_name)
-                .thenAcceptAsync(result -> {
-                    if ( result.equals(CommandResp.SUCCESS) ) {
-                        source.sendMessage(CommandInfo.titleDeleteSuccess(title_name));
-                    } else {
-                        source.sendMessage(result.get(title_name));
-                    }
-                });
+        confirmationManager.putAction(
+                source, "delete " + title_name,
+                () -> DataBaseOperate.deleteTitle(title_name)
+                        .thenAcceptAsync(result -> {
+                            if ( result.equals(CommandResp.SUCCESS) ) {
+                                source.sendMessage(CommandInfo.titleDeleteSuccess(title_name));
+                            } else {
+                                source.sendMessage(result.get(title_name));
+                            }
+                        })
+        );
     }
 
 }

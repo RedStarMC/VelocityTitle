@@ -90,6 +90,13 @@ revoke-success = "称号 {} 不再分配给玩家 {}"
 wear-success = "已穿戴称号 {}"
 pick-success = "已移除 {} 称号"
 
+[commands.confirm]
+disable = "&c 命令确认功能未启用，无法执行此指令"
+put = "&c⚠ 确定要执行: &e {} &c吗？\n请在 &e{} &c秒内输入 &a/vt confirm &c来确认执行"
+expired = "&c操作已过期，请重新执行命令"
+cancel = "&c操作已取消"
+empty = "&c找不到待确认的操作"
+run = "&e{} &c已执行"
 
 # 数据库类
 [database]

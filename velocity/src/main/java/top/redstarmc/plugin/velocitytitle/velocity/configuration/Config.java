@@ -33,8 +33,11 @@ public class Config extends VelocityConfigManager {
 
     public String language;
 
+    public boolean confirmMode;
+
     public Config(File dataFolder) {
         super(dataFolder, fileName);
+        //
     }
 
     @Override
@@ -43,6 +46,7 @@ public class Config extends VelocityConfigManager {
         this.pluginPrefix = getConfigToml().getString("plugin-prefix", "[VelocityTitle]");
         this.debugMode = getConfigToml().getBoolean("debugMode", false);
         this.language = getConfigToml().getString("language", "zh_CN");
+        this.confirmMode = getConfigToml().getBoolean("confirm.enable", true);
     }
 
 }

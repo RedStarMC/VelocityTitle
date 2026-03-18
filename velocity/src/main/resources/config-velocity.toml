@@ -14,6 +14,11 @@ debug-mode = true
 # ./lang 目录下列出了全部的语言文件
 language = "zh_CN"
 
+# 是否开启命令确认
+[confirm]
+enable = true
+expired = 30 # 单位秒
+
 # 数据库设置
 [database]
 mode = "Embedded" # 数据库工作方式

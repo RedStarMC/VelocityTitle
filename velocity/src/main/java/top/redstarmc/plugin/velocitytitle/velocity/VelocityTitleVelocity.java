@@ -34,6 +34,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Config;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfirmationManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 
@@ -53,6 +54,8 @@ public class VelocityTitleVelocity {
     private Config config;
 
     private Language language;
+
+    private ConfirmationManager confirmationManager;
 
     private PluginMessage pluginMessage;
 
@@ -90,6 +93,7 @@ public class VelocityTitleVelocity {
         DBManager = new EasySQLManager(logger, config, language);
         DBManager.init();
 
+        confirmationManager = new ConfirmationManager(language, config.getConfigToml().getLong("confirm.expired", 30L), config.confirmMode);
         logger.info(language.getConfigToml().getString("logs.command-loading"));
         registerCommand();
         CommandInfo.init();
@@ -151,6 +155,10 @@ public class VelocityTitleVelocity {
 
     public Language getLanguage() {
         return language;
+    }
+
+    public ConfirmationManager getConfirmationManager() {
+        return confirmationManager;
     }
 
     public EasySQLManager getDBManager() {

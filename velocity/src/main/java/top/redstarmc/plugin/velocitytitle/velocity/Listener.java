@@ -49,7 +49,8 @@ public class Listener {
     public void onServerPostConnectEvent(@NotNull ServerPostConnectEvent event){
         Player player = event.getPlayer();
         DataBaseOperate.savePlayer(player.getUniqueId().toString(), player.getUsername())
-                .thenRunAsync(() -> logger.warn("测试发送成功"));
+                .thenRunAsync(() -> {
+                });
     }
 
     @Subscribe

@@ -522,7 +522,7 @@ public class DataBaseOperate {
         return selectPlayerUUID(player_name)
                 .thenCompose(player_uuid -> {
                     if ( player_uuid == null ) {
-                        CompletableFuture.completedFuture(CommandResp.PlayerNotFound);
+                        return CompletableFuture.completedFuture(CommandResp.PlayerNotFound);
                     }
 
                     return selectTitleWithName(title_name)
@@ -544,11 +544,9 @@ public class DataBaseOperate {
                                                     .addColumnValue(title.type().get(), title.id())
                                                     .build().executeAsync(
                                                             (query) -> {
-                                                                Optional<Player> optionalPlayer = Optional.empty();
-                                                                if ( player_uuid != null ) {
-                                                                    optionalPlayer = VelocityTitleVelocity.getInstance()
-                                                                            .getServer().getPlayer(UUID.fromString(player_uuid));
-                                                                }
+                                                                Optional<Player> optionalPlayer;
+                                                                optionalPlayer = VelocityTitleVelocity.getInstance()
+                                                                        .getServer().getPlayer(UUID.fromString(player_uuid));
                                                                 if ( optionalPlayer != null && optionalPlayer.isPresent() ) {
                                                                     Player player = optionalPlayer.get();
                                                                     String[] temp = {"UpdateTitle", player_uuid, title.name(), title.type().get(), title.display()};

@@ -19,7 +19,6 @@
 
 package top.redstarmc.plugin.velocitytitle.velocity.command;
 
-import cc.carm.lib.easysql.api.SQLManager;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -36,6 +35,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.command.title.EditBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.MetaBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfirmationManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
 /**
@@ -55,10 +55,7 @@ public interface VelocityTitleCommand {
      */
     static ProxyServer proxyServer = VelocityTitleVelocity.getInstance().getServer();
 
-    /**
-     * 数据库实例
-     */
-    static SQLManager sqlManager = VelocityTitleVelocity.getInstance().getDBManager().getSqlManager();
+    static ConfirmationManager confirmationManager = VelocityTitleVelocity.getInstance().getConfirmationManager();
 
     /**
      * 子命令树
@@ -118,6 +115,18 @@ public interface VelocityTitleCommand {
                         .executes(context -> {
                             TextSer.sendComponentList(context.getSource(), CommandInfo.help());
                             return 1;
+                        })
+                )
+                .then(LiteralArgumentBuilder.<CommandSource>literal("confirm")
+                        .executes(context -> {
+                            confirmationManager.confirmAction(context.getSource());
+                            return Command.SINGLE_SUCCESS;
+                        })
+                )
+                .then(LiteralArgumentBuilder.<CommandSource>literal("cancel")
+                        .executes(context -> {
+                            confirmationManager.cancel(context.getSource());
+                            return Command.SINGLE_SUCCESS;
                         })
                 )
                 .build();
