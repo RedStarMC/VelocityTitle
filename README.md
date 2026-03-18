@@ -3,7 +3,8 @@
 ![License](https://img.shields.io/github/license/redstarmc/velocitytitle)
 ![Commit activity](https://img.shields.io/github/commit-activity/m/redstarmc/VelocityTitle)
 ![Repo size](https://img.shields.io/github/repo-size/redstarmc/velocitytitle)
-# VelocityTitle
+
+# VelocityTitle [English](./docs/README_EN.md)
 
 **VelocityTitle** 是一个适用于 Minecraft Velocity 群组服的称号插件。
 
@@ -11,13 +12,25 @@
 在子服进行显示和操作。  
 主要用于填补没有开源免费的跨服端插件的问题。
 
-## 下载
+非常欢迎 PR！
+
+## 下载 | Download
 
 在其他平台发布之前，请到 [Releases](https://github.com/redstarmc/velocitytitle/releases) 处下载最新版本。
 
-## 命令 & 权限
+## 安装 | Install
 
-### Velocity 端命令
+1. 下载插件  
+   你可以使用统一的插件，也可以分别下载不同平台的插件使用。但是 core 并不能作为插件使用。
+2. 安装  
+   你需要在服务端里正常安装插件。 注意 Velocity 必须安装，否则无法运行。
+3. 配置插件
+4. 设置 PAPI
+   `velocitytitle_prefix` 和 `velocitytitle_suffix`
+
+## 命令 & 权限 | Command & perms
+
+### Velocity 命令 | Command
 
 根命令 `/velocitytitle` & `/vt`
 
@@ -45,21 +58,21 @@
 > 称号的 `name` 务必使用英文字母和下划线  
 > 称号的 `display` 使用英文双引号即可输入中文
 
-### Velocity 端权限
+### Velocity 权限 | perms
 
 `velocitytitle.admin` 管理员权限 包括了所有管理员应该有的权限
 
 玩家需要使用的命令不需要设置权限
 
-## 配置
+## 配置 | Configuration
 
 配置文件均有详细注释，此处不再赘述
 
-## 开发计划
+## 开发计划 | Develop Plan
 
 第一阶段目标：
 
-* [ ] 修复已知 bug
+* [x] 修复已知 bug
 * [x] 完善权限管理
 * [x] 增加命令确认系统
 * [ ] 列表查询优化
