@@ -45,7 +45,6 @@ allprojects {
         implementation "net.kyori:adventure-api:4.25.0"
     }
 
-
     // 编译 固定 UTF-8 编码
     tasks.withType(JavaCompile).configureEach {
         options.encoding = "UTF-8"
@@ -76,7 +75,8 @@ allprojects {
 }
 
 subprojects {
-    // 1. 配置原始 Jar 任务（包含自身代码和core模块代码）
+
+    // 配置原始 Jar 任务（包含自身代码和core模块代码）
     tasks.withType(Jar).tap {
         configureEach {
             group = 'build'
@@ -92,7 +92,7 @@ subprojects {
         }
     }
 
-    // 2. 配置包含依赖的 JAR 任务（xxx.jar）
+    // 配置包含依赖的 JAR 任务（xxx.jar）
     tasks.register('jarWithDependencies', Jar) {
         group = 'build'
         destinationDirectory.set(rootProject.file("${rootProject.rootDir}/build/jars"))
@@ -123,7 +123,7 @@ subprojects {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 
-    // 3. 确保 build 任务同时执行两个 JAR 任务
+    // 确保 build 任务同时执行两个 JAR 任务
     tasks.named('build') {
         dependsOn(tasks.named('jar'), tasks.named('jarWithDependencies'))
     }

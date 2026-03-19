@@ -30,6 +30,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import top.redstarmc.plugin.velocitytitle.velocity.bstats.Metrics;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Config;
@@ -65,10 +66,13 @@ public class VelocityTitleVelocity {
 
     private static VelocityTitleVelocity instance;
 
+    private final Metrics.Factory metricsFactory;
+
     @Inject
-    public VelocityTitleVelocity(@DataDirectory Path dataDirectory, ProxyServer server) {
+    public VelocityTitleVelocity(@DataDirectory Path dataDirectory, ProxyServer server, Metrics.Factory metricsFactory) {
         this.dataFolder = dataDirectory.toFile();
         this.server = server;
+        this.metricsFactory = metricsFactory;
     }
 
     @Subscribe
@@ -106,6 +110,12 @@ public class VelocityTitleVelocity {
         pluginMessage = new PluginMessage(logger);
 
         logger.info(language.getConfigToml().getString("logs.end"));
+
+        int pluginId = 30298;  // bstats
+        Metrics metrics = metricsFactory.make(this, pluginId);
+        metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> server.getAllPlayers().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("servers", () -> server.getAllServers().size()));
+
     }
 
     @Subscribe
