@@ -23,6 +23,6 @@ public interface Manager {
 
     /** 临时标记的版本号 */
     @Deprecated
-    public static final String d_version = "0.2.0";
+    public static final String d_version = "0.2.1";
 
 }
