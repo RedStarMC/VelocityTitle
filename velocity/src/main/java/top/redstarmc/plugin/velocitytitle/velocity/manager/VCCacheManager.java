@@ -17,31 +17,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.spigot.manager;
+package top.redstarmc.plugin.velocitytitle.velocity.manager;
 
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.api.InterfaceCacheManager;
 import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
-import top.redstarmc.plugin.velocitytitle.spigot.VelocityTitleSpigot;
+import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
+import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleType;
 
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <h2>缓存管理器</h2>
  */
-public class CacheManager implements InterfaceCacheManager {
+public class VCCacheManager implements InterfaceCacheManager {
 
     private static final Map<String, PlayerTitleCache> CACHE = new ConcurrentHashMap<>();
 
     private final LoggerManager logger;
 
     /** 插件实例 */
-    private final VelocityTitleSpigot plugin;
+    private final VelocityTitleVelocity plugin;
 
-    public CacheManager(@NotNull LoggerManager logger, @NotNull VelocityTitleSpigot plugin) {
+    public VCCacheManager(@NotNull LoggerManager logger, @NotNull VelocityTitleVelocity plugin) {
         this.logger = logger;
         this.plugin = plugin;
     }
@@ -53,40 +53,35 @@ public class CacheManager implements InterfaceCacheManager {
      * @param playerTitle 称号
      */
     @Override
-    public void CachePut(@NotNull String uuid, @NotNull PlayerTitleCache playerTitle){
+    public void CachePut(@NotNull String uuid, @NotNull PlayerTitleCache playerTitle) {
         CACHE.put(uuid, playerTitle);
     }
 
     @Override
-    public PlayerTitleCache CacheGet(@NotNull String uuid){
-        //TODO 每隔一段时间发送一次
+    public PlayerTitleCache CacheGet(@NotNull String uuid) {
         PlayerTitleCache playerTitle = CACHE.get(uuid);
 
-        if (playerTitle == null){
-            // 发送获取称号请求
-            Player player = VelocityTitleSpigot.getInstance().getServer().getPlayer(UUID.fromString(uuid));
-            if (player != null && player.isOnline()) {
-                plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid, "prefix")
-                        .thenRunAsync(() -> logger.debug("插件消息：已请求玩家称号前缀数据。UUID: "+uuid));
-                plugin.getPluginMessage().sendMessage(player/*其实是PluginMessageRecipient*/, "GetTitle", uuid, "suffix")
-                        .thenRunAsync(() -> logger.debug("插件消息：已请求玩家称号后缀数据。UUID: "+uuid));
-            }else {
-                logger.warn("被请求获取称号的玩家不在线");
-            }
+        if ( playerTitle == null ) {
+
+            DataBaseOperate.playerWoreTitle(uuid, TitleType.ALL)
+                    .thenAcceptAsync(result -> {
+                        CachePut(uuid, result);
+                    });
+
             return null;
-        }else{
+        } else {
             return playerTitle;
         }
     }
 
     @Override
-    public void CacheRemove(@NotNull String uuid){
+    public void CacheRemove(@NotNull String uuid) {
         CACHE.remove(uuid);
         //
     }
 
     @Override
-    public void CacheRemoveAll(){
+    public void CacheRemoveAll() {
         CACHE.clear();
         //
     }

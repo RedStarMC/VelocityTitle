@@ -17,16 +17,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.core.impl;
+package top.redstarmc.plugin.velocitytitle.core.api;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
 
-public record PlayerTitleCache(@Nullable TitleCache prefix, @Nullable TitleCache suffix) {
+public interface InterfaceCacheManager extends Manager {
 
-    public static @NotNull PlayerTitleCache create(String type, @NotNull TitleCache cache) {
-        if ( type.equals("prefix") ) return new PlayerTitleCache(cache, null);
-        else return new PlayerTitleCache(null, cache);
-    }
+    /**
+     * 向缓存中保存指定的称号
+     *
+     * @param uuid        玩家 UUID
+     * @param playerTitle 称号
+     */
+    void CachePut(@NotNull String uuid, @NotNull PlayerTitleCache playerTitle);
+
+    PlayerTitleCache CacheGet(@NotNull String uuid);
+
+    void CacheRemove(@NotNull String uuid);
+
+    void CacheRemoveAll();
 
 }

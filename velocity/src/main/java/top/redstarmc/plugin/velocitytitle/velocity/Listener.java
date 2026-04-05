@@ -20,6 +20,7 @@
 package top.redstarmc.plugin.velocitytitle.velocity;
 
 import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PluginMessageEvent;
 import com.velocitypowered.api.event.player.ServerPostConnectEvent;
 import com.velocitypowered.api.proxy.Player;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleType;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -51,6 +53,13 @@ public class Listener {
         DataBaseOperate.savePlayer(player.getUniqueId().toString(), player.getUsername())
                 .thenRunAsync(() -> {
                 });
+    }
+
+    @Subscribe
+    public void onPlayerDisconnect(@NotNull DisconnectEvent event) {
+        VelocityTitleVelocity.getInstance().getCacheManager().CacheRemove(
+                event.getPlayer().getUniqueId().toString()
+        );
     }
 
     @Subscribe
@@ -107,13 +116,31 @@ public class Listener {
             VelocityTitleVelocity.getInstance().getServer().getPlayer(UUID.fromString(player_uuid))
                     .ifPresentOrElse(
                             player -> {
-                                DataBaseOperate.playerWoreTitle(player_uuid, type.equals("prefix"))
+                                DataBaseOperate.playerWoreTitle(player_uuid, TitleType.getType(type))
                                         .thenAcceptAsync(title -> {
                                             String[] temp;
                                             if(title == null){
                                                 temp = new String[] {"UpdateTitle", player_uuid, "", type, ""};
                                             }else {
-                                                temp = new String[] {"UpdateTitle", player_uuid, title.name(), type, title.display()};
+                                                if ( type.equals("all") ) {
+                                                    if ( title.prefix() != null ) {
+                                                        temp = new String[] {"UpdateTitle", player_uuid, title.prefix().name(), type, title.prefix().display()};
+                                                        logger.debug(Arrays.toString(temp));
+                                                        VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                                    }
+                                                    if ( title.suffix() != null ) {
+                                                        temp = new String[] {"UpdateTitle", player_uuid, title.suffix().name(), type, title.suffix().display()};
+                                                        logger.debug(Arrays.toString(temp));
+                                                        VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                                    }
+                                                    return;
+                                                } else if ( type.equals("prefix") && title.prefix() != null ) {
+                                                    temp = new String[] {"UpdateTitle", player_uuid, title.prefix().name(), type, title.prefix().display()};
+                                                } else if ( type.equals("suffix") && title.suffix() != null ) {
+                                                    temp = new String[] {"UpdateTitle", player_uuid, title.suffix().name(), type, title.suffix().display()};
+                                                } else {
+                                                    temp = new String[] {"UpdateTitle", player_uuid, "", type, ""};
+                                                }
                                             }
                                             logger.debug(Arrays.toString(temp));
                                             VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);

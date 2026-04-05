@@ -26,6 +26,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.VelocityBrigadierMessage;
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.core.util.UpdateTitle;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.VelocityTitleCommand;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
@@ -110,6 +111,7 @@ public class PickBuilder implements VelocityTitleCommand {
                         .thenAcceptAsync(response -> {
                             if ( response.equals(CommandResp.SUCCESS) ) {
                                 sendMessage(player_uuid, new String[] {"DeleteTitle", player_uuid});
+                                VelocityTitleVelocity.getInstance().getCacheManager().CacheRemove(player_uuid);
                                 source.sendMessage(CommandInfo.pickSuccess("All"));
                             } else {
                                 source.sendMessage(response.get("", player_uuid));
@@ -121,6 +123,9 @@ public class PickBuilder implements VelocityTitleCommand {
                         .thenAcceptAsync(response -> {
                             if ( response.equals(CommandResp.SUCCESS) ) {
                                 sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                                UpdateTitle.updateTitle(VelocityTitleVelocity.getInstance().getCacheManager(),
+                                        player_uuid, "", type, ""
+                                );
                                 source.sendMessage(CommandInfo.pickSuccess("Prefix"));
                             } else {
                                 source.sendMessage(response.get("", player_uuid));
@@ -132,6 +137,9 @@ public class PickBuilder implements VelocityTitleCommand {
                         .thenAcceptAsync(response -> {
                             if ( response.equals(CommandResp.SUCCESS) ) {
                                 sendMessage(player_uuid, new String[] {"UpdateTitle", player_uuid, "", type, ""});
+                                UpdateTitle.updateTitle(VelocityTitleVelocity.getInstance().getCacheManager(),
+                                        player_uuid, "", type, ""
+                                );
                                 source.sendMessage(CommandInfo.pickSuccess("suffix"));
                             } else {
                                 source.sendMessage(response.get("", player_uuid));

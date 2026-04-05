@@ -19,6 +19,9 @@
 
 package top.redstarmc.plugin.velocitytitle.velocity.pojo;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public enum TitleType {
     PREFIX("prefix"), SUFFIX("suffix"), ALL("null");
 
@@ -29,7 +32,16 @@ public enum TitleType {
         //
     }
 
-    public String get() {
+    public static @Nullable TitleType getType(@NotNull String type) {
+        return switch ( type ) {
+            case "prefix" -> TitleType.PREFIX;
+            case "suffix" -> TitleType.SUFFIX;
+            case "all" -> TitleType.ALL;
+            default -> null;
+        };
+    }
+
+    public String getColumnName() {
         return columnName;
         //
     }

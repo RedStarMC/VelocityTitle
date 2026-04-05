@@ -27,6 +27,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -38,13 +39,18 @@ import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfirmationManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.VCCacheManager;
+import top.redstarmc.plugin.velocitytitle.velocity.util.HookMiniPlaceholderAPI;
 
 import java.io.File;
 import java.nio.file.Path;
 
 @Plugin(
         id = "velocity_title",
-        name = "VelocityTitle"
+        name = "VelocityTitle",
+        dependencies = {
+                @Dependency(id = "miniplaceholders", optional = true)
+        }
 )
 public class VelocityTitleVelocity {
 
@@ -63,6 +69,8 @@ public class VelocityTitleVelocity {
     private EasySQLManager DBManager;
 
     private final ProxyServer server;
+
+    private VCCacheManager VCCacheManager;
 
     private static VelocityTitleVelocity instance;
 
@@ -109,6 +117,11 @@ public class VelocityTitleVelocity {
         server.getChannelRegistrar().register(PluginMessage.INCOMING, PluginMessage.OUTGOING);
         pluginMessage = new PluginMessage(logger);
 
+        logger.info("加载称号缓存管理器");
+        VCCacheManager = new VCCacheManager(logger, this);
+
+        new HookMiniPlaceholderAPI().init();
+
         logger.info(language.getConfigToml().getString("logs.end"));
 
         int pluginId = 30298;  // bstats
@@ -131,7 +144,7 @@ public class VelocityTitleVelocity {
     @Subscribe
     public void onProxyShutdown(ProxyShutdownEvent event){
         language.close();
-        //
+        VCCacheManager.CacheRemoveAll();
     }
 
     private void registerCommand(){
@@ -181,6 +194,10 @@ public class VelocityTitleVelocity {
 
     public File getDataFolder() {
         return dataFolder;
+    }
+
+    public VCCacheManager getCacheManager() {
+        return VCCacheManager;
     }
 
     public static VelocityTitleVelocity getInstance() {

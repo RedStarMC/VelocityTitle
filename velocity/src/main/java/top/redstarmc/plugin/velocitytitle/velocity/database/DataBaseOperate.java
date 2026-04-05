@@ -23,6 +23,9 @@ import cc.carm.lib.easysql.api.SQLManager;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import org.jetbrains.annotations.NotNull;
+import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
+import top.redstarmc.plugin.velocitytitle.core.impl.TitleCache;
+import top.redstarmc.plugin.velocitytitle.core.util.UpdateTitle;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.CommandInfo;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
@@ -247,37 +250,82 @@ public class DataBaseOperate {
      * 获得玩家当前穿戴的称号
      *
      * @param player_uuid 玩家的 UUID
-     * @param isPrefix    是否为前缀
      *
      * @return 称号实例
      */
-    public static @NotNull CompletableFuture<Title> playerWoreTitle(String player_uuid, boolean isPrefix) {
-        CompletableFuture<Title> titleCompletableFuture = new CompletableFuture<>();
+    public static @NotNull CompletableFuture<PlayerTitleCache> playerWoreTitle(String player_uuid, TitleType type) {
+        CompletableFuture<PlayerTitleCache> titleCompletableFuture = new CompletableFuture<>();
 
-        getSqlManager().createQuery()
-                .inTable(PlayerWear.PLAYER_WEAR.getTableName())
-                .selectColumns("player_uuid", isPrefix ? "prefix" : "suffix")
-                .addCondition("player_uuid", player_uuid)
-                .build()
-                .executeAsync(
-                        (query) -> {
-                            ResultSet result = query.getResultSet();
-                            if (result.next()) {
-                                int id = result.getInt(isPrefix ? "prefix" : "suffix");
+        if ( type == TitleType.ALL ) {
+            getSqlManager().createQuery()
+                    .inTable(PlayerWear.PLAYER_WEAR.getTableName())
+                    .selectColumns("player_uuid", "prefix", "suffix")
+                    .addCondition("player_uuid", player_uuid)
+                    .build()
+                    .executeAsync(
+                            (query) -> {
+                                ResultSet result = query.getResultSet();
+                                if ( result.next() ) {
+                                    int prefixId = result.getInt("prefix");
+                                    int suffixId = result.getInt("suffix");
 
-                                selectTitleWithID(id)
-                                        .thenAccept(titleCompletableFuture :: complete)
-                                        .exceptionally(throwable -> {
-                                            titleCompletableFuture.completeExceptionally(throwable);
-                                            return null;
-                                        });
+                                    // 处理可能为 0 的情况（表示未佩戴）
+                                    CompletableFuture<Title> prefixFuture = (prefixId > 0) ? selectTitleWithID(prefixId) : CompletableFuture.completedFuture(null);
+                                    CompletableFuture<Title> suffixFuture = (suffixId > 0) ? selectTitleWithID(suffixId) : CompletableFuture.completedFuture(null);
 
-                            } else {
-                                titleCompletableFuture.complete(null);
-                            }
-                        },
-                        ((exception, sqlAction) -> titleCompletableFuture.completeExceptionally(exception))
-                );
+                                    CompletableFuture.allOf(prefixFuture, suffixFuture)
+                                            .thenAccept(v -> {
+                                                Title prefixTitle = prefixFuture.join();
+                                                Title suffixTitle = suffixFuture.join();
+
+                                                TitleCache prefixCache = (prefixTitle != null) ? new TitleCache(prefixTitle.name(), prefixTitle.display()) : null;
+                                                TitleCache suffixCache = (suffixTitle != null) ? new TitleCache(suffixTitle.name(), suffixTitle.display()) : null;
+
+                                                titleCompletableFuture.complete(new PlayerTitleCache(prefixCache, suffixCache));
+                                            })
+                                            .exceptionally(ex -> {
+                                                titleCompletableFuture.completeExceptionally(ex);
+                                                return null;
+                                            });
+                                } else {
+                                    titleCompletableFuture.complete(null);
+                                }
+                            },
+                            (exception, sqlAction) -> titleCompletableFuture.completeExceptionally(exception)
+                    );
+        } else {
+            getSqlManager().createQuery()
+                    .inTable(PlayerWear.PLAYER_WEAR.getTableName())
+                    .selectColumns("player_uuid", type.getColumnName())
+                    .addCondition("player_uuid", player_uuid)
+                    .build()
+                    .executeAsync(
+                            (query) -> {
+                                ResultSet result = query.getResultSet();
+                                if ( result.next() ) {
+                                    int id = result.getInt(type.getColumnName());
+
+                                    selectTitleWithID(id)
+                                            .thenAccept(title -> {
+                                                if ( title != null ) {
+                                                    titleCompletableFuture.complete(PlayerTitleCache.create(type.getColumnName(),
+                                                            new TitleCache(title.name(), title.display())));
+                                                } else {
+                                                    titleCompletableFuture.complete(null);
+                                                }
+                                            })
+                                            .exceptionally(throwable -> {
+                                                titleCompletableFuture.completeExceptionally(throwable);
+                                                return null;
+                                            });
+
+                                } else {
+                                    titleCompletableFuture.complete(null);
+                                }
+                            },
+                            ((exception, sqlAction) -> titleCompletableFuture.completeExceptionally(exception))
+                    );
+        }
 
         return titleCompletableFuture.exceptionally(throwable -> {
             logger.crash(throwable, getLanguage().getConfigToml().getString("database.failed-operate"));
@@ -390,6 +438,7 @@ public class DataBaseOperate {
                                             if ( player != null ) {
                                                 String[] temp = {"DeleteAll"};
                                                 VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                                VelocityTitleVelocity.getInstance().getCacheManager().CacheRemoveAll();
                                             }
                                             // 没有玩家则不发送
                                             insertFuture.complete(CommandResp.SUCCESS);
@@ -494,6 +543,7 @@ public class DataBaseOperate {
                                                         Player player = optionalPlayer.get();
                                                         String[] temp = {"DeleteTitle", player_uuid};
                                                         VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                                        VelocityTitleVelocity.getInstance().getCacheManager().CacheRemove(player_uuid);
                                                     }
                                                     // 不在线则无需发送，当玩家上线时会自动取消。
                                                     deletePlayerTitle.complete(CommandResp.SUCCESS);
@@ -541,7 +591,7 @@ public class DataBaseOperate {
 
                                             getSqlManager().createUpdate(PlayerWear.PLAYER_WEAR.getTableName())
                                                     .addCondition("player_uuid", player_uuid)
-                                                    .addColumnValue(title.type().get(), title.id())
+                                                    .addColumnValue(title.type().getColumnName(), title.id())
                                                     .build().executeAsync(
                                                             (query) -> {
                                                                 Optional<Player> optionalPlayer;
@@ -549,8 +599,11 @@ public class DataBaseOperate {
                                                                         .getServer().getPlayer(UUID.fromString(player_uuid));
                                                                 if ( optionalPlayer != null && optionalPlayer.isPresent() ) {
                                                                     Player player = optionalPlayer.get();
-                                                                    String[] temp = {"UpdateTitle", player_uuid, title.name(), title.type().get(), title.display()};
+                                                                    String[] temp = {"UpdateTitle", player_uuid, title.name(), title.type().getColumnName(), title.display()};
                                                                     VelocityTitleVelocity.getInstance().getPluginMessage().sendMessageT(player, temp);
+                                                                    UpdateTitle.updateTitle(VelocityTitleVelocity.getInstance().getCacheManager(),
+                                                                            player_uuid, title.name(), title.type().getColumnName(), title.display()
+                                                                    );
                                                                 }
                                                                 // 不在线则无需发送，当玩家上线时会自动佩戴。
                                                                 wear.complete(CommandResp.SUCCESS);

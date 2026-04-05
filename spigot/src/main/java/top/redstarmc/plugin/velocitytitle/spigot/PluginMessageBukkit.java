@@ -25,8 +25,7 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
-import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
-import top.redstarmc.plugin.velocitytitle.core.impl.TitleCache;
+import top.redstarmc.plugin.velocitytitle.core.util.UpdateTitle;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
 import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
 
@@ -117,27 +116,7 @@ public class PluginMessageBukkit implements PluginMessageListener{
                 String title_display = data[4];
 //                String others = data[5];
 
-                PlayerTitleCache playerTitleCache = cache.CacheGet(uuid1);
-
-                if (playerTitleCache == null){
-                    if (title_type.equals("prefix")){
-                        cache.CachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), null));
-
-                    }else {
-                        cache.CachePut(uuid1, new PlayerTitleCache(null, new TitleCache(title_name, title_display)));
-
-                    }
-                }else {
-                    if(title_type.equals("prefix")){
-                        TitleCache suffix = playerTitleCache.suffix();
-                        cache.CachePut(uuid1, new PlayerTitleCache(new TitleCache(title_name, title_display), suffix));
-
-                    }else {
-                        TitleCache prefix = playerTitleCache.prefix();
-                        cache.CachePut(uuid1, new PlayerTitleCache(prefix, new TitleCache(title_name, title_display)));
-
-                    }
-                }
+                UpdateTitle.updateTitle(cache, uuid1, title_name, title_type, title_display);
 
                 log.debug(Arrays.toString(data));
                 break;
