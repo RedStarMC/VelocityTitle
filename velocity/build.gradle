@@ -19,15 +19,15 @@
 
 dependencies {
     implementation project(':core')
-    compileOnly "com.velocitypowered:velocity-api:3.4.0-SNAPSHOT"
+    compileOnly "com.velocitypowered:velocity-api:3.5.0-SNAPSHOT"
     implementation 'com.h2database:h2:2.2.220'
     implementation 'cc.carm.lib:easysql-hikaricp:0.4.7'
 }
 
-repositories {
-    maven { url 'https://repo.codemc.io/repository/maven-releases/' }
-    maven { url 'https://repo.papermc.io/repository/maven-public/' }
-}
+//repositories {
+//    maven { url 'https://repo.codemc.io/repository/maven-releases/' }
+//    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+//}
 
 jar {
     archiveBaseName.set("VelocityTitle-Velocity")  // 基础名称

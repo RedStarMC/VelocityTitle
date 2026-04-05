@@ -75,7 +75,7 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
         logger.info(language.getConfigToml().getString("logs.listener-loading"));
         getServer().getPluginManager().registerEvents(this, this);
 
-        logger.info("加载缓存");
+        logger.info("加载称号缓存管理器");
         cacheManager = new CacheManager( logger, this);
 
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
@@ -83,14 +83,21 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HookPlaceholderAPI().register();
+            logger.info("PlaceholderAPI 已加载！");
         }else {
-            logger.error("无法加载PAPI！");
+            logger.debug("PlaceholderAPI 未安装！");
+        }
+
+        if ( Bukkit.getPluginManager().isPluginEnabled("MiniPlaceholders") ) {
+            new HookMiniPlaceholderAPI().init();
+            logger.info("MiniPlaceholders 已加载！");
+        } else {
+            logger.debug("MiniPlaceholders 未安装！");
         }
 
         logger.info(language.getConfigToml().getString("logs.end"));
-        logger.warn("当前运行的插件为后端插件，需要在 Velocity 运行 Velocity版插件，否则本插件无法正常运行！");
+        logger.warn("当前运行的插件为后端插件，需要在 Velocity 运行 Velocity版插件，并在本服务器上安装占位符插件。否则本插件无法正常运行！");
     }
-
 
     @Override
     public void onDisable() {

@@ -23,7 +23,7 @@ plugins{
     id 'java-library'
 }
 
-def now_version = "0.2.1"
+//def now_version = "${pluginVersion}"
 
 allprojects {
     apply {
@@ -31,18 +31,18 @@ allprojects {
     }
 
     group = 'top.redstarmc.plugin.velocitytitle'
+    version = "${pluginVersion}"
 
-    version = now_version
-
-    repositories {
-        mavenCentral()  //Maven 存储库
-        maven { url 'https://repo.codemc.io/repository/maven-releases/' }
-    }
+//    repositories {
+//        mavenCentral()  //Maven 存储库
+//        maven { url 'https://repo.codemc.io/repository/maven-releases/' }
+//    }
 
     dependencies {
-        compileOnly 'org.jetbrains:annotations:23.0.0'
-        implementation 'com.moandjiezana.toml:toml4j:0.7.2'
-        implementation "net.kyori:adventure-api:4.25.0"
+        compileOnly "org.jetbrains:annotations:${annotationVersion}"
+        compileOnly "io.github.miniplaceholders:miniplaceholders-api:${miniplaceholdersVersion}"
+        implementation "com.moandjiezana.toml:toml4j:${toml4jVersion}"
+        implementation "net.kyori:adventure-api:${adventureVersion}"
     }
 
     // 编译 固定 UTF-8 编码
@@ -133,7 +133,7 @@ tasks.register('createAllJar', Jar) {
     group = 'build'
 
     archiveBaseName.set('VelocityTitle')
-    archiveVersion.set(now_version)
+    archiveVersion.set(version)
 
     // 收集所有子模块的类文件和资源文件
     from {

@@ -79,34 +79,37 @@ public class HookPlaceholderAPI extends PlaceholderExpansion {
             return "UNKNOWN";
         }
         String[] par = params.split("_");
-        switch (par[0].toLowerCase()) {
-            case "prefix":
-                return prefix(player);
-            case "suffix":
-                return suffix(player);
-            case "version":
-                return getVersion();
-            default:
+        return switch ( par[0].toLowerCase() ) {
+            case "prefix" -> prefix(player);
+            case "suffix" -> suffix(player);
+            case "version" -> getVersion();
+            default -> {
                 log.warn("请求错误！");
-                return "";
-        }
+                yield "";
+            }
+        };
     }
 
     public String prefix(@NotNull Player player){
         PlayerTitleCache playerTitleCache = cacheManager.CacheGet(player.getUniqueId().toString());
+        if ( playerTitleCache == null ) {
+            return "";
+        }
         if (playerTitleCache.prefix() != null){
             return ChatColor.translateAlternateColorCodes('&', playerTitleCache.prefix().display());
-        }else {
+        } else {
             return "";
         }
     }
 
     public String suffix(@NotNull Player player){
-
         PlayerTitleCache playerTitleCache = cacheManager.CacheGet(player.getUniqueId().toString());
+        if ( playerTitleCache == null ) {
+            return "";
+        }
         if (playerTitleCache.suffix() != null){
             return ChatColor.translateAlternateColorCodes('&', playerTitleCache.suffix().display());
-        }else {
+        } else {
             return "";
         }
     }
