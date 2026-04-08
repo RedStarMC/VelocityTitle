@@ -54,7 +54,8 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
         language = new ConfigManager(getDataFolder(), "language-spigot.toml");
         config.init();language.init();
 
-        logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"), true);
+        logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"),
+                config.getConfigToml().getBoolean("debug-mode"));
 
         logger.info("Language: "+language.getConfigToml().getString("name"));
 
@@ -81,9 +82,11 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
         pluginMessage = new PluginMessageBukkit(this, logger, cacheManager);
 
+        int a = 1;
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HookPlaceholderAPI().register();
             logger.info("PlaceholderAPI 已加载！");
+            a++;
         }else {
             logger.debug("PlaceholderAPI 未安装！");
         }
@@ -91,9 +94,11 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
         if ( Bukkit.getPluginManager().isPluginEnabled("MiniPlaceholders") ) {
             new HookMiniPlaceholderAPI().init();
             logger.info("MiniPlaceholders 已加载！");
+            a++;
         } else {
             logger.debug("MiniPlaceholders 未安装！");
         }
+        if ( a < 2 ) logger.warn("没有安装 PlaceholderAPI 或 MiniPlaceholders 占位符插件，你将无法使用本插件！");
 
         logger.info(language.getConfigToml().getString("logs.end"));
         logger.warn("当前运行的插件为后端插件，需要在 Velocity 运行 Velocity版插件，并在本服务器上安装占位符插件。否则本插件无法正常运行！");

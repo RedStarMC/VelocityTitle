@@ -6,3 +6,5 @@ version = "@VERSION@"
 
 # 插件提示前缀（可以使用 & 符号）
 plugin-prefix = "[VelocityTitleSpigot] "
+
+debug-mode = false

@@ -73,9 +73,9 @@
 第一阶段目标：
 
 * [ ] 列表查询优化
-* [ ] 支持 Miniplaceholder
+* [x] 支持 Miniplaceholder
 * [ ] 优化命令分组
-* [ ] 支持 Folia
+* [x] 支持 Folia
 
 第二阶段目标：
 

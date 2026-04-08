@@ -3,5 +3,6 @@ version: '@VERSION@'
 main: top.redstarmc.plugin.velocitytitle.spigot.VelocityTitleSpigot
 api-version: 1.13
 author: pingguomc
+folia-supported: true
 website: https://github.com/RedStarMC/VelocityTitle
 softdepend: [ PlaceholderAPI, MiniPlaceholders ]
