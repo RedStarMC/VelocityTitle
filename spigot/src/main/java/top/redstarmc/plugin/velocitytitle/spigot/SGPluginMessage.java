@@ -26,21 +26,21 @@ import org.bukkit.plugin.messaging.PluginMessageRecipient;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.core.util.UpdateTitle;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGCacheManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGLoggerManager;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
-public class PluginMessageBukkit implements PluginMessageListener{
+public class SGPluginMessage implements PluginMessageListener {
     private final String incomingChannel;
     private final String outgoingChannel;
     private final VelocityTitleSpigot plugin;
-    private final LoggerManager log;
-    private final CacheManager cache;
+    private final SGLoggerManager log;
+    private final SGCacheManager cache;
 
-    public PluginMessageBukkit(VelocityTitleSpigot server, LoggerManager loggerManager, CacheManager cache) {
+    public SGPluginMessage(VelocityTitleSpigot server, SGLoggerManager loggerManager, SGCacheManager cache) {
         this.plugin = server;
         this.cache = cache;
         this.incomingChannel = "velocitytitle:server";

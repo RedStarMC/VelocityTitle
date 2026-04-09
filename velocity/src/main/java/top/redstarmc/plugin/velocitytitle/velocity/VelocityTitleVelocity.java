@@ -38,8 +38,8 @@ import top.redstarmc.plugin.velocitytitle.velocity.configuration.Config;
 import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.ConfirmationManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.EasySQLManager;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
 import top.redstarmc.plugin.velocitytitle.velocity.manager.VCCacheManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.VCLoggerManager;
 import top.redstarmc.plugin.velocitytitle.velocity.util.HookMiniPlaceholderAPI;
 
 import java.io.File;
@@ -54,7 +54,7 @@ import java.nio.file.Path;
 )
 public class VelocityTitleVelocity {
 
-    private LoggerManager logger;
+    private VCLoggerManager logger;
 
     private final File dataFolder;
 
@@ -64,7 +64,7 @@ public class VelocityTitleVelocity {
 
     private ConfirmationManager confirmationManager;
 
-    private PluginMessage pluginMessage;
+    private VCPluginMessage pluginMessage;
 
     private EasySQLManager DBManager;
 
@@ -91,7 +91,7 @@ public class VelocityTitleVelocity {
         System.out.println("[VelocityTitle] Configurations Loading...");
         loadConfiguration();
 
-        logger = new LoggerManager(config.pluginPrefix, config.debugMode,
+        logger = new VCLoggerManager(config.pluginPrefix, config.debugMode,
                 server.getConsoleCommandSource());
 
         logger.info("Language: "+language.getConfigToml().getString("name"));
@@ -114,8 +114,8 @@ public class VelocityTitleVelocity {
         server.getEventManager().register(this, new Listener());
 
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
-        server.getChannelRegistrar().register(PluginMessage.INCOMING, PluginMessage.OUTGOING);
-        pluginMessage = new PluginMessage(logger);
+        server.getChannelRegistrar().register(VCPluginMessage.INCOMING, VCPluginMessage.OUTGOING);
+        pluginMessage = new VCPluginMessage(logger);
 
         logger.info("加载称号缓存管理器");
         VCCacheManager = new VCCacheManager(logger, this);
@@ -168,7 +168,7 @@ public class VelocityTitleVelocity {
     }
 
 
-    public LoggerManager getLogger() {
+    public VCLoggerManager getLogger() {
         return logger;
     }
 
@@ -188,7 +188,7 @@ public class VelocityTitleVelocity {
         return DBManager;
     }
 
-    public PluginMessage getPluginMessage() {
+    public VCPluginMessage getPluginMessage() {
         return pluginMessage;
     }
 

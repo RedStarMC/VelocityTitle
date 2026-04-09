@@ -17,16 +17,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.spigot.manager;
+package top.redstarmc.plugin.velocitytitle.velocity.manager;
 
-import org.bukkit.Bukkit;
+import com.velocitypowered.api.command.CommandSource;
 import top.redstarmc.plugin.velocitytitle.core.api.AbstractLoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.util.TextSer;
 
-public class LoggerManager extends AbstractLoggerManager {
+/**
+ * <b>日志管理器</b><br>
+ * 提供了日志相关的操作代码，以免重复编写发送日志的操作。
+ */
+public class VCLoggerManager extends AbstractLoggerManager {
 
-    public LoggerManager(String INFO_PREFIX, boolean debugMode) {
+    private final CommandSource console;
+
+    public VCLoggerManager(String INFO_PREFIX, boolean debugMode, CommandSource console) {
         super(INFO_PREFIX, debugMode);
-        //
+        this.console = console;
     }
 
     /**
@@ -35,7 +42,7 @@ public class LoggerManager extends AbstractLoggerManager {
      */
     @Override
     public void sendMessage(String msg) {
-        Bukkit.getConsoleSender().sendMessage(msg);
+        console.sendMessage(TextSer.parseSectionColorCode(msg));
         //
     }
 

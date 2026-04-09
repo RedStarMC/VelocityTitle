@@ -17,36 +17,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.configuration;
+package top.redstarmc.plugin.velocitytitle.velocity.manager;
 
-import top.redstarmc.plugin.velocitytitle.velocity.manager.VCConfigManager;
+import top.redstarmc.plugin.velocitytitle.core.api.AbstractConfigurationManager;
 
 import java.io.File;
 
-public class Config extends VCConfigManager {
+public class VCConfigManager extends AbstractConfigurationManager {
 
-    static final String fileName = "config-velocity.toml";
-
-    public String pluginPrefix;
-
-    public boolean debugMode;
-
-    public String language;
-
-    public boolean confirmMode;
-
-    public Config(File dataFolder) {
+    /**
+     * 构造器
+     * @param dataFolder 插件的工作文件夹
+     * @param fileName   要操作的配置文件名称
+     */
+    public VCConfigManager(File dataFolder, String fileName) {
         super(dataFolder, fileName);
         //
     }
 
-    @Override
-    public void init() {
-        super.init();
-        this.pluginPrefix = getConfigToml().getString("plugin-prefix", "[VelocityTitle]");
-        this.debugMode = getConfigToml().getBoolean("debugMode", false);
-        this.language = getConfigToml().getString("language", "zh_CN");
-        this.confirmMode = getConfigToml().getBoolean("confirm.enable", true);
-    }
 
 }

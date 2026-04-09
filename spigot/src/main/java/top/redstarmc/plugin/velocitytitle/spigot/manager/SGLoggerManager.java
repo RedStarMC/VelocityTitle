@@ -17,23 +17,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package top.redstarmc.plugin.velocitytitle.velocity.manager;
+package top.redstarmc.plugin.velocitytitle.spigot.manager;
 
-import top.redstarmc.plugin.velocitytitle.core.api.AbstractConfigurationManager;
+import org.bukkit.Bukkit;
+import top.redstarmc.plugin.velocitytitle.core.api.AbstractLoggerManager;
 
-import java.io.File;
+public class SGLoggerManager extends AbstractLoggerManager {
 
-public class VelocityConfigManager extends AbstractConfigurationManager {
-
-    /**
-     * 构造器
-     * @param dataFolder 插件的工作文件夹
-     * @param fileName   要操作的配置文件名称
-     */
-    public VelocityConfigManager(File dataFolder, String fileName) {
-        super(dataFolder, fileName);
+    public SGLoggerManager(String INFO_PREFIX, boolean debugMode) {
+        super(INFO_PREFIX, debugMode);
         //
     }
 
+    /**
+     * <h2>向控制台打印的方法</h2>
+     * @param msg 内容
+     */
+    @Override
+    public void sendMessage(String msg) {
+        Bukkit.getConsoleSender().sendMessage(msg);
+        //
+    }
 
 }

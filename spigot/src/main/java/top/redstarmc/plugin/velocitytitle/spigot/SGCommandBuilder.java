@@ -22,13 +22,13 @@ package top.redstarmc.plugin.velocitytitle.spigot;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.entity.Player;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.ConfigManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGConfigManager;
 
 import static net.kyori.adventure.text.Component.text;
 
-public class CommandBuilder {
+public class SGCommandBuilder {
 
-    ConfigManager language = VelocityTitleSpigot.getInstance().getLanguage();
+    SGConfigManager language = VelocityTitleSpigot.getInstance().getLanguage();
 
     public LiteralArgumentBuilder<CommandSourceStack> init(){
         return LiteralArgumentBuilder.<CommandSourceStack>literal("VelocityTitleSpigot")

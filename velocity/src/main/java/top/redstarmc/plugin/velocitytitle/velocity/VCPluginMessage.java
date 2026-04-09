@@ -22,11 +22,14 @@ package top.redstarmc.plugin.velocitytitle.velocity;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.VCLoggerManager;
 
 import java.util.Arrays;
 
-public class PluginMessage {
+/**
+ * 插件消息
+ */
+public class VCPluginMessage {
 
     /**
      * 接收子服消息的通道
@@ -38,9 +41,9 @@ public class PluginMessage {
      */
     public static final MinecraftChannelIdentifier OUTGOING = MinecraftChannelIdentifier.from("velocitytitle:server");
 
-    private final LoggerManager logger;
+    private final VCLoggerManager logger;
 
-    public PluginMessage(LoggerManager logger) {
+    public VCPluginMessage(VCLoggerManager logger) {
         this.logger = logger;
     }
 

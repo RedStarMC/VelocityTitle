@@ -42,13 +42,13 @@ public class EasySQLManager {
 
     private static SQLManagerImpl sqlManager;
 
-    private final LoggerManager logger;
+    private final VCLoggerManager logger;
 
-    private final VelocityConfigManager config;
+    private final VCConfigManager config;
 
     private final Language language;
 
-    public EasySQLManager(LoggerManager logger, VelocityConfigManager config, Language language) {
+    public EasySQLManager(VCLoggerManager logger, VCConfigManager config, Language language) {
         this.logger = logger;
         this.config = config;
         this.language = language;

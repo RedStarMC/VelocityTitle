@@ -28,7 +28,7 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.api.NetWorkReader;
 import top.redstarmc.plugin.velocitytitle.velocity.database.DataBaseOperate;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.VCLoggerManager;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleType;
 
 import java.io.IOException;
@@ -40,7 +40,7 @@ import java.util.UUID;
  */
 public class Listener {
 
-    private static final LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
+    private static final VCLoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
 
     /**
      * 进服时保存UUID，以便离线时查验。<br>
@@ -70,18 +70,18 @@ public class Listener {
         // 无论来源如何，首先检查标识符是否匹配。
         // 这允许将所有消息设置为 IDENTIFIER as handled，
         // 防止转发任何源自客户端的邮件。
-        if (!event.getIdentifier().equals(PluginMessage.INCOMING)) {
+        if ( ! event.getIdentifier().equals(VCPluginMessage.INCOMING) ) {
             return;
         }
 
         logger.debug("接收到插件消息-1");
-        // 将 PluginMessage 标记为已处理，表示内容
+        // 将 VCPluginMessage 标记为已处理，表示内容
         // 不应转发到其原始目的地。
         event.setResult(PluginMessageEvent.ForwardResult.handled());
 
         // 或者：
 
-        // 将 PluginMessage 标记为已转发，表示内容
+        // 将 VCPluginMessage 标记为已转发，表示内容
         // 应该通过，就好像速度不存在一样。
         //
         // 使用时应格外小心，

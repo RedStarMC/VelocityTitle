@@ -24,14 +24,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGCacheManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGLoggerManager;
 
 public class HookPlaceholderAPI extends PlaceholderExpansion {
 
-    final CacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
+    final SGCacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
 
-    final LoggerManager log = VelocityTitleSpigot.getInstance().getLoggerManager();
+    final SGLoggerManager log = VelocityTitleSpigot.getInstance().getLoggerManager();
 
     /**
      * 此扩展的占位符标识符。可能不包含 {@literal %},

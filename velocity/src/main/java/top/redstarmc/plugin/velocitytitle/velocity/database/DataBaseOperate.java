@@ -32,7 +32,7 @@ import top.redstarmc.plugin.velocitytitle.velocity.configuration.Language;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerTitles;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.PlayerWear;
 import top.redstarmc.plugin.velocitytitle.velocity.database.table.TitleDictionary;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.VCLoggerManager;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.CommandResp;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.Title;
 import top.redstarmc.plugin.velocitytitle.velocity.pojo.TitleInfoType;
@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  */
 public class DataBaseOperate {
 
-    static final LoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
+    static final VCLoggerManager logger = VelocityTitleVelocity.getInstance().getLogger();
 
     private static Language getLanguage() {
         return VelocityTitleVelocity.getInstance().getLanguage();

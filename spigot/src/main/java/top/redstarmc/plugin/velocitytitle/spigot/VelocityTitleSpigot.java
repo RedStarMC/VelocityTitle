@@ -25,24 +25,24 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.ConfigManager;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGCacheManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGConfigManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGLoggerManager;
 
 
 public class VelocityTitleSpigot extends JavaPlugin implements Listener {
 
     private static VelocityTitleSpigot instance;
 
-    private LoggerManager logger;
+    private SGLoggerManager logger;
 
-    private PluginMessageBukkit pluginMessage;
+    private SGPluginMessage pluginMessage;
 
-    private ConfigManager config;
+    private SGConfigManager config;
 
-    private ConfigManager language;
+    private SGConfigManager language;
 
-    private CacheManager cacheManager;
+    private SGCacheManager cacheManager;
 
     @Override
     public void onEnable() {
@@ -50,11 +50,11 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
         instance = this;
 
         System.out.println("[VelocityTitle] Configurations Loading...");
-        config = new ConfigManager(getDataFolder(), "config-spigot.toml");
-        language = new ConfigManager(getDataFolder(), "language-spigot.toml");
+        config = new SGConfigManager(getDataFolder(), "config-spigot.toml");
+        language = new SGConfigManager(getDataFolder(), "language-spigot.toml");
         config.init();language.init();
 
-        logger = new LoggerManager(config.getConfigToml().getString("plugin-prefix"),
+        logger = new SGLoggerManager(config.getConfigToml().getString("plugin-prefix"),
                 config.getConfigToml().getBoolean("debug-mode"));
 
         logger.info("Language: "+language.getConfigToml().getString("name"));
@@ -70,17 +70,17 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
 
         logger.info(language.getConfigToml().getString("logs.command-loading"));
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(new CommandBuilder().init().build());
+            commands.registrar().register(new SGCommandBuilder().init().build());
         });
 
         logger.info(language.getConfigToml().getString("logs.listener-loading"));
         getServer().getPluginManager().registerEvents(this, this);
 
         logger.info("加载称号缓存管理器");
-        cacheManager = new CacheManager( logger, this);
+        cacheManager = new SGCacheManager(logger, this);
 
         logger.info(language.getConfigToml().getString("logs.channel-loading"));
-        pluginMessage = new PluginMessageBukkit(this, logger, cacheManager);
+        pluginMessage = new SGPluginMessage(this, logger, cacheManager);
 
         int a = 1;
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -121,23 +121,23 @@ public class VelocityTitleSpigot extends JavaPlugin implements Listener {
         return instance;
     }
 
-    public LoggerManager getLoggerManager() {
+    public SGLoggerManager getLoggerManager() {
         return logger;
     }
 
-    public ConfigManager getNewConfig() {
+    public SGConfigManager getNewConfig() {
         return config;
     }
 
-    public ConfigManager getLanguage() {
+    public SGConfigManager getLanguage() {
         return language;
     }
 
-    public PluginMessageBukkit getPluginMessage() {
+    public SGPluginMessage getPluginMessage() {
         return pluginMessage;
     }
 
-    public CacheManager getCacheManager() {
+    public SGCacheManager getCacheManager() {
         return cacheManager;
     }
 }

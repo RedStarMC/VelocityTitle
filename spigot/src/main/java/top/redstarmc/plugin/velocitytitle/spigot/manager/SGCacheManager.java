@@ -32,16 +32,16 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * <h2>缓存管理器</h2>
  */
-public class CacheManager implements InterfaceCacheManager {
+public class SGCacheManager implements InterfaceCacheManager {
 
     private static final Map<String, PlayerTitleCache> CACHE = new ConcurrentHashMap<>();
 
-    private final LoggerManager logger;
+    private final SGLoggerManager logger;
 
     /** 插件实例 */
     private final VelocityTitleSpigot plugin;
 
-    public CacheManager(@NotNull LoggerManager logger, @NotNull VelocityTitleSpigot plugin) {
+    public SGCacheManager(@NotNull SGLoggerManager logger, @NotNull VelocityTitleSpigot plugin) {
         this.logger = logger;
         this.plugin = plugin;
     }

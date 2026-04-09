@@ -36,12 +36,12 @@ public class VCCacheManager implements InterfaceCacheManager {
 
     private static final Map<String, PlayerTitleCache> CACHE = new ConcurrentHashMap<>();
 
-    private final LoggerManager logger;
+    private final VCLoggerManager logger;
 
     /** 插件实例 */
     private final VelocityTitleVelocity plugin;
 
-    public VCCacheManager(@NotNull LoggerManager logger, @NotNull VelocityTitleVelocity plugin) {
+    public VCCacheManager(@NotNull VCLoggerManager logger, @NotNull VelocityTitleVelocity plugin) {
         this.logger = logger;
         this.plugin = plugin;
     }

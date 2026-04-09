@@ -27,11 +27,11 @@ import net.kyori.adventure.text.minimessage.tag.resolver.ArgumentQueue;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import top.redstarmc.plugin.velocitytitle.core.impl.PlayerTitleCache;
-import top.redstarmc.plugin.velocitytitle.spigot.manager.CacheManager;
+import top.redstarmc.plugin.velocitytitle.spigot.manager.SGCacheManager;
 
 public class HookMiniPlaceholderAPI {
 
-    final CacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
+    final SGCacheManager cacheManager = VelocityTitleSpigot.getInstance().getCacheManager();
 
     public void init() {
         Expansion.Builder builder = Expansion.builder("velocitytitle");

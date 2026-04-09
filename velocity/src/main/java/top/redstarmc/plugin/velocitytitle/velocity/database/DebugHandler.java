@@ -26,16 +26,16 @@ import cc.carm.lib.easysql.api.action.PreparedSQLUpdateBatchAction;
 import cc.carm.lib.easysql.api.function.SQLDebugHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import top.redstarmc.plugin.velocitytitle.velocity.manager.LoggerManager;
+import top.redstarmc.plugin.velocitytitle.velocity.manager.VCLoggerManager;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DebugHandler implements SQLDebugHandler {
 
-    private final LoggerManager logger;
+    private final VCLoggerManager logger;
 
-    public DebugHandler(LoggerManager logger){
+    public DebugHandler(VCLoggerManager logger) {
         this.logger = logger;
     }
 
