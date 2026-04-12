@@ -23,8 +23,6 @@ plugins{
     id 'java-library'
 }
 
-//def now_version = "${pluginVersion}"
-
 allprojects {
     apply {
         plugin 'java-library'

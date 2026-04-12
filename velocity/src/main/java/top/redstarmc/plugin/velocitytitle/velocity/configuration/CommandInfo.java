@@ -64,7 +64,10 @@ public class CommandInfo {
                 sharp + "&a/vt player < divide | revoke | wear | pick | list >&r",
                 sharp + "&a/vt reload",
                 sharp + "&a/vt confirm",
-                sharp + "&a/vt cancel"
+                sharp + "&a/vt cancel",
+                sharp + "&a/vt wear",
+                sharp + "&a/vt pick",
+                sharp + "&a/vt list"
         );
     }
 
@@ -83,10 +86,7 @@ public class CommandInfo {
         return TextSer.toComponentList(
                 prefix() + language.getConfigToml().getString("commands.player"),
                 sharp + language.getConfigToml().getString("commands.playerlist.divide"),
-                sharp + language.getConfigToml().getString("commands.playerlist.revoke"),
-                sharp + language.getConfigToml().getString("commands.playerlist.wear"),
-                sharp + language.getConfigToml().getString("commands.playerlist.pick"),
-                sharp + language.getConfigToml().getString("commands.playerlist.list")
+                sharp + language.getConfigToml().getString("commands.playerlist.revoke")
         );
     }
 
@@ -118,6 +118,16 @@ public class CommandInfo {
 
     }
 
+    public static @NotNull List<Component> pick() {
+        return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.pick"),
+                language.getConfigToml().getString("commands.playerlist.pick-p"));
+    }
+
+    public static @NotNull List<Component> wear() {
+        return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.wear"),
+                language.getConfigToml().getString("commands.playerlist.wear-p"));
+    }
+
     public static class Player {
 
         public static @NotNull List<Component> divide() {
@@ -128,16 +138,6 @@ public class CommandInfo {
         public static @NotNull List<Component> revoke() {
             return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.revoke"),
                     language.getConfigToml().getString("commands.playerlist.revoke-p"));
-        }
-
-        public static @NotNull List<Component> pick() {
-            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.pick"),
-                    language.getConfigToml().getString("commands.playerlist.pick-p"));
-        }
-
-        public static @NotNull List<Component> wear() {
-            return TextSer.toComponentList(prefix() + language.getConfigToml().getString("commands.playerlist.wear"),
-                    language.getConfigToml().getString("commands.playerlist.wear-p"));
         }
 
     }

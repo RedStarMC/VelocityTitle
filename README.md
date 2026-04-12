@@ -26,7 +26,8 @@
    你需要在服务端里正常安装插件。 注意 Velocity 必须安装，否则无法运行。
 3. 配置插件
 4. 设置 PAPI
-   `velocitytitle_prefix` 和 `velocitytitle_suffix`
+    - PlaceholderAPI 是 `%velocitytitle_prefix%` 和 `%velocitytitle_suffix%`
+    - MiniPlaceholders 是 `<velocitytitle_prefix>` 和 `<velocitytitle_suffix>`
 
 ## 命令 & 权限 | Command & perms
 
@@ -39,16 +40,16 @@
 
 * `player` 操作玩家
     - `divide` `<name>` `[player]` 向指定的玩家分配一个称号，不写玩家默认是自己
-    - `list` `[player]` 列出指定的玩家的全部可用称号，不写玩家默认是自己
-    - `pick` `( prefix | suffix | all)` 摘除指定的玩家的某个类型的称号
     - `revoke` `<name>` `<player>` 不再向指定的玩家分配这个称号
-    - `wear` `<name>` `[player]` 为指定的玩家穿戴某个特定的称号，不写玩家默认是自己
 * `title`
     - `create` `( prefix | suffix )` `<name>` `<display>` `[description]` 不填写描述默认是 无
     - `delete` `<name>` 删除指定的称号
     - `edit` `<name>` `( display | description )` `<data>`
     - `list` 列出全部称号
     - `meta` `<name>` 列出指定称号的信息
+* `wear` `<name>` `[player]` 为指定的玩家穿戴某个特定的称号，不写玩家默认是自己
+* `list` `[player]` 列出指定的玩家的全部可用称号，不写玩家默认是自己
+* `pick` `( prefix | suffix | all)` 摘除指定的玩家的某个类型的称号*
 * `reload` 不稳定，暂时不要使用
 * `help` 展示帮助列表
 * `confirm` 执行等待确认的命令（仅在启用命令确认时可用）
@@ -74,7 +75,7 @@
 
 * [ ] 列表查询优化
 * [x] 支持 Miniplaceholder
-* [ ] 优化命令分组
+* [x] 优化命令分组
 * [x] 支持 Folia
 
 第二阶段目标：

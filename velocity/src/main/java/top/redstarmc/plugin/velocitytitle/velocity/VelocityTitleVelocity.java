@@ -83,52 +83,13 @@ public class VelocityTitleVelocity {
         this.metricsFactory = metricsFactory;
     }
 
-    @Subscribe
-    public void onProxyInitialization(ProxyInitializeEvent event) {
-        System.out.println("[VelocityTitle] Loading...");
-        instance = this;
-
-        System.out.println("[VelocityTitle] Configurations Loading...");
-        loadConfiguration();
-
-        logger = new VCLoggerManager(config.pluginPrefix, config.debugMode,
-                server.getConsoleCommandSource());
-
-        logger.info("Language: "+language.getConfigToml().getString("name"));
-
-        logger.info(language.getConfigToml().getString("logs.loading"));
-        logger.info(language.getConfigToml().getString("logs.author") + " pingguomc");
-        logger.debug(language.getConfigToml().getString("logs.debug"));
-        logger.info(language.getConfigToml().getString("logs.website") + " https://github.com/RedStarMC/VelocityTitle");
-
-        logger.info(language.getConfigToml().getString("logs.database-loading"));
-        DBManager = new EasySQLManager(logger, config, language);
-        DBManager.init();
-
-        confirmationManager = new ConfirmationManager(language, config.getConfigToml().getLong("confirm.expired", 30L), config.confirmMode);
-        logger.info(language.getConfigToml().getString("logs.command-loading"));
-        registerCommand();
-        CommandInfo.init();
-
-        logger.info(language.getConfigToml().getString("logs.listener-loading"));
-        server.getEventManager().register(this, new Listener());
-
-        logger.info(language.getConfigToml().getString("logs.channel-loading"));
-        server.getChannelRegistrar().register(VCPluginMessage.INCOMING, VCPluginMessage.OUTGOING);
-        pluginMessage = new VCPluginMessage(logger);
-
-        logger.info("加载称号缓存管理器");
-        VCCacheManager = new VCCacheManager(logger, this);
-
-        new HookMiniPlaceholderAPI().init();
-
-        logger.info(language.getConfigToml().getString("logs.end"));
-
-        int pluginId = 30298;  // bstats
-        Metrics metrics = metricsFactory.make(this, pluginId);
-        metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> server.getAllPlayers().size()));
-        metrics.addCustomChart(new Metrics.SingleLineChart("servers", () -> server.getAllServers().size()));
-
+    private static boolean isMiniPlaceholders() {
+        try {
+            Class.forName("io.github.miniplaceholders.api.MiniPlaceholders");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     @Subscribe
@@ -167,6 +128,55 @@ public class VelocityTitleVelocity {
         language.init(config.language);
     }
 
+    @Subscribe
+    public void onProxyInitialization(ProxyInitializeEvent event) {
+        System.out.println("[VelocityTitle] Loading...");
+        instance = this;
+
+        System.out.println("[VelocityTitle] Configurations Loading...");
+        loadConfiguration();
+
+        logger = new VCLoggerManager(config.pluginPrefix, config.debugMode,
+                server.getConsoleCommandSource());
+
+        logger.info("Language: "+language.getConfigToml().getString("name"));
+
+        logger.info(language.getConfigToml().getString("logs.loading"));
+        logger.info(language.getConfigToml().getString("logs.author") + " pingguomc");
+        logger.debug(language.getConfigToml().getString("logs.debug"));
+        logger.info(language.getConfigToml().getString("logs.website") + " https://github.com/RedStarMC/VelocityTitle");
+
+        logger.info(language.getConfigToml().getString("logs.database-loading"));
+        DBManager = new EasySQLManager(logger, config, language);
+        DBManager.init();
+
+        confirmationManager = new ConfirmationManager(language, config.getConfigToml().getLong("confirm.expired", 30L), config.confirmMode);
+        logger.info(language.getConfigToml().getString("logs.command-loading"));
+        registerCommand();
+        CommandInfo.init();
+
+        logger.info(language.getConfigToml().getString("logs.listener-loading"));
+        server.getEventManager().register(this, new Listener());
+
+        logger.info(language.getConfigToml().getString("logs.channel-loading"));
+        server.getChannelRegistrar().register(VCPluginMessage.INCOMING, VCPluginMessage.OUTGOING);
+        pluginMessage = new VCPluginMessage(logger);
+
+        logger.info("加载称号缓存管理器");
+        VCCacheManager = new VCCacheManager(logger, this);
+
+        if ( isMiniPlaceholders() ) {
+            new HookMiniPlaceholderAPI().init();
+        }
+
+        logger.info(language.getConfigToml().getString("logs.end"));
+
+        int pluginId = 30298;  // bstats
+        Metrics metrics = metricsFactory.make(this, pluginId);
+        metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> server.getAllPlayers().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("servers", () -> server.getAllServers().size()));
+
+    }
 
     public VCLoggerManager getLogger() {
         return logger;

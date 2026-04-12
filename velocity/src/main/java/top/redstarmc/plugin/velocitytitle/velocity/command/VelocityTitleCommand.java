@@ -26,9 +26,7 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.ProxyServer;
 import top.redstarmc.plugin.velocitytitle.velocity.VelocityTitleVelocity;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.DivideBuilder;
-import top.redstarmc.plugin.velocitytitle.velocity.command.player.PickBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.player.RevokeBuilder;
-import top.redstarmc.plugin.velocitytitle.velocity.command.player.WearBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.CreateBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.DeleteBuilder;
 import top.redstarmc.plugin.velocitytitle.velocity.command.title.EditBuilder;
@@ -88,10 +86,7 @@ public interface VelocityTitleCommand {
                     return 1;
                 })
                 .then(new DivideBuilder().build())
-                .then(new RevokeBuilder().build())
-                .then(new top.redstarmc.plugin.velocitytitle.velocity.command.player.ListBuilder().build())
-                .then(new PickBuilder().build())
-                .then(new WearBuilder().build());
+                .then(new RevokeBuilder().build());
     }
 
     private static LiteralArgumentBuilder<CommandSource> database(){
@@ -110,6 +105,10 @@ public interface VelocityTitleCommand {
                 })
                 .then(title())
                 .then(player())
+                .then(new ListBuilder().build())
+                .then(new PickBuilder().build())
+                .then(new WearBuilder().build())
+
                 .then(new ReloadBuilder().build())
                 .then(LiteralArgumentBuilder.<CommandSource>literal("help")
                         .executes(context -> {
