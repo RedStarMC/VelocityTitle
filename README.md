@@ -24,7 +24,7 @@
    你可以使用统一的插件，也可以分别下载不同平台的插件使用。但是 core 并不能作为插件使用。
 2. 安装  
    你需要在服务端里正常安装插件。 注意 Velocity 必须安装，否则无法运行。
-3. 配置插件
+3. 配置插件（默认配置即可使用）
 4. 设置 PAPI
     - PlaceholderAPI 是 `%velocitytitle_prefix%` 和 `%velocitytitle_suffix%`
     - MiniPlaceholders 是 `<velocitytitle_prefix>` 和 `<velocitytitle_suffix>`
@@ -74,17 +74,11 @@
 第一阶段目标：
 
 * [ ] 列表查询优化
-* [x] 支持 Miniplaceholder
-* [x] 优化命令分组
-* [x] 支持 Folia
+* [ ] 配置文件热重载
+* [ ] 支持 MySQL
+* [ ] 支持模组服务端
 
 第二阶段目标：
-
-* 配置文件热重载
-* 支持 MySQL
-* 支持模组服务端
-
-第三阶段目标：
 
 * 支持 Redis 内存数据库模式
 * 添加 GUI
